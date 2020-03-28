@@ -1,0 +1,16 @@
+{
+  "name": "@marblez/graphql",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "webpack --watch --mode=development",
+    "build": "webpack --mode=production"
+  },
+  "devDependencies": {
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}

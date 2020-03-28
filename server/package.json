@@ -1,0 +1,30 @@
+{
+  "name": "@marblez/server",
+  "version": "0.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc && node dist",
+    "dev": "tsc-watch --onSuccess \"node dist\""
+  },
+  "dependencies": {
+    "@marblez/graphql": "^0.0.0",
+    "@typegoose/typegoose": "^6.4.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/graphql": "^14.5.0",
+    "@types/mongodb": "^3.5.4",
+    "@types/mongoose": "^5.7.8",
+    "apollo-server": "^2.11.0",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.6.0",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.6",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^0.17.6"
+  },
+  "devDependencies": {
+    "tsc": "^1.20150623.0",
+    "tsc-watch": "^4.2.3",
+    "typescript": "^3.8.3"
+  }
+}
