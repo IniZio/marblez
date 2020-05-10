@@ -2,10 +2,15 @@
   "name": "root",
   "private": true,
   "scripts": {
+    "bootstrap": "lerna bootstrap --hoist",
     "dev": "NODE_ENV=development lerna exec --parallel npm run dev",
-    "build": "lerna exec --parallel npm run build"
+    "build": "lerna exec --parallel npm run build",
+    "types": "lerna exec --parallel npx typesync && npm run bootstrap"
   },
   "devDependencies": {
     "lerna": "^3.20.2"
+  },
+  "dependencies": {
+    "typesync": "^0.6.1"
   }
 }

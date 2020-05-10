@@ -23,6 +23,7 @@
     "type-graphql": "^0.17.6"
   },
   "devDependencies": {
+    "@types/tsc-watch": "^4.2.0",
     "tsc": "^1.20150623.0",
     "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"
