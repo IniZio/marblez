@@ -11,6 +11,7 @@ export default async function createApolloClient() {
   });
 
   const client = new ApolloClient({
+    uri: 'http://localhost:4000/',
     clientState: {
       typeDefs,
       resolvers: resolvers as Resolvers,

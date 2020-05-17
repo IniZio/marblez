@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 
 import { RecipeResolver } from "./resolvers/recipe-resolver";
 import { RateResolver } from "./resolvers/rate-resolver";
+import { OrderResolver } from './resolvers/order-resolver ';
 import { User } from "./entities/user";
 import { seedDatabase } from "./helpers";
 import { TypegooseMiddleware } from "./typegoose-middleware";
@@ -33,13 +34,13 @@ async function bootstrap() {
 
     // build TypeGraphQL executable schema
     const schema = await buildSchema({
-      resolvers: [RecipeResolver, RateResolver],
+      resolvers: [RecipeResolver, RateResolver, OrderResolver],
       emitSchemaFile: path.resolve(__dirname, "schema.gql"),
       // use document converting middleware
       globalMiddlewares: [TypegooseMiddleware],
       // use ObjectId scalar mapping
       scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
-      validate: false,
+      dateScalarMode: 'isoDate',
     });
 
     // create mocked context
