@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node dist",
-    "dev": "tsc-watch --onSuccess \"node dist\""
+    "start": "npm run build && node dist",
+    "dev": "tsc-watch --onSuccess \"node dist\"",
+    "build": "tsc"
   },
   "dependencies": {
     "@marblez/graphql": "^0.0.0",
@@ -29,7 +30,6 @@
   "devDependencies": {
     "@types/graphql-iso-date": "^3.3.3",
     "@types/tsc-watch": "^4.2.0",
-    "tsc": "^1.20150623.0",
     "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"
   }
