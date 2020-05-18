@@ -21,7 +21,7 @@ export interface Context {
 dotenv.config();
 
 // replace with your value if needed
-const { MONGO_HOST } = process.env;
+const { MONGO_HOST, PORT } = process.env;
 
 async function bootstrap() {
   try {
@@ -50,7 +50,7 @@ async function bootstrap() {
     const server = new ApolloServer({ schema, context });
 
     // Start the server
-    const { url } = await server.listen(4000);
+    const { url } = await server.listen(PORT || 4000);
     console.log(`Server is running, GraphQL Playground available at ${url}`);
   } catch (err) {
     console.error(err);

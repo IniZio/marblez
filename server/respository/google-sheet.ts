@@ -7,7 +7,7 @@ import { AuthPlus } from 'googleapis/build/src/googleapis';
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 const sheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
 
-const json = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../marble-service-account.json')) as unknown as string);
+const json = JSON.parse(process.env.SERVICE_ACCOUNT_KEY_FILE || fs.readFileSync(path.resolve(__dirname, '../../marble-service-account.json')) as unknown as string);
 
 class GoogleSheetRespository {
   googleSheet: sheets_v4.Sheets

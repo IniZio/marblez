@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "npm run build && node dist",
+    "start": "node dist",
     "dev": "tsc-watch --onSuccess \"node dist\"",
     "build": "tsc"
   },
