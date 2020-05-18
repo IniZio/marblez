@@ -7,8 +7,8 @@
 ## Status
 
 |Server|URL|Status|
-|---|---|---|---|---|
-|Client|https://marblez.netlify.app|[![Netlify Status](https://api.netlify.com/api/v1/badges/8605c81a-03b0-416b-a114-45dec7410ee8/deploy-status)](https://app.netlify.com/sites/marblez/deploys)|   |   |   |
+|---|---|---|
+|Client|https://marblez.netlify.app|[![Netlify Status](https://api.netlify.com/api/v1/badges/8605c81a-03b0-416b-a114-45dec7410ee8/deploy-status)](https://app.netlify.com/sites/marblez/deploys)|
 
 ## Setup
 
