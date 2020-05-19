@@ -28,4 +28,5 @@
 
 ### Frontend
 
-- In netlify, set 
+- In netlify, set env variables `API_URL`
+- Set build command to be `npm run build` and publish directory to `client/dist`
