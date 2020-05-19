@@ -3,12 +3,13 @@ import { ApolloProvider } from "react-apollo";
 import ApolloClient from "apollo-boost";
 import { ThemeProvider, CSSReset  } from "@chakra-ui/core";
 
+import { theme } from './theme'
 import Counter from "./Counter/Counter";
 import OverviewScreen from './screens/Overview';
 
 const App: FC<{ client: ApolloClient<any> }> = ({ client }) => (
   <ApolloProvider client={client}>
-    <ThemeProvider>
+    <ThemeProvider theme={theme}>
       <CSSReset />
       {/* <Counter /> */}
       <OverviewScreen />
