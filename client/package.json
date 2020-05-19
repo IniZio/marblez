@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "@types/parcel-bundler": "^1.12.1",
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-pwa-manifest": "^3.0.6"
   },
   "alias": {
     "util": "./mocks/utils.js",
@@ -32,5 +33,20 @@
   },
   "browserslist": [
     "last 1 Chrome version"
-  ]
+  ],
+  "pwaManifest": {
+    "name": "Marblez",
+    "shortName": "Marblez",
+    "startURL": "./",
+    "theme": "#ff385c",
+    "generateIconOptions": {
+      "baseIcon": "./src/images/logo.svg",
+      "sizes": [
+        192,
+        384,
+        512
+      ],
+      "genFavicons": true
+    }
+  }
 }

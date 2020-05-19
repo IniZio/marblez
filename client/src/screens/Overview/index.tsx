@@ -38,7 +38,7 @@ function Overview() {
         <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
         <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
       </InputGroup>
-      <SimpleGrid columns={[2, 3, 4]} spacing="40px">
+      <SimpleGrid columns={[1, 2, 3, 4]} spacing="40px">
         {filteredOrders.map(order => {
           function lineIf(o, fields, opt?: any) {
             const line = (
@@ -55,7 +55,7 @@ function Overview() {
               .join(' ')
             )
             return (
-                line.trim().length > 0 ? <Fragment>{((opt && opt.prefix) || '') + line.trim()} <br /></Fragment> : ''
+                line.trim().length > 0 ? <Box mb={2}>{((opt && opt.prefix) || '') + line.trim()} <br /></Box> : ''
             );
           }
           
