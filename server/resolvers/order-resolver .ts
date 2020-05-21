@@ -60,6 +60,8 @@ export class OrderResolver {
     const records = await (await googleSheet.init()).getAllRows()
     const orders = records.map(rowToOrder);
     
-    return orders.filter(order => isSameDay(order.date, pickupDate));
+    return orders
+    .filter(order => isSameDay(order.date, pickupDate))
+    .sort((a, b) => a.time.localeCompare(b.time));
   }
 }
