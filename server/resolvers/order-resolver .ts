@@ -1,9 +1,12 @@
 import { ObjectId } from "mongodb";
-import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx } from "type-graphql";
+import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
 import { parse, isValid, isSameDay } from 'date-fns';
 
 import { Order } from "../entities/order";
+import * as GoogleSheetEvent from './types/google-sheet-event-input';
 import googleSheet from '../respository/google-sheet';
+import { NotificationModel, Notification } from '../entities/notification';
+import PubSubEvent from '../pubsub';
 
 const orderFields = {
   paid: 0,
@@ -55,6 +58,27 @@ const rowToOrder = (row: any[]): Order => {
 
 @Resolver(of => Order)
 export class OrderResolver {
+  @Mutation(returns => Notification)
+  async onOrderGoogleSheetEditEvent(
+    @Arg('editEvent', type => GoogleSheetEvent.EditEventInput) editEvent: GoogleSheetEvent.EditEventInput,
+    @PubSub() pubsub: PubSubEngine,
+  ) {
+    const records = await (await googleSheet.init()).getAllRows()
+    const orders = records.map(rowToOrder);
+
+    const order = orders[editEvent.row - 1];
+
+    const notification = new NotificationModel({
+      orders: [order],
+      event: 'onEdit',
+    } as Notification);
+
+     const payload = await notification.save();
+
+     await pubsub.publish(PubSubEvent.NOTIFICATION, payload.toObject());
+     return payload;
+  }
+  
   @Query(returns => [Order], { nullable: true })
   async orders(@Arg("pickupDate", type => Date, { defaultValue: new Date() }) pickupDate: Date) {
     const records = await (await googleSheet.init()).getAllRows()

@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist",
-    "dev": "tsc-watch --onSuccess \"node dist\"",
+    "dev": "node ./ngrok.js & tsc-watch --noClear --onSuccess \"node dist\"",
     "build": "tsc"
   },
   "dependencies": {
@@ -24,6 +24,7 @@
     "graphql-iso-date": "^3.6.1",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.6",
+    "ngrok": "^3.2.7",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^0.17.6"
   },

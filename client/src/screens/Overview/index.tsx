@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useMemo, useEffect } from 'react';
-import { gql } from "apollo-boost";
 import { format, parseISO } from 'date-fns';
-import { useQuery } from "react-apollo";
+import { useQuery, useSubscription } from "react-apollo";
 import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex } from '@chakra-ui/core';
+import gql from 'graphql-tag';
 
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
 import DatePicker from '../../components/DatePicker';
@@ -19,8 +19,8 @@ function Overview() {
     }
     ${FRAGMENT_ORDER}
   `, {
-    pollInterval: 10000,
-    variables: { pickupDate }
+    // pollInterval: 10000,
+    variables: { pickupDate },
   });
 
   const [keyword, setKeyword] = useState('');
@@ -38,11 +38,42 @@ function Overview() {
   }, [data, keyword])
 
   useEffect(() => {refetch({ pickupDate })}, [pickupDate]);
+
+  const { data: { newNotification } = { newNotification: null }, loading: loadingNotificatinos, error } = useSubscription(
+    gql`
+      subscription {
+        newNotification {
+          orders {
+            ...OrderAllFields
+          }
+          event
+        }
+      }
+      ${FRAGMENT_ORDER}
+    `,
+    {
+      variables: { },
+      // onSubscriptionData({ client, subscriptionData }) {
+      //   const cachedNotifications = client.readQuery({
+      //     query: gql``,
+      //     variables: { date: new Date() }
+      //   })
+      //   cachedNotifications.notifications.push(subscriptionData.data?.newNotification);
+      //   client.writeQuery({
+      //     query: gql``,
+      //     variables: { date: new Date() },
+      //     data: cachedNotifications,
+      //   })
+      // }
+    }
+  );
   
   return (
     <Flex>
       <Box padding={5} flex={1}>
         <DatePicker value={pickupDate} onChange={setPickupDate} />
+        { !loadingNotificatinos && JSON.stringify(newNotification) }
+        { JSON.stringify(error) }
         <InputGroup mb={5}>
           <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
@@ -51,7 +82,7 @@ function Overview() {
           <Spinner />
         ) : (
           <SimpleGrid columns={[1, 2, 2, 4]} spacing="40px">
-            {filteredOrders.map(order => {
+            {filteredOrders.map((order, index) => {
               function lineIf(o, fields, opt?: any) {
                 const line = (
                   fields
@@ -90,7 +121,7 @@ function Overview() {
               )
               
               return (
-                <Box w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md">
+                <Box key={index} w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md">
                   {lines}
                 </Box>
               )})}
