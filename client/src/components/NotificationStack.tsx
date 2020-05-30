@@ -10,17 +10,19 @@ function Notification({ title, desc, ...rest }) {
   );
 }
 
-function NotificationStack(props: StackProps) {
+export interface NotificationStackProps extends StackProps {
+  notifications: any[],
+}
+
+function NotificationStack({notifications, ...props}: NotificationStackProps) {
   return (
     <Stack spacing={2} p={4} {...props}>
-      <Notification
-        title="Plan Money"
-        desc="The future can be even brighter but a goal without a plan is just a wish"
-      />
-      <Notification
-        title="Save Money"
-        desc="You deserve good things. With a whooping 10-15% interest rate per annum, grow your savings on your own terms with our completely automated process"
-      />
+      {notifications.map(noti => (
+        <Notification
+          title={`${noti.event}-ed ${noti.orders.map(o => o.phone)}`}
+          desc=""
+        />
+      ))}
     </Stack>
   )
 }

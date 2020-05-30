@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
-import { parse, isValid, isSameDay } from 'date-fns';
+import { parse, isValid, isSameDay, addHours, compareDesc } from 'date-fns';
 
 import { Order } from "../entities/order";
 import * as GoogleSheetEvent from './types/google-sheet-event-input';
@@ -10,6 +10,7 @@ import PubSubEvent from '../pubsub';
 
 const orderFields = {
   paid: 0,
+  created_at: 1,
   name: 2,
   phone: 3,
   date: 4,
@@ -43,13 +44,19 @@ const rowToOrder = (row: any[]): Order => {
         order[key] = order[key] === 'TRUE'
         break;
       case 'date':
-        order[key] = parse(order[key], 'M/d', new Date());
+        order[key] = addHours(parse(order[key], 'M/d', new Date()), 8);
         if (!isValid(order[key])) {
           order[key] = undefined;
         }
         break;
       case 'decorations':
         order[key] = (order[key] || '').split(', ');
+        break;
+      case 'created_at':
+        order[key] = addHours(parse(order[key], 'M/d/y k:m:s', new Date()), 8);
+        if (!isValid(order[key])) {
+          order[key] = undefined;
+        }
         break;
     }
   })
@@ -80,12 +87,20 @@ export class OrderResolver {
   }
   
   @Query(returns => [Order], { nullable: true })
-  async orders(@Arg("pickupDate", type => Date, { defaultValue: new Date() }) pickupDate: Date) {
+  async orders(
+    @Arg("pickupDate", type => Date, { nullable: true }) pickupDate?: Date,
+    @Arg("keyword", type => String, { nullable: true }) keyword?: string,
+  ) {
     const records = await (await googleSheet.init()).getAllRows()
     const orders = records.map(rowToOrder);
     
     return orders
-    .filter(order => isSameDay(order.date, pickupDate))
-    .sort((a, b) => a.time.localeCompare(b.time));
+    .filter(order => !pickupDate || isSameDay(order.date, pickupDate))
+    .filter(order => !keyword || order.phone?.includes(keyword))
+    // Sort from latest pickup date
+    .sort((a, b) => compareDesc(a.date, b.date))
+    // And sort from earliest time
+    .sort((a, b) => a.time.localeCompare(b.time))
+    .slice(0, 100);
   }
 }

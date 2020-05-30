@@ -21,6 +21,10 @@ export class Order {
 
   @Field({ nullable: true })
   @Property({ required: true })
+  created_at?: Date;
+
+  @Field({ nullable: true })
+  @Property({ required: true })
   time?: string;
 
   @Field({ nullable: true })

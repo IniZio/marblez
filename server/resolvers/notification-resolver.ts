@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, Subscription } from "type-graphql";
-import { parse, isValid, isSameDay, endOfDay, startOfDay } from 'date-fns';
+import { parse, isValid, isSameDay, endOfDay, startOfDay, addHours } from 'date-fns';
 
 import { Notification, NotificationModel } from '../entities/notification';
 import googleSheet from '../respository/google-sheet';
@@ -9,11 +9,11 @@ import PubSubEvent from '../pubsub';
 @Resolver(of => Notification)
 export class NotificationResolver {
   @Query(returns => [Notification], { nullable: true })
-  async notificationsToday() {
-    console.log(endOfDay(new Date(2020, 11, 30)));
-    
+  async notificationsOfDay(
+    @Arg('date', type => Date, { defaultValue: new Date(2020, 1, 16) }) date: Date,
+  ) {
     return NotificationModel.find({
-      'orders.date': { $gte: startOfDay(new Date(2020, 11, 30)) } ,
+      'orders.date': { $gte: startOfDay(date), $lte: endOfDay(date) } ,
     })
   }
 

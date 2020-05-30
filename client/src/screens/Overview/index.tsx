@@ -1,45 +1,64 @@
-import React, { Fragment, useState, useMemo, useEffect } from 'react';
+import React, { Fragment, useState, useMemo, useEffect, useCallback } from 'react';
 import { format, parseISO } from 'date-fns';
 import { useQuery, useSubscription } from "react-apollo";
 import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex } from '@chakra-ui/core';
 import gql from 'graphql-tag';
+import produce from 'immer';
+import { debounce } from 'lodash';
 
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
+import { QUERY_NOTIFICATIONS_OF_DAY } from '../../apollo/query';
 import DatePicker from '../../components/DatePicker';
 import NotificationStack from '../../components/NotificationStack';
 
 function Overview() {
-  const [pickupDate, setPickupDate] = useState<Date>(new Date());
+  const [pickupDate, setPickupDate] = useState<Date>(new Date(2020, 1, 16));
 
-  const {data, loading, refetch} = useQuery(gql`
-    query ordersOfDay($pickupDate: DateTime!) {
-      orders(pickupDate: $pickupDate) {
+  const [keyword, setKeyword] = useState('');
+
+
+  const filter = useMemo(() => ({
+    keyword,
+    pickupDate: keyword ? undefined : pickupDate,
+  }), [keyword, pickupDate]);
+
+  const {data, loading, refetch: refetchOrdersOfDay} = useQuery(gql`
+    query ordersOfDay(
+      $pickupDate: DateTime
+      $keyword: String
+    ) {
+      orders(
+        pickupDate: $pickupDate
+        keyword: $keyword
+      ) {
         ...OrderAllFields
       }
     }
     ${FRAGMENT_ORDER}
   `, {
     // pollInterval: 10000,
-    variables: { pickupDate },
+    variables: filter,
   });
 
-  const [keyword, setKeyword] = useState('');
   const filteredOrders = useMemo(() => {
     if (!data || !data.orders) {
       return [];
     }
-    if (!keyword) {
-      return data.orders;
-    }
 
     return data.orders
-      .filter(order => order.phone && order.phone.includes(keyword))
       .filter(order => order.paid);
   }, [data, keyword])
 
-  useEffect(() => {refetch({ pickupDate })}, [pickupDate]);
+  const refetchOrdersOfDayWithFilter = useCallback(() => debounce(() => {refetchOrdersOfDay(filter)}, 2000), [])
+  useEffect(refetchOrdersOfDayWithFilter, [filter]);
 
-  const { data: { newNotification } = { newNotification: null }, loading: loadingNotificatinos, error } = useSubscription(
+  const { data: { notificationsOfDay } = { notificationsOfDay: [] }, loading: loadingNotifications, error, refetch: refetchNotifications } = useQuery(
+    QUERY_NOTIFICATIONS_OF_DAY,
+    { variables: { date: pickupDate } }
+  )
+  useEffect(() => {refetchNotifications({ date: pickupDate })}, [pickupDate]);
+
+  const { data: { newNotification } = { newNotification: null }, loading: loadingNewNotification } = useSubscription(
     gql`
       subscription {
         newNotification {
@@ -53,18 +72,20 @@ function Overview() {
     `,
     {
       variables: { },
-      // onSubscriptionData({ client, subscriptionData }) {
-      //   const cachedNotifications = client.readQuery({
-      //     query: gql``,
-      //     variables: { date: new Date() }
-      //   })
-      //   cachedNotifications.notifications.push(subscriptionData.data?.newNotification);
-      //   client.writeQuery({
-      //     query: gql``,
-      //     variables: { date: new Date() },
-      //     data: cachedNotifications,
-      //   })
-      // }
+      onSubscriptionData({ client, subscriptionData }) {
+        const cachedNotifications = client.readQuery({
+          query: QUERY_NOTIFICATIONS_OF_DAY,
+          variables: { date: pickupDate },
+        })
+
+        client.writeQuery({
+          query: QUERY_NOTIFICATIONS_OF_DAY,
+          variables: { date: pickupDate },
+          data: produce(cachedNotifications, state => {
+            state.notificationsOfDay.push(subscriptionData.data?.newNotification)
+          }),
+        })
+      }
     }
   );
   
@@ -72,8 +93,6 @@ function Overview() {
     <Flex>
       <Box padding={5} flex={1}>
         <DatePicker value={pickupDate} onChange={setPickupDate} />
-        { !loadingNotificatinos && JSON.stringify(newNotification) }
-        { JSON.stringify(error) }
         <InputGroup mb={5}>
           <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
@@ -128,7 +147,7 @@ function Overview() {
           </SimpleGrid>
         )}
       </Box>
-      <NotificationStack maxW={300} />
+      {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
     </Flex>
   );
 }

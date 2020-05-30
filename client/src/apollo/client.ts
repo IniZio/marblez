@@ -20,8 +20,6 @@ export default async function createApolloClient() {
 
   const WS_URL = API_URL.replace('http', 'ws');
 
-  console.log('=== websocket', WS_URL);
-
   const wsLink = new WebSocketLink({
     uri: WS_URL,
     options: {
@@ -35,7 +33,6 @@ export default async function createApolloClient() {
     // split based on operation type
     ({ query }) => {
       const { kind, operation } = getMainDefinition(query) as unknown as any;
-      console.log(kind, operation)
       return kind === 'OperationDefinition' && operation === 'subscription';
     },
     wsLink,
@@ -56,10 +53,14 @@ export default async function createApolloClient() {
   })
 
   const client = new ApolloClient({
-    link,
+    link: ApolloLink.from([
+      stateLink,
+      link,
+    ]),
     cache: new InMemoryCache(),
     typeDefs,
     resolvers: resolvers as Resolvers,
+    connectToDevTools: true,
     defaultOptions: {
       query: {
         fetchPolicy: 'network-only',

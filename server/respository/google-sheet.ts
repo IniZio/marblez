@@ -42,7 +42,7 @@ class GoogleSheetRespository {
       spreadsheetId: sheetId,
       range: 'A1:AC'
     });
-    return res.data.values || [];
+    return (res.data.values || []).slice(1);
   }
 }
 
