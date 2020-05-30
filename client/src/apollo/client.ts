@@ -10,15 +10,16 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import CounterResolver from "../Counter/counter.resolver";
 import CounterType from "../Counter/counter.type";
 
+const API_URL = process.env.API_URL;
+
 export default async function createApolloClient() {
-  const { API_URL = 'http://localhost:4000/graphql' } = process.env;
   
   const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
     resolvers: [CounterResolver],
     skipCheck: true, // allow for schema without queries
   });
 
-  const WS_URL = API_URL.replace('http', 'ws');
+  const WS_URL = API_URL!.replace('http', 'ws');
 
   const wsLink = new WebSocketLink({
     uri: WS_URL,
