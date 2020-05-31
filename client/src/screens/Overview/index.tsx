@@ -5,15 +5,16 @@ import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Fl
 import gql from 'graphql-tag';
 import produce from 'immer';
 import { throttle } from 'lodash';
+import styled from '@emotion/styled';
 
+import { theme } from '../../theme';
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
 import { QUERY_NOTIFICATIONS_OF_DAY } from '../../apollo/query';
 import {useDebounce} from '../../hooks';
 import DatePicker from '../../components/DatePicker';
 import NotificationStack from '../../components/NotificationStack';
 import CopyToClipboard from '../../components/CopyToClipboard';
-import styled from '@emotion/styled';
-import { theme } from '../../theme';
+import SocialButton from '../../components/SocialButton';
 
 
 function lineIf(o, fields, opt?: any) {
@@ -41,9 +42,13 @@ const StyledBox = styled(Box)`
   }
 `;
 
+const SocialButtonGroup = styled(Box)`
+  > *:not(:last-child) {
+    margin-right: ${theme.space[2]};
+  }
+`;
+
 function Overview() {
-  const toast = useToast();
-  
   const [pickupDate, setPickupDate] = useState<Date>(new Date());
 
   const [keyword, setKeyword] = useState('');
@@ -67,7 +72,7 @@ function Overview() {
     }
     ${FRAGMENT_ORDER}
   `, {
-    // pollInterval: 10000,
+    pollInterval: 30000,
     variables: filter,
   });
 
@@ -145,24 +150,20 @@ function Overview() {
                 lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '}),
                 lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
                 lineIf(order, ['remarks']),
-              ];
+              ].filter(Boolean);
               
               return (
-                <CopyToClipboard text={lines.join('\n')} onCopy={(text) => toast({
-                  title: 'Order copied!',
-                  duration: 1000,
-                  status: 'success'
-                })}>
                     <StyledBox key={index} w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md">
-                  <Tooltip aria-label="Copy order" hasArrow label="Click to Copy :)" placement="top" showDelay={1000}>
-                  <Box>
+                  <Box position="relative">
                       {lines.map( 
                         line => line && <Box key={line} mb={2}>{line}<br/></Box>
                       )}
+                      <SocialButtonGroup pos="absolute" right="0" top="0">
+                        <SocialButton.WhatsApp text={lines.join('\n')} />
+                        <SocialButton.ClipBoard text={lines.join('\n')} />
+                      </SocialButtonGroup>
                       </Box>
-                  </Tooltip>
                     </StyledBox>
-                </CopyToClipboard>
               )})}
           </SimpleGrid>
         )}
