@@ -44,7 +44,7 @@ const StyledBox = styled(Box)`
 function Overview() {
   const toast = useToast();
   
-  const [pickupDate, setPickupDate] = useState<Date>(new Date(2020, 1, 16));
+  const [pickupDate, setPickupDate] = useState<Date>(new Date());
 
   const [keyword, setKeyword] = useState('');
 

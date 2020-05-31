@@ -45,6 +45,7 @@ const rowToOrder = (row: any[]): Order => {
         break;
       case 'date':
         order[key] = addHours(parse(order[key], 'M/d', new Date()), 8);
+        console.log('=== date', order[key]);
         if (!isValid(order[key])) {
           order[key] = undefined;
         }
