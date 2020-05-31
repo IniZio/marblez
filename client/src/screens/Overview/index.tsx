@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useMemo, useEffect, useCallback } from 'react';
 import { format, parseISO } from 'date-fns';
 import { useQuery, useSubscription } from "react-apollo";
-import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex } from '@chakra-ui/core';
+import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip } from '@chakra-ui/core';
 import gql from 'graphql-tag';
 import produce from 'immer';
 import { throttle } from 'lodash';
@@ -11,12 +11,42 @@ import { QUERY_NOTIFICATIONS_OF_DAY } from '../../apollo/query';
 import {useDebounce} from '../../hooks';
 import DatePicker from '../../components/DatePicker';
 import NotificationStack from '../../components/NotificationStack';
+import CopyToClipboard from '../../components/CopyToClipboard';
+import styled from '@emotion/styled';
+import { theme } from '../../theme';
+
+
+function lineIf(o, fields, opt?: any) {
+  const line = (
+    fields
+    .map(function(f, i) {
+      if (opt && opt.overrides && opt.overrides[i]) {
+        return opt.overrides[i](o[f])
+      }
+      if (f === 'date') {
+        return  format(parseISO(o[f]), 'MM/dd');
+      }
+      return o[f]
+    })
+    .join(' ')
+  )
+  return (
+      line.trim().length > 0 ? ((opt && opt.prefix) || '') + line.trim() : ''
+  );
+}
+
+const StyledBox = styled(Box)`
+  :active {
+    box-shadow: ${theme.shadows.lg}
+  }
+`;
 
 function Overview() {
+  const toast = useToast();
+  
   const [pickupDate, setPickupDate] = useState<Date>(new Date(2020, 1, 16));
 
   const [keyword, setKeyword] = useState('');
-
 
   const filter = useMemo(() => ({
     keyword,
@@ -104,47 +134,35 @@ function Overview() {
         ) : (
           <SimpleGrid columns={[1, 2, 2, 4]} spacing="40px">
             {filteredOrders.map((order, index) => {
-              function lineIf(o, fields, opt?: any) {
-                const line = (
-                  fields
-                  .map(function(f, i) {
-                    if (opt && opt.overrides && opt.overrides[i]) {
-                      return opt.overrides[i](o[f])
-                    }
-                    if (f === 'date') {
-                      return  format(parseISO(o[f]), 'MM/dd');
-                    }
-                    // if (o[f] instanceof Date) {
-                    //   return (o[f].getMonth() + 1) + '/' + o[f].getDate();
-                    // }
-                    return o[f]
-                  })
-                  .join(' ')
-                )
-                return (
-                    line.trim().length > 0 ? <Box mb={2}>{((opt && opt.prefix) || '') + line.trim()} <br /></Box> : ''
-                );
-              }
-              
-              const lines = (
-                <Fragment>
-                {lineIf(order, ['name', 'phone'], {prefix: '👨 '})}
-                {lineIf(order, ['date', 'time'], {prefix: '🕐 '})}
-                {lineIf(order, ['cake', 'size'], {prefix: '🎂 '})}
-                {lineIf(order, ['shape', 'color']/*, {prefix: '      '}*/)}
-                {lineIf(order, ['taste', 'letter']/*, {prefix: '      '}*/)}
-                {lineIf(order, ['sentence'], {prefix: '✍️️ '})}
-                {lineIf(order, ['decorations'])}
-                {lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '})}
-                {lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '})}
-                {lineIf(order, ['remarks'])}
-                </Fragment>
-              )
+              const lines = [
+                lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
+                lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
+                lineIf(order, ['cake', 'size'], {prefix: '🎂 '}),
+                lineIf(order, ['shape', 'color']/*, {prefix: '      '}*/),
+                lineIf(order, ['taste', 'letter']/*, {prefix: '      '}*/),
+                lineIf(order, ['sentence'], {prefix: '✍️️ '}),
+                lineIf(order, ['decorations']),
+                lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '}),
+                lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
+                lineIf(order, ['remarks']),
+              ];
               
               return (
-                <Box key={index} w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md">
-                  {lines}
-                </Box>
+                <CopyToClipboard text={lines.join('\n')} onCopy={(text) => toast({
+                  title: 'Order copied!',
+                  duration: 1000,
+                  status: 'success'
+                })}>
+                    <StyledBox key={index} w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md">
+                  <Tooltip aria-label="Copy order" hasArrow label="Click to Copy :)" placement="top" showDelay={1000}>
+                  <Box>
+                      {lines.map( 
+                        line => line && <Box key={line} mb={2}>{line}<br/></Box>
+                      )}
+                      </Box>
+                  </Tooltip>
+                    </StyledBox>
+                </CopyToClipboard>
               )})}
           </SimpleGrid>
         )}
