@@ -4,10 +4,11 @@ import { useQuery, useSubscription } from "react-apollo";
 import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex } from '@chakra-ui/core';
 import gql from 'graphql-tag';
 import produce from 'immer';
-import { debounce } from 'lodash';
+import { throttle } from 'lodash';
 
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
 import { QUERY_NOTIFICATIONS_OF_DAY } from '../../apollo/query';
+import {useDebounce} from '../../hooks';
 import DatePicker from '../../components/DatePicker';
 import NotificationStack from '../../components/NotificationStack';
 
@@ -47,47 +48,48 @@ function Overview() {
 
     return data.orders
       .filter(order => order.paid);
-  }, [data, keyword])
+  }, [data]);
 
-  const refetchOrdersOfDayWithFilter = useCallback(() => debounce(() => {refetchOrdersOfDay(filter)}, 2000), [])
-  useEffect(refetchOrdersOfDayWithFilter, [filter]);
+  const debouncedFilter = useDebounce(filter, 2000);
 
-  const { data: { notificationsOfDay } = { notificationsOfDay: [] }, loading: loadingNotifications, error, refetch: refetchNotifications } = useQuery(
-    QUERY_NOTIFICATIONS_OF_DAY,
-    { variables: { date: pickupDate } }
-  )
-  useEffect(() => {refetchNotifications({ date: pickupDate })}, [pickupDate]);
+  useEffect(() => {refetchOrdersOfDay(filter)}, [debouncedFilter]);
 
-  const { data: { newNotification } = { newNotification: null }, loading: loadingNewNotification } = useSubscription(
-    gql`
-      subscription {
-        newNotification {
-          orders {
-            ...OrderAllFields
-          }
-          event
-        }
-      }
-      ${FRAGMENT_ORDER}
-    `,
-    {
-      variables: { },
-      onSubscriptionData({ client, subscriptionData }) {
-        const cachedNotifications = client.readQuery({
-          query: QUERY_NOTIFICATIONS_OF_DAY,
-          variables: { date: pickupDate },
-        })
+  // const { data: { notificationsOfDay } = { notificationsOfDay: [] }, loading: loadingNotifications, error, refetch: refetchNotifications } = useQuery(
+  //   QUERY_NOTIFICATIONS_OF_DAY,
+  //   { variables: { date: pickupDate } }
+  // )
+  // useEffect(() => {refetchNotifications({ date: pickupDate })}, [pickupDate]);
 
-        client.writeQuery({
-          query: QUERY_NOTIFICATIONS_OF_DAY,
-          variables: { date: pickupDate },
-          data: produce(cachedNotifications, state => {
-            state.notificationsOfDay.push(subscriptionData.data?.newNotification)
-          }),
-        })
-      }
-    }
-  );
+  // const { data: { newNotification } = { newNotification: null }, loading: loadingNewNotification } = useSubscription(
+  //   gql`
+  //     subscription {
+  //       newNotification {
+  //         orders {
+  //           ...OrderAllFields
+  //         }
+  //         event
+  //       }
+  //     }
+  //     ${FRAGMENT_ORDER}
+  //   `,
+  //   {
+  //     variables: { },
+  //     onSubscriptionData({ client, subscriptionData }) {
+  //       const cachedNotifications = client.readQuery({
+  //         query: QUERY_NOTIFICATIONS_OF_DAY,
+  //         variables: { date: pickupDate },
+  //       })
+
+  //       client.writeQuery({
+  //         query: QUERY_NOTIFICATIONS_OF_DAY,
+  //         variables: { date: pickupDate },
+  //         data: produce(cachedNotifications, state => {
+  //           state.notificationsOfDay.push(subscriptionData.data?.newNotification)
+  //         }),
+  //       })
+  //     }
+  //   }
+  // );
   
   return (
     <Flex>
