@@ -26,10 +26,12 @@
     "mongoose": "^5.9.6",
     "ngrok": "^3.2.7",
     "reflect-metadata": "^0.1.13",
+    "superagent": "^5.2.2",
     "type-graphql": "^0.17.6"
   },
   "devDependencies": {
     "@types/graphql-iso-date": "^3.3.3",
+    "@types/superagent": "^4.1.7",
     "@types/tsc-watch": "^4.2.0",
     "tsc-watch": "^4.2.3",
     "typescript": "^3.8.3"

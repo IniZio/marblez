@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useMemo, useEffect, useCallback } from 'react';
 import { format, parseISO } from 'date-fns';
 import { useQuery, useSubscription } from "react-apollo";
-import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip } from '@chakra-ui/core';
+import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button } from '@chakra-ui/core';
 import gql from 'graphql-tag';
 import produce from 'immer';
 import { throttle } from 'lodash';
@@ -15,6 +15,7 @@ import DatePicker from '../../components/DatePicker';
 import NotificationStack from '../../components/NotificationStack';
 import CopyToClipboard from '../../components/CopyToClipboard';
 import SocialButton from '../../components/SocialButton';
+import { downloadURI } from '../../util/dom';
 
 
 function lineIf(o, fields, opt?: any) {
@@ -89,6 +90,26 @@ function Overview() {
 
   useEffect(() => {refetchOrdersOfDay(filter)}, [debouncedFilter]);
 
+  const {data1 = { downloadOrdersOfDay: undefined }, loading: loadingDownloadOrdersOfDay, refetch: refetchDownloadOrdersOfDay} = useQuery(gql`
+    query ordersOfDay(
+      $date: DateTime
+    ) {
+      downloadOrdersOfDay(
+        date: $date
+      )
+    }
+  `, {
+    fetchPolicy: 'network-only',
+    skip: true,
+    variables: { date: pickupDate },
+  });
+  const downloadOrdersOfDay = useCallback(async () => {
+    console.log('=== pickup', pickupDate)
+    const res = await refetchDownloadOrdersOfDay({ date: pickupDate });
+    const linkToOrdersOfDay = res.data.downloadOrdersOfDay;
+    downloadURI(linkToOrdersOfDay, `Orders of ${pickupDate}.pdf`);
+  }, [pickupDate])
+
   // const { data: { notificationsOfDay } = { notificationsOfDay: [] }, loading: loadingNotifications, error, refetch: refetchNotifications } = useQuery(
   //   QUERY_NOTIFICATIONS_OF_DAY,
   //   { variables: { date: pickupDate } }
@@ -134,6 +155,7 @@ function Overview() {
           <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
+        <Button leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay}>Download orders</Button>
         {loading ? (
           <Spinner />
         ) : (
@@ -160,7 +182,7 @@ function Overview() {
                       )}
                       <SocialButtonGroup pos="absolute" right="0" top="0">
                         <SocialButton.WhatsApp text={lines.join('\n')} />
-                        <SocialButton.ClipBoard text={lines.join('\n')} />
+                        {/* <SocialButton.ClipBoard text={lines.join('\n')} /> */}
                       </SocialButtonGroup>
                       </Box>
                     </StyledBox>

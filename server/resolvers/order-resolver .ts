@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
 import { parse, isValid, isSameDay, addHours, compareDesc } from 'date-fns';
+import agent from 'superagent';
 
 import { Order } from "../entities/order";
 import * as GoogleSheetEvent from './types/google-sheet-event-input';
@@ -102,5 +103,13 @@ export class OrderResolver {
     // And sort from earliest time
     .sort((a, b) => a.time.localeCompare(b.time))
     .slice(0, 100);
+  }
+
+  @Query(returns => String)
+  async downloadOrdersOfDay(
+    @Arg("date", type => Date, { nullable: true, defaultValue: new Date() }) date?: Date,
+  ) {
+    const res = await agent.get(`${process.env.GOOGLE_SHEET_SCRIPT_URL}?date=${date.toISOString()}`);
+    return res.text
   }
 }
