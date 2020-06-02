@@ -90,7 +90,8 @@ function Overview() {
 
   useEffect(() => {refetchOrdersOfDay(filter)}, [debouncedFilter]);
 
-  const {data1 = { downloadOrdersOfDay: undefined }, loading: loadingDownloadOrdersOfDay, refetch: refetchDownloadOrdersOfDay} = useQuery(gql`
+  const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false);
+  const {refetch: refetchDownloadOrdersOfDay} = useQuery(gql`
     query ordersOfDay(
       $date: DateTime
     ) {
@@ -100,14 +101,16 @@ function Overview() {
     }
   `, {
     fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
     skip: true,
     variables: { date: pickupDate },
   });
   const downloadOrdersOfDay = useCallback(async () => {
-    console.log('=== pickup', pickupDate)
-    const res = await refetchDownloadOrdersOfDay({ date: pickupDate });
+    setLoadingDownloadOrdersOfDay(true);
+    const res = await refetchDownloadOrdersOfDay();
     const linkToOrdersOfDay = res.data.downloadOrdersOfDay;
     downloadURI(linkToOrdersOfDay, `Orders of ${pickupDate}.pdf`);
+    setLoadingDownloadOrdersOfDay(false);
   }, [pickupDate])
 
   // const { data: { notificationsOfDay } = { notificationsOfDay: [] }, loading: loadingNotifications, error, refetch: refetchNotifications } = useQuery(
@@ -155,7 +158,9 @@ function Overview() {
           <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
-        <Button leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay}>Download orders</Button>
+        <Box pb={5}>
+          <Button leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay}>Download orders</Button>
+        </Box>
         {loading ? (
           <Spinner />
         ) : (
