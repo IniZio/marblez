@@ -1,57 +1,16 @@
-import React, { Fragment, useState, useMemo, useEffect, useCallback } from 'react';
-import { format, parseISO } from 'date-fns';
-import { useQuery, useSubscription } from "react-apollo";
-import { Spinner, SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button } from '@chakra-ui/core';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useQuery } from "react-apollo";
+import { SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button, Skeleton } from '@chakra-ui/core';
 import gql from 'graphql-tag';
-import produce from 'immer';
-import { throttle } from 'lodash';
-import styled from '@emotion/styled';
 
-import { theme } from '../../theme';
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
-import { QUERY_NOTIFICATIONS_OF_DAY } from '../../apollo/query';
 import {useDebounce} from '../../hooks';
 import DatePicker from '../../components/DatePicker';
-import NotificationStack from '../../components/NotificationStack';
-import CopyToClipboard from '../../components/CopyToClipboard';
-import SocialButton from '../../components/SocialButton';
 import { downloadURI } from '../../util/dom';
-
-
-function lineIf(o, fields, opt?: any) {
-  const line = (
-    fields
-    .map(function(f, i) {
-      if (opt && opt.overrides && opt.overrides[i]) {
-        return opt.overrides[i](o[f])
-      }
-      if (f === 'date') {
-        return  format(parseISO(o[f]), 'MM/dd');
-      }
-      return o[f]
-    })
-    .join(' ')
-  )
-  return (
-      line.trim().length > 0 ? ((opt && opt.prefix) || '') + line.trim() : ''
-  );
-}
-
-const StyledBox = styled(Box)`
-  :active {
-    box-shadow: ${theme.shadows.lg}
-  }
-`;
-
-const SocialButtonGroup = styled(Box)`
-  > *:not(:last-child) {
-    margin-right: ${theme.space[2]};
-  }
-`;
+import Order from '../../components/Order';
 
 function Overview() {
   const [pickupDate, setPickupDate] = useState<Date>(new Date());
-
   const [keyword, setKeyword] = useState('');
 
   const filter = useMemo(() => ({
@@ -161,39 +120,13 @@ function Overview() {
         <Box pb={5}>
           <Button leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay}>Download orders</Button>
         </Box>
-        {loading ? (
-          <Spinner />
-        ) : (
           <SimpleGrid columns={[1, 2, 2, 4]} spacing="40px">
-            {filteredOrders.map((order, index) => {
-              const lines = [
-                lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
-                lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
-                lineIf(order, ['cake', 'size'], {prefix: '🎂 '}),
-                lineIf(order, ['shape', 'color']/*, {prefix: '      '}*/),
-                lineIf(order, ['taste', 'letter']/*, {prefix: '      '}*/),
-                lineIf(order, ['sentence'], {prefix: '✍️️ '}),
-                lineIf(order, ['decorations']),
-                lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '}),
-                lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
-                lineIf(order, ['remarks']),
-              ].filter(Boolean);
-              
-              return (
-                    <StyledBox key={index} w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md">
-                  <Box position="relative">
-                      {lines.map( 
-                        line => line && <Box key={line} mb={2}>{line}<br/></Box>
-                      )}
-                      <SocialButtonGroup pos="absolute" right="0" top="0">
-                        <SocialButton.WhatsApp text={lines.join('\n')} />
-                        {/* <SocialButton.ClipBoard text={lines.join('\n')} /> */}
-                      </SocialButtonGroup>
-                      </Box>
-                    </StyledBox>
-              )})}
+            {loading ? (
+              [1, 1, 1].map(() => <Skeleton><Order /></Skeleton>)
+            ) : (
+              filteredOrders.map((order, index) => <Order order={order} key={index} />)
+            )}
           </SimpleGrid>
-        )}
       </Box>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
     </Flex>
