@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useQuery } from "react-apollo";
-import { SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button, Skeleton } from '@chakra-ui/core';
+import { SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button, Skeleton, IconButton, ButtonGroup } from '@chakra-ui/core';
 import gql from 'graphql-tag';
 
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
@@ -34,6 +34,7 @@ function Overview() {
     ${FRAGMENT_ORDER}
   `, {
     pollInterval: 30000,
+    notifyOnNetworkStatusChange: true,
     variables: filter,
   });
 
@@ -46,9 +47,6 @@ function Overview() {
       .filter(order => order.paid);
   }, [data]);
 
-  const debouncedFilter = useDebounce(filter, 2000);
-
-  useEffect(() => {refetchOrdersOfDay(filter)}, [debouncedFilter]);
 
   const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false);
   const {refetch: refetchDownloadOrdersOfDay} = useQuery(gql`
@@ -118,10 +116,11 @@ function Overview() {
           <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
-        <Box pb={5}>
-          <Button leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay}>Download orders</Button>
-        </Box>
-          <SimpleGrid columns={[1, 2, 2, 3, 4]} spacing="40px">
+        <ButtonGroup pb={5}>
+          <Button mb={[3, 0]} leftIcon="repeat" onClick={() => refetchOrdersOfDay()} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
+          <Button mb={[3, 0]} leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
+        </ButtonGroup>
+          <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
             {loading ? (
               [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
             ) : (

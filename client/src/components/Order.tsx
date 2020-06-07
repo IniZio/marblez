@@ -25,8 +25,17 @@ function lineIf(o, fields, opt?: any) {
       if (f === 'date') {
         return  format(parseISO(o[f]), 'MM/dd');
       }
+
+      if (['cake', 'shape', 'color', 'taste', 'letter'].includes(f)) {
+        return o[f].replace(/\([^(\))]*\)/g, '')
+      }
+
+      if (f === 'decorations') {
+        return o[f].map(v => v.replace(/\([^(\))]*\)/g, ''))
+      }
       return o[f]
     })
+    .filter(Boolean)
     .join(' ')
   )
   return (
@@ -51,17 +60,17 @@ function Order({ order }: OrderProps) {
     lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
     lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
     lineIf(order, ['cake', 'size'], {prefix: '🎂 '}),
-    lineIf(order, ['shape', 'color']/*, {prefix: '      '}*/),
-    lineIf(order, ['taste', 'letter']/*, {prefix: '      '}*/),
+    lineIf(order, ['shape', 'color'], {prefix: '‎‎‎⠀⠀ '}),
+    lineIf(order, ['taste', 'letter'], {prefix: '‎‎⠀⠀ '}),
     lineIf(order, ['sentence'], {prefix: '✍️️ '}),
-    lineIf(order, ['decorations']),
+    lineIf(order, ['decorations'], {prefix: '📿 '}),
     lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '}),
     lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
     lineIf(order, ['remarks']),
   ].filter(Boolean), [order]);
   
   return (
-    <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353}>
+    <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20}>
       <Box position="relative">
       {lines.map( 
         line => line && <Box key={line} mb={2}>{line}</Box>
