@@ -15,7 +15,7 @@ export interface SocialButtonProps {
 const SocialButton = {};
 
 function SocialButtonInstagram ({ username, icon }: SocialButtonProps) {
-  const encodedUsername = encodeURIComponent(username || '');
+  const encodedUsername = encodeURIComponent(username || '').toLowerCase();
 
   const href = useMemo(() => {
     let href;
