@@ -30,14 +30,10 @@ function SocialButtonWhatsApp ({ text = '' }: SocialButtonProps) {
 
 function SocialButtonClipBoard({ text = '' }: SocialButtonProps) {
   const { onCopy, hasCopied } = useClipboard(text);
-  
-  const onClick = useCallback(() => {
-    onCopy && onCopy();
-  }, [text]);
 
   return (
     <Tooltip aria-label="Copied Order" label="Order Copied!" isOpen={hasCopied} placement="top">
-    <IconButton icon={FaClipboard} onClick={onCopy} aria-label="Copy Order" />
+     <IconButton icon={FaClipboard} onClick={onCopy} aria-label="Copy Order" />
     </Tooltip>
   )
 }

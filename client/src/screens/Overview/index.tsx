@@ -8,6 +8,7 @@ import {useDebounce} from '../../hooks';
 import DatePicker from '../../components/DatePicker';
 import { downloadURI } from '../../util/dom';
 import Order from '../../components/Order';
+import OrderStats from '../../components/OrderStats';
 
 function Overview() {
   const [pickupDate, setPickupDate] = useState<Date>(new Date());
@@ -120,15 +121,16 @@ function Overview() {
         <Box pb={5}>
           <Button leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay}>Download orders</Button>
         </Box>
-          <SimpleGrid columns={[1, 2, 2, 4]} spacing="40px">
+          <SimpleGrid columns={[1, 2, 2, 3, 4]} spacing="40px">
             {loading ? (
-              [1, 1, 1].map(() => <Skeleton><Order /></Skeleton>)
+              [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
             ) : (
               filteredOrders.map((order, index) => <Order order={order} key={index} />)
             )}
           </SimpleGrid>
       </Box>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
+      <OrderStats display={['none', 'none', 'block', 'block']} />
     </Flex>
   );
 }
