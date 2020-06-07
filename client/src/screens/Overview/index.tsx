@@ -13,11 +13,12 @@ import OrderStats from '../../components/OrderStats';
 function Overview() {
   const [pickupDate, setPickupDate] = useState<Date>(new Date());
   const [keyword, setKeyword] = useState('');
+  const debouncedKeyword = useDebounce(keyword, 1000);
 
   const filter = useMemo(() => ({
     keyword,
-    pickupDate: keyword ? undefined : pickupDate,
-  }), [keyword, pickupDate]);
+    pickupDate: debouncedKeyword ? undefined : pickupDate,
+  }), [debouncedKeyword, pickupDate]);
 
   const {data, loading, refetch: refetchOrdersOfDay} = useQuery(gql`
     query ordersOfDay(
@@ -35,6 +36,7 @@ function Overview() {
   `, {
     pollInterval: 30000,
     notifyOnNetworkStatusChange: true,
+    variables: filter,
   });
 
   const filteredOrders = useMemo(() => {
@@ -46,8 +48,6 @@ function Overview() {
       .filter(order => order.paid);
   }, [data]);
 
-  const debouncedOrderFilter = useDebounce(filter, 1000)
-  useEffect(() => {refetchOrdersOfDay(filter)}, [debouncedOrderFilter, filter.pickupDate])
 
   const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false);
   const {refetch: refetchDownloadOrdersOfDay} = useQuery(gql`
