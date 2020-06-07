@@ -34,7 +34,7 @@ function Overview() {
     }
     ${FRAGMENT_ORDER}
   `, {
-    pollInterval: 30000,
+    pollInterval: 1000 * 60 * 5,
     notifyOnNetworkStatusChange: true,
     variables: filter,
   });

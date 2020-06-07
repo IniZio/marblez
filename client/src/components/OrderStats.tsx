@@ -28,7 +28,7 @@ function OrderStats(props: StackProps) {
       }
     }
   `, {
-    pollInterval: 30000,
+    pollInterval: 1000 * 60 * 5,
     variables: todayFilter,
   });
 
@@ -43,7 +43,7 @@ function OrderStats(props: StackProps) {
       }
     }
   `, {
-    pollInterval: 30000,
+    pollInterval: 1000 * 60 * 5,
     variables: tomorrowFilter,
   });
   

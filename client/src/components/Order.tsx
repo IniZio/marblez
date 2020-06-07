@@ -70,15 +70,19 @@ function Order({ order }: OrderProps) {
   ].filter(Boolean), [order]);
   
   return (
-    <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20}>
-      <Box position="relative">
+    <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20} position="relative">
+      <Box>
       {lines.map( 
         line => line && <Box key={line} mb={2}>{line}</Box>
       )}
-      <SocialButtonGroup pos="absolute" right="0" top="0">
-        <SocialButton.WhatsApp text={lines.join('\n')} />
-      </SocialButtonGroup>
       </Box>
+      <SocialButtonGroup pos="absolute" right="5" top="5">
+        <SocialButton.WhatsApp icon="external-link" text={lines.join('\n')} />
+      </SocialButtonGroup>
+      <SocialButtonGroup pos="absolute" right="5" bottom="5" bg="orange">
+        <SocialButton.WhatsApp phone={order && order.phone} />
+        {order?.order_from?.toLowerCase()?.includes('ig') && <SocialButton.Instagram username={order?.social_name} />}
+      </SocialButtonGroup>
     </StyledBox>
   )
 }

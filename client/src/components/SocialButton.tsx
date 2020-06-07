@@ -1,29 +1,57 @@
 import React, { useMemo, useCallback } from 'react';
-import { Box, useClipboard, Button, useToast, Tooltip, IconButton } from '@chakra-ui/core';
-import { FaWhatsapp, FaClipboard } from 'react-icons/fa';
+import { Box, useClipboard, Button, useToast, Tooltip, IconButton, IconProps } from '@chakra-ui/core';
+import { FaWhatsapp, FaClipboard, FaInstagram } from 'react-icons/fa';
 
 import { isMobile } from '../util/device';
+import { Icons } from '@chakra-ui/core/dist/theme/icons';
 
 export interface SocialButtonProps {
   text?: string;
+  icon?: Icons;
+  phone?: string;
+  username?: string;
 }
 
 const SocialButton = {};
 
-function SocialButtonWhatsApp ({ text = '' }: SocialButtonProps) {
-  const encodedText = encodeURIComponent(text);
+function SocialButtonInstagram ({ username, icon }: SocialButtonProps) {
+  const encodedUsername = encodeURIComponent(username || '');
 
   const href = useMemo(() => {
-      if (isMobile.any) {
-        return `whatsapp://send?text=${encodedText}`
-      }
+    let href;
+    href = `https://www.instagram.com/${encodedUsername}`;
+    return href;
+  }, [username])
 
-      return `https://web.whatsapp.com/send?text=${encodedText}`;
+  return (
+    <a href={href} target="_blank">
+      <IconButton icon={icon || FaInstagram} aria-label="View Instagram profile" />
+    </a>
+  )
+}
+
+function SocialButtonWhatsApp ({ text = '', icon, phone = '' }: SocialButtonProps) {
+  const encodedText = encodeURIComponent(text);
+  const encodedPhone = encodeURIComponent(phone);
+
+  const href = useMemo(() => {
+    let href;
+    if (isMobile.any) {
+      href = `whatsapp://send?text=${encodedText}`
+    } else {
+      href = `https://web.whatsapp.com/send?text=${encodedText}`;
+    }
+
+    if (encodedPhone) {
+      href += `&phone=${encodedPhone}`;
+    }
+
+      return href;
   }, [text])
 
   return (
     <a href={href} target="_blank">
-      <IconButton icon={FaWhatsapp} aria-label="Share on WhatsApp" />
+      <IconButton icon={icon || FaWhatsapp} aria-label="Share on WhatsApp" />
     </a>
   )
 }
@@ -41,4 +69,5 @@ function SocialButtonClipBoard({ text = '' }: SocialButtonProps) {
 export default Object.assign(SocialButton, {
   WhatsApp: SocialButtonWhatsApp,
   ClipBoard: SocialButtonClipBoard,
+  Instagram: SocialButtonInstagram,
 });
