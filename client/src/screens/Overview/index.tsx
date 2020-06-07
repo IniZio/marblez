@@ -35,7 +35,6 @@ function Overview() {
   `, {
     pollInterval: 30000,
     notifyOnNetworkStatusChange: true,
-    variables: filter,
   });
 
   const filteredOrders = useMemo(() => {
@@ -47,6 +46,8 @@ function Overview() {
       .filter(order => order.paid);
   }, [data]);
 
+  const debouncedOrderFilter = useDebounce(filter, 1000)
+  useEffect(() => {refetchOrdersOfDay(filter)}, [debouncedOrderFilter, filter.pickupDate])
 
   const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false);
   const {refetch: refetchDownloadOrdersOfDay} = useQuery(gql`
@@ -117,7 +118,7 @@ function Overview() {
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
         <ButtonGroup pb={5}>
-          <Button mb={[3, 0]} leftIcon="repeat" onClick={() => refetchOrdersOfDay()} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
+          <Button mb={[3, 0]} leftIcon="repeat" onClick={() => refetchOrdersOfDay(filter)} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
           <Button mb={[3, 0]} leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
         </ButtonGroup>
           <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">

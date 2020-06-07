@@ -97,7 +97,7 @@ export class OrderResolver {
     
     return orders
     .filter(order => !pickupDate || isSameDay(order.date, pickupDate))
-    .filter(order => !keyword || order.phone?.includes(keyword))
+    .filter(order => !keyword || order.phone?.includes(keyword) || order.name?.includes(keyword) || order.social_name?.includes(keyword))
     // Sort from latest pickup date
     .sort((a, b) => compareDesc(a.date, b.date))
     // And sort from earliest time
