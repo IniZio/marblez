@@ -81,7 +81,7 @@ function Order({ order }: OrderProps) {
       </SocialButtonGroup>
       <SocialButtonGroup pos="absolute" right="5" bottom="5" bg="orange">
         <SocialButton.WhatsApp phone={order && order.phone} />
-        {order?.order_from?.toLowerCase()?.includes('ig') && <SocialButton.Instagram username={order?.social_name} />}
+        {order?.order_from?.toLowerCase()?.includes('ig') && !order?.social_name?.trim()?.includes(' ') && <SocialButton.Instagram username={order?.social_name} />}
       </SocialButtonGroup>
     </StyledBox>
   )
