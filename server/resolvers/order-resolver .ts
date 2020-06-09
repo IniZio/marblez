@@ -51,7 +51,7 @@ const rowToOrder = (row: any[]): Order => {
         }
         break;
       case 'decorations':
-        order[key] = (order[key] || '').split(', ');
+        order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
         break;
       case 'created_at':
         order[key] = addHours(parse(order[key], 'M/d/y k:m:s', new Date()), 8);
@@ -59,6 +59,11 @@ const rowToOrder = (row: any[]): Order => {
           order[key] = undefined;
         }
         break;
+      default:
+        if (['cake', 'shape', 'color', 'taste', 'letter'].includes(key)) {
+          return order[key]?.replace(/\([^(\))]*\)/g, '');
+        }
+        return order[key]
     }
   })
   return order;
@@ -90,10 +95,12 @@ export class OrderResolver {
   @Query(returns => [Order], { nullable: true })
   async orders(
     @Arg("pickupDate", type => Date, { nullable: true }) pickupDate?: Date,
-    @Arg("keyword", type => String, { nullable: true }) keyword?: string,
+    @Arg("keyword", type => String, { nullable: true }) _keyword?: string,
   ) {
     const records = await (await googleSheet.init()).getAllRows()
     const orders = records.map(rowToOrder);
+
+    const keyword = _keyword?.replace(' ', '');
     
     return orders
     .filter(order => !pickupDate || isSameDay(order.date, pickupDate))
@@ -101,7 +108,7 @@ export class OrderResolver {
     // Sort from latest pickup date
     .sort((a, b) => compareDesc(a.date, b.date))
     // And sort from earliest time
-    .sort((a, b) => a.time.localeCompare(b.time))
+    .sort((a, b) => a.time?.localeCompare(b.time))
     .slice(0, 100);
   }
 
