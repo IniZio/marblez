@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
-import { Box } from '@chakra-ui/core';
+import { Box, Badge } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 
 import { theme } from '../theme';
@@ -68,9 +68,14 @@ function Order({ order }: OrderProps) {
     lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
     lineIf(order, ['remarks']),
   ].filter(Boolean), [order]);
-  
+
   return (
     <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20} position="relative">
+      {!order?.printed && (
+        <Badge ml="1" variantColor="green">
+          New
+        </Badge>
+      )}
       <Box>
       {lines.map( 
         line => line && <Box key={line} mb={2}>{line}</Box>

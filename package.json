@@ -6,7 +6,7 @@
   },
   "scripts": {
     "postinstall": "npm run bootstrap",
-    "bootstrap": "lerna bootstrap --hoist",
+    "bootstrap": "lerna bootstrap",
     "dev": "NODE_ENV=development lerna exec --parallel npm run dev",
     "build": "lerna exec --parallel npm run build",
     "types": "lerna exec --parallel npx typesync && npm run bootstrap",

@@ -29,13 +29,13 @@ const orderFields = {
   delivery_method: 24,
   delivery_address: 25,
   remarks: 26,
-//  printed: ,
+  printed: 90,
 //  index: ,
 };
 
 const rowToOrder = (row: any[]): Order => {
   const order: any = {};
-  Object.entries(orderFields).forEach(([key, columns]) => {
+  Object.entries(orderFields).forEach(([key, columns], index) => {
     for (const column of [].concat(columns)) {
       order[key] = order[key] || row[column];
     }
@@ -52,6 +52,9 @@ const rowToOrder = (row: any[]): Order => {
         break;
       case 'decorations':
         order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
+        break;
+      case 'printed':
+        // order[key] = typeof order[key] === 'string' && order[key].toUpperCase() === 'TRUE'
         break;
       case 'created_at':
         order[key] = addHours(parse(order[key], 'M/d/y k:m:s', new Date()), 8);

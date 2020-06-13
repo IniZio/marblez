@@ -2,7 +2,6 @@ import React, { FC } from "react";
 import { useQuery } from "react-apollo";
 import { gql } from "apollo-boost";
 import { Button } from '@chakra-ui/core';
-import { MAGIC } from '@marblez/graphql';
 
 import IncrementButton from "./IncrementButton";
 import DecrementButton from "./DecrementButton";

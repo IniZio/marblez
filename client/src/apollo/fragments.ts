@@ -20,5 +20,6 @@ export const FRAGMENT_ORDER = gql`
       delivery_method
       delivery_address
       remarks
+      printed
     }
 `;

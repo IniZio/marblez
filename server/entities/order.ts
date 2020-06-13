@@ -70,4 +70,8 @@ export class Order {
   @Field({ nullable: true })
   @Property({ required: true })
   remarks?: string;
+
+  @Field({ nullable: true })
+  @Property({ required: true })
+  printed?: string;
 }

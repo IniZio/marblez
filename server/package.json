@@ -9,7 +9,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@marblez/graphql": "^0.0.0",
     "@typegoose/typegoose": "^6.4.0",
     "@types/dotenv": "^8.2.0",
     "@types/graphql": "^14.5.0",
