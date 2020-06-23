@@ -50,7 +50,7 @@ const rowToOrder = (row: any[], index: any): Order => {
         order[key] = order[key] === 'TRUE'
         break;
       case 'date':
-        order[key] = addHours(parse(order[key], 'M/d', new Date()), 8);
+        order[key] = parse(order[key], 'M/d', new Date());
         if (!isValid(order[key])) {
           order[key] = undefined;
         }
@@ -62,7 +62,7 @@ const rowToOrder = (row: any[], index: any): Order => {
         // order[key] = typeof order[key] === 'string' && order[key].toUpperCase() === 'TRUE'
         break;
       case 'created_at':
-        order[key] = addHours(parse(order[key], 'M/d/y k:m:s', new Date()), 8);
+        order[key] = parse(order[key], 'M/d/y k:m:s', new Date());
         if (!isValid(order[key])) {
           order[key] = undefined;
         }
@@ -151,7 +151,7 @@ export class OrderResolver {
     const keyword = _keyword?.replace(' ', '');
     
     return orders
-    .filter(order => !pickupDate || isSameDay(order.date, pickupDate))
+    .filter(order => !pickupDate || isSameDay(order.date, addHours(pickupDate, 8)))
     .filter(order => !keyword || order.phone?.includes(keyword) || order.name?.includes(keyword) || order.social_name?.includes(keyword))
     // Sort from latest pickup date
     .sort((a, b) => compareDesc(a.date, b.date))
