@@ -112,7 +112,7 @@ function Overview() {
   return (
     <Flex>
       <Box padding={5} flex={1}>
-        <DatePicker value={pickupDate} onChange={setPickupDate} />
+        <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
         <InputGroup mb={5}>
           <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
@@ -125,7 +125,7 @@ function Overview() {
             {loading ? (
               [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
             ) : (
-              filteredOrders.map((order, index) => <Order order={order} key={index} />)
+              filteredOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
             )}
           </SimpleGrid>
       </Box>

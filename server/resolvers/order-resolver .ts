@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
-import { parse, isValid, isSameDay, addHours, compareDesc } from 'date-fns';
+import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format } from 'date-fns';
 import agent from 'superagent';
 
 import { Order } from "../entities/order";
@@ -8,6 +8,8 @@ import * as GoogleSheetEvent from './types/google-sheet-event-input';
 import googleSheet from '../respository/google-sheet';
 import { NotificationModel, Notification } from '../entities/notification';
 import PubSubEvent from '../pubsub';
+
+import { OrderInput } from './types/order-input';
 
 const orderFields = {
   paid: 0,
@@ -33,9 +35,12 @@ const orderFields = {
 //  index: ,
 };
 
-const rowToOrder = (row: any[]): Order => {
+const rowToOrder = (row: any[], index: any): Order => {
   const order: any = {};
-  Object.entries(orderFields).forEach(([key, columns], index) => {
+  Object.entries(orderFields).forEach(([key, columns]) => {
+    // +2 to compenstate column header and start with 1 index
+    order.index = index + 2;
+    
     for (const column of [].concat(columns)) {
       order[key] = order[key] || row[column];
     }
@@ -70,6 +75,46 @@ const rowToOrder = (row: any[]): Order => {
     }
   })
   return order;
+}
+
+const orderToRow = (orderInput: OrderInput, prevRow: any[]) => {
+  const row: any = [];
+  Object.entries(orderFields).forEach(([key, _columns]) => {
+    const columns = [].concat(_columns);
+
+    let value = orderInput[key as keyof OrderInput];
+
+    switch(key) {
+      case 'paid':
+      case 'printed':
+        value =  [null, undefined].includes(value) ? undefined : value;
+        break;
+      case 'date':
+        value = format(value as any, 'M/d')
+        break;
+      case 'decorations':
+        value = (value as string[]).join(', ')
+        break;
+      default:
+        if (['cake', 'shape', 'color', 'taste', 'letter'].includes(key)) {
+          value = (value as any)?.replace(/\([^(\))]*\)/g, '');
+        }
+    }
+
+    let found;
+    for (const column of columns) {
+      if (prevRow[column]) {
+        found = true;
+        row[column] = [null, undefined].includes(value) ? row[column] : value;
+      }
+    }
+
+    if (!found) {
+      row[columns[columns.length - 1]] = value;
+    }
+
+  })
+  return row;
 }
 
 @Resolver(of => Order)
@@ -121,5 +166,15 @@ export class OrderResolver {
   ) {
     const res = await agent.get(`${process.env.GOOGLE_SHEET_SCRIPT_URL}?date=${date.toISOString()}`);
     return res.text
+  }
+
+  @Mutation(returns => Order)
+  async updateOrder(
+    @Arg('order', type => OrderInput) orderInput?: OrderInput
+  ) {
+    const row = await (await googleSheet.init()).getRow(orderInput.index);
+    const updatedRow = orderToRow(orderInput, row);
+    await (await googleSheet.init()).updateRow(orderInput.index, updatedRow)
+    return orderInput;
   }
 }

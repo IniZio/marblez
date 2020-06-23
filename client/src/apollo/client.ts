@@ -58,7 +58,9 @@ export default async function createApolloClient() {
       stateLink,
       link,
     ]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      addTypename: false
+    }),
     typeDefs,
     resolvers: resolvers as Resolvers,
     connectToDevTools: true,

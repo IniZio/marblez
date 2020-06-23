@@ -1,15 +1,27 @@
 import React, { useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
-import { Box, Badge } from '@chakra-ui/core';
+import { Box, Badge, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, DrawerCloseButton, Stack, FormLabel, Input, InputGroup, InputLeftAddon, InputRightAddon, Select, Textarea, FormControl, Button, IconButton, Flex } from '@chakra-ui/core';
 import styled from '@emotion/styled';
+import { Formik, Field, FieldArray } from 'formik';
 
 import { theme } from '../theme';
 import SocialButton from '../components/SocialButton';
+import DatePicker from './DatePicker';
+import { gql } from 'apollo-boost';
+import { useMutation } from 'react-apollo';
 
 export interface OrderProps {
   order?: any;
+  onUpdate?: () => any;
 }
 
+const UPDATE_ORDER = gql`
+  mutation updateOrder($order: OrderInput!) {
+    updateOrder(order: $order) {
+      index
+    }
+  }
+`;
 
 function lineIf(o, fields, opt?: any) {
   if (!o) {
@@ -55,7 +67,9 @@ const StyledBox = styled(Box)`
   }
 `;
 
-function Order({ order }: OrderProps) {
+function Order({ order, onUpdate = () => {} }: OrderProps) {
+  const [updateOrder] = useMutation(UPDATE_ORDER);
+  
   const lines = useMemo(() => [
     lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
     lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
@@ -69,26 +83,139 @@ function Order({ order }: OrderProps) {
     lineIf(order, ['remarks']),
   ].filter(Boolean), [order]);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const firstField = React.useRef<HTMLInputElement>();
+  const btnRef = React.useRef();
+
   return (
-    <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20} position="relative">
-      {!order?.printed && (
-        <Badge ml="1" variantColor="green">
-          New
-        </Badge>
+    <>
+      <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20} position="relative" onClick={onOpen}>
+        {!order?.printed && (
+          <Badge ml="1" variantColor="green">
+            New
+          </Badge>
+        )}
+        <Box>
+        {lines.map( 
+          line => line && <Box key={line} mb={2}>{line}</Box>
+        )}
+        </Box>
+        <SocialButtonGroup pos="absolute" right="5" top="5">
+          <SocialButton.WhatsApp icon="external-link" text={lines.join('\n')} />
+        </SocialButtonGroup>
+        <SocialButtonGroup pos="absolute" right="5" bottom="5" bg="orange">
+          <SocialButton.WhatsApp phone={order && order.phone} />
+          {order?.order_from?.toLowerCase()?.includes('ig') && !order?.social_name?.trim()?.includes(' ') && <SocialButton.Instagram username={order?.social_name} />}
+        </SocialButtonGroup>
+      </StyledBox>
+      {order && (
+        <Drawer onClose={onClose} isOpen={isOpen} size="md">
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Edit {order.phone}</DrawerHeader>
+            <DrawerBody style={{ maxHeight: 'calc(100vh - 62px)', overflow: 'scroll' }}>
+                <Formik
+                  initialValues={order}
+                  onSubmit={(order, actions) => {
+                    updateOrder({ variables: { order } })
+                      .then(onUpdate)
+                      .then(onClose)
+                      .then(() => actions.setSubmitting(false))
+                  }}
+                >
+                  {props => (
+                  <form onSubmit={props.handleSubmit}>
+                    <Stack spacing="24px">
+                    <Field name="name">
+                      {({field}: { field: any }) => (
+                        <FormControl>
+                          <FormLabel htmlFor="name">Name</FormLabel>
+                          <Input {...field} ref={firstField} />
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="phone">
+                      {({field}: { field: any }) => (
+                        <FormControl>
+                          <FormLabel htmlFor="phone">Phone</FormLabel>
+                          <Input {...field} type="phone" />
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="date">
+                      {({field}: { field: any }) => (
+                        <FormControl>
+                          <FormLabel htmlFor="date">Date</FormLabel>
+                          <DatePicker {...field} withArrows={false} />
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="time">
+                      {({field}: { field: any }) => (
+                        <FormControl>
+                          <FormLabel htmlFor="time">Time</FormLabel>
+                          <Input {...field} />
+                        </FormControl>
+                      )}
+                    </Field>
+                    {['cake', 'size', 'shape', 'color', 'taste', 'letter', 'sentence', 'delivery_method', 'delivery_address'].map(attr => (
+                      <Field name={attr}>
+                        {({field}: { field: any }) => (
+                          <FormControl>
+                            <FormLabel htmlFor={attr}>{attr}</FormLabel>
+                            <Input {...field} />
+                          </FormControl>
+                        )}
+                      </Field>
+                    ))}
+
+                    <FieldArray name="decorations">
+                      {({remove, push}) => (
+                        <div>
+                          <FormLabel htmlFor="decorations">Decorations</FormLabel>
+                          {props.values.decorations.map((decoration, index) => (
+                            <FormControl>
+                              <Field name={`decorations.${index}`}>
+                                {({field}: { field: any }) => (
+                                  <Flex mt={1}>
+                                    <Input mr={2} {...field} />
+                                    <IconButton aria-label="Delete decoration" icon="delete" onClick={() => remove(index)} />
+                                  </Flex>
+                                )}
+                              </Field>
+                            </FormControl>
+                          ))}
+                          <IconButton aria-label="Add decoration" icon="add" onClick={() => push('')} />
+                        </div>
+                      )}
+                    </FieldArray>
+                    <Field name="remarks">
+                      {({field}: { field: any }) => (
+                        <FormControl>
+                          <FormLabel htmlFor="remarks">Remarks</FormLabel>
+                          <Textarea {...field} />
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Button
+                      mt={4}
+                      variantColor="teal"
+                      isLoading={props.isSubmitting}
+                      type="submit"
+                      loadingText="Updating..."
+                    >
+                      Update
+                    </Button>
+                    </Stack>
+                  </form>
+                  )}
+                </Formik>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
       )}
-      <Box>
-      {lines.map( 
-        line => line && <Box key={line} mb={2}>{line}</Box>
-      )}
-      </Box>
-      <SocialButtonGroup pos="absolute" right="5" top="5">
-        <SocialButton.WhatsApp icon="external-link" text={lines.join('\n')} />
-      </SocialButtonGroup>
-      <SocialButtonGroup pos="absolute" right="5" bottom="5" bg="orange">
-        <SocialButton.WhatsApp phone={order && order.phone} />
-        {order?.order_from?.toLowerCase()?.includes('ig') && !order?.social_name?.trim()?.includes(' ') && <SocialButton.Instagram username={order?.social_name} />}
-      </SocialButtonGroup>
-    </StyledBox>
+    </>
   )
 }
 
