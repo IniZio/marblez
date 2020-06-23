@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useQuery } from "react-apollo";
-import { SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button, Skeleton, IconButton, ButtonGroup } from '@chakra-ui/core';
+import { SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button, Skeleton, IconButton, ButtonGroup, Checkbox } from '@chakra-ui/core';
 import gql from 'graphql-tag';
 
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
@@ -14,6 +14,7 @@ function Overview() {
   const [pickupDate, setPickupDate] = useState<Date>(new Date());
   const [keyword, setKeyword] = useState('');
   const debouncedKeyword = useDebounce(keyword, 1000);
+  const [includeUnpaid, setIncludeUnpaid] = useState(false);
 
   const filter = useMemo(() => ({
     keyword,
@@ -45,8 +46,8 @@ function Overview() {
     }
 
     return data.orders
-      .filter(order => order.paid);
-  }, [data]);
+      .filter(order => includeUnpaid || order.paid);
+  }, [data, includeUnpaid]);
 
 
   const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false);
@@ -120,6 +121,7 @@ function Overview() {
         <ButtonGroup pb={5}>
           <Button mb={[3, 0]} leftIcon="repeat" onClick={() => refetchOrdersOfDay(filter)} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
           <Button mb={[3, 0]} leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
+          <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
         </ButtonGroup>
           <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
             {loading ? (

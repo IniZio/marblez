@@ -93,7 +93,7 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[]) => {
         value = format(value as any, 'M/d')
         break;
       case 'decorations':
-        value = (value as string[]).join(', ')
+        value = (value as string[]).filter(Boolean).join(', ')
         break;
       default:
         if (['cake', 'shape', 'color', 'taste', 'letter'].includes(key)) {
@@ -157,6 +157,7 @@ export class OrderResolver {
     .sort((a, b) => compareDesc(a.date, b.date))
     // And sort from earliest time
     .sort((a, b) => a.time?.localeCompare(b.time))
+    .sort((a, b) => (Number(a.paid) || -1) - (Number(b.paid) || -1))
     .slice(0, 100);
   }
 

@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
 import { format, parseISO } from 'date-fns';
-import { Box, Badge, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, DrawerCloseButton, Stack, FormLabel, Input, InputGroup, InputLeftAddon, InputRightAddon, Select, Textarea, FormControl, Button, IconButton, Flex } from '@chakra-ui/core';
+import { Box, Badge, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, DrawerCloseButton, Stack, FormLabel, Input, InputGroup, InputLeftAddon, InputRightAddon, Select, Textarea, FormControl, Button, IconButton, Flex, Checkbox } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import { Formik, Field, FieldArray } from 'formik';
+import { gql } from 'apollo-boost';
+import { useMutation } from 'react-apollo';
+import { capitalize } from 'lodash';
 
 import { theme } from '../theme';
 import SocialButton from '../components/SocialButton';
 import DatePicker from './DatePicker';
-import { gql } from 'apollo-boost';
-import { useMutation } from 'react-apollo';
 
 export interface OrderProps {
   order?: any;
@@ -91,8 +92,13 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
     <>
       <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20} position="relative" onClick={onOpen}>
         {!order?.printed && (
-          <Badge ml="1" variantColor="green">
+          <Badge ml="1" variantColor="blue">
             New
+          </Badge>
+        )}
+        {!order?.paid && (
+          <Badge ml="1" variantColor="orange">
+            Unpaid
           </Badge>
         )}
         <Box>
@@ -127,6 +133,23 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                   {props => (
                   <form onSubmit={props.handleSubmit}>
                     <Stack spacing="24px">
+                    <Field name="paid">
+                    {({field}: { field: any }) => (
+                        <FormControl>
+                          <Checkbox {...field} isChecked={field.value}>
+                            {!field.value ? (
+                                <Badge ml="1" variantColor="orange">
+                                  Unpaid
+                                </Badge>
+                            ) : (
+                              <Badge ml="1" variantColor="green">
+                                Paid
+                              </Badge>
+                            )}
+                          </Checkbox>
+                        </FormControl>
+                    )}
+                    </Field>
                     <Field name="name">
                       {({field}: { field: any }) => (
                         <FormControl>
@@ -163,7 +186,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                       <Field name={attr}>
                         {({field}: { field: any }) => (
                           <FormControl>
-                            <FormLabel htmlFor={attr}>{attr}</FormLabel>
+                            <FormLabel htmlFor={attr}>{capitalize(attr.replace('_', ' '))}</FormLabel>
                             <Input {...field} />
                           </FormControl>
                         )}
@@ -175,7 +198,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                         <div>
                           <FormLabel htmlFor="decorations">Decorations</FormLabel>
                           {props.values.decorations.map((decoration, index) => (
-                            <FormControl>
+                            <FormControl mb={1}>
                               <Field name={`decorations.${index}`}>
                                 {({field}: { field: any }) => (
                                   <Flex mt={1}>
@@ -186,7 +209,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                               </Field>
                             </FormControl>
                           ))}
-                          <IconButton aria-label="Add decoration" icon="add" onClick={() => push('')} />
+                          <IconButton size="sm" aria-label="Add decoration" icon="add" w="100%" onClick={() => push('')} />
                         </div>
                       )}
                     </FieldArray>
@@ -194,7 +217,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                       {({field}: { field: any }) => (
                         <FormControl>
                           <FormLabel htmlFor="remarks">Remarks</FormLabel>
-                          <Textarea {...field} />
+                          <Textarea {...field} size="lg" />
                         </FormControl>
                       )}
                     </Field>
