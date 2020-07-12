@@ -30,6 +30,7 @@
     "react-dom": "^16.13.0",
     "react-icons": "^3.10.0",
     "react-input-mask": "^2.0.4",
+    "react-remove-scroll": "^2.3.0",
     "reflect-metadata": "^0.1.13",
     "serve": "^11.3.2",
     "subscriptions-transport-ws": "^0.9.16",

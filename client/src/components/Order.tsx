@@ -6,6 +6,7 @@ import { Formik, Field, FieldArray } from 'formik';
 import { gql } from 'apollo-boost';
 import { useMutation } from 'react-apollo';
 import { capitalize } from 'lodash';
+import {RemoveScroll} from 'react-remove-scroll';
 
 import { theme } from '../theme';
 import SocialButton from '../components/SocialButton';
@@ -117,6 +118,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
       {order && (
         <Drawer onClose={onClose} isOpen={isOpen} size="md">
           <DrawerOverlay />
+            <RemoveScroll>
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerHeader>Edit {order.phone}</DrawerHeader>
@@ -236,6 +238,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                 </Formik>
             </DrawerBody>
           </DrawerContent>
+            </RemoveScroll>
         </Drawer>
       )}
     </>
