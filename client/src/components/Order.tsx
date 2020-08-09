@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { format, parseISO } from 'date-fns';
 import { Box, Badge, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, DrawerCloseButton, Stack, FormLabel, Input, InputGroup, InputLeftAddon, InputRightAddon, Select, Textarea, FormControl, Button, IconButton, Flex, Checkbox } from '@chakra-ui/core';
 import styled from '@emotion/styled';
@@ -7,11 +7,37 @@ import { gql } from 'apollo-boost';
 import { useMutation } from 'react-apollo';
 import { capitalize } from 'lodash';
 import {RemoveScroll} from 'react-remove-scroll';
+import { FaFileDownload } from 'react-icons/fa';
+import html2canvas from 'html2canvas'
+import jsPdf from 'jspdf';
 
 import { theme } from '../theme';
 import SocialButton from '../components/SocialButton';
 import DatePicker from './DatePicker';
+import { downloadURI } from '../util/dom';
 
+function printPDF (domElement) { 
+  domElement.ownerDocument.defaultView.innerHeight = 10000000;
+  // domElement.ownerDocument.defaultView.innerWidth = domElement.clientWidth;
+  window.scroll(0, 0)
+  
+  return html2canvas(domElement, { 
+    width: domElement.clientWidth, 
+    height: domElement.clientHeight,
+    useCORS: true,
+  })
+    .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        // downloadURI(imgData, 'wtf.png');
+        const pdf = new jsPdf('p', 'px', [domElement.clientHeight, domElement.clientWidth]);
+        const imgProps= pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        console.log('=== size', pdfWidth, pdfHeight)
+        pdf.save('your-filename.pdf')
+  })
+}
 export interface OrderProps {
   order?: any;
   onUpdate?: () => any;
@@ -71,6 +97,7 @@ const StyledBox = styled(Box)`
 
 function Order({ order, onUpdate = () => {} }: OrderProps) {
   const [updateOrder] = useMutation(UPDATE_ORDER);
+  const screenshotRef = useRef();
   
   const lines = useMemo(() => [
     lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
@@ -87,7 +114,11 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef<HTMLInputElement>();
-  const btnRef = React.useRef();
+  const downloadPDF = React.useCallback(async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    printPDF(screenshotRef.current);
+  }, [screenshotRef.current]);
 
   return (
     <>
@@ -103,9 +134,11 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
           </Badge>
         )}
         <Box>
-        {lines.map( 
-          line => line && <Box key={line} mb={2}>{line}</Box>
-        )}
+        <Box ref={screenshotRef}>
+          {lines.map( 
+            line => line && <Box key={line} mb={2}>{line}</Box>
+          )}
+        </Box>
         </Box>
         <SocialButtonGroup pos="absolute" right="5" top="5">
           <SocialButton.WhatsApp icon="external-link" text={lines.join('\n')} />
@@ -113,6 +146,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         <SocialButtonGroup pos="absolute" right="5" bottom="5" bg="orange">
           <SocialButton.WhatsApp phone={order && order.phone} />
           {order?.order_from?.toLowerCase()?.includes('ig') && !order?.social_name?.trim()?.includes(' ') && <SocialButton.Instagram username={order?.social_name} />}
+           <IconButton icon={FaFileDownload} aria-label="Download Order as PDF" onClick={downloadPDF} />
         </SocialButtonGroup>
       </StyledBox>
       {order && (
