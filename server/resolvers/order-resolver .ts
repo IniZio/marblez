@@ -18,19 +18,23 @@ const orderFields = {
   phone: 3,
   date: 4,
   time: 5,
-  cake: 6,
-  letter: 7,
-  taste: [9, 10, 11, 12, 13],
-  size: 16,
-  shape: [17, 18],
-  color: 8,
-  sentence: [20, 21],
-  decorations: 19,
-  social_name: 22,
-  order_from: 23,
-  delivery_method: 24,
-  delivery_address: 25,
-  remarks: 26,
+  cake: [6, 7, 24],
+  letter: 8,
+  taste: [10, 11, 12, 13],
+  inner_taste: [14],
+  bottom_taste: [15],
+  size: 18,
+  shape: [19, 20],
+  color: [9, 16],
+  sentence: 25,
+  paid_sentence: 26,
+  toppings: 21,
+  decorations: [22, 23],
+  social_name: 28,
+  order_from: 29,
+  delivery_method: 30,
+  delivery_address: 31,
+  remarks: 32,
   printed: 90,
 //  index: ,
 };
@@ -42,7 +46,7 @@ const rowToOrder = (row: any[], index: any): Order => {
     order.index = index + 2;
     
     for (const column of [].concat(columns)) {
-      order[key] = order[key] || row[column];
+      order[key] = [row[column], order[key]].filter(Boolean).join(', ');
     }
 
     switch(key) {
@@ -149,7 +153,7 @@ export class OrderResolver {
     const orders = records.map(rowToOrder);
 
     const keyword = _keyword?.replace(' ', '');
-    
+
     return orders
     .filter(order => !pickupDate || isSameDay(order.date, addHours(pickupDate, 8)))
     .filter(order => !keyword || order.phone?.includes(keyword) || order.name?.includes(keyword) || order.social_name?.includes(keyword))
