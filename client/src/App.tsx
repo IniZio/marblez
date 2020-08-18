@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from "apollo-boost";
-import { ThemeProvider, CSSReset  } from "@chakra-ui/core";
+import { ThemeProvider, CSSReset, Button  } from "@chakra-ui/core";
 
 import { theme } from './theme'
 import Counter from "./Counter/Counter";
@@ -11,7 +11,7 @@ const App: FC<{ client: ApolloClient<any> }> = ({ client }) => (
   <ApolloProvider client={client}>
     <ThemeProvider theme={theme}>
       <CSSReset />
-      {/* <Counter /> */}
+      <Button data-feedbackok-trigger="l4xncog">Give Feedback</Button>
       <OverviewScreen />
     </ThemeProvider>
   </ApolloProvider>
