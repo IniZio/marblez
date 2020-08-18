@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useQuery } from "react-apollo";
-import { SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button, Skeleton, IconButton, ButtonGroup, Checkbox } from '@chakra-ui/core';
+import { SimpleGrid, Box, InputGroup, InputLeftElement, Input, Icon, Flex, useToast, Tooltip, Button, Skeleton, IconButton, ButtonGroup, Checkbox, Heading } from '@chakra-ui/core';
 import gql from 'graphql-tag';
 
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
@@ -60,6 +60,14 @@ function Overview() {
     return data.orders
       .filter(order => includeUnpaid || order.paid);
   }, [data, includeUnpaid]);
+  const filteredNewOrders = useMemo(
+    () => filteredOrders.filter(order => !order.printed),
+    [filteredOrders]
+  );
+  const filteredExistingOrders = useMemo(
+    () => filteredOrders.filter(order => order.printed),
+    [filteredOrders]
+  );
 
   const previousPaidOrdersRef = useRef(paidOrders);
   const previousPickupDateRef = useRef(pickupDate);
@@ -170,13 +178,35 @@ function Overview() {
           <Button mb={[3, 0]} leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
           <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
         </ButtonGroup>
-          <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
-            {(loading && !autoReload) ? (
-              [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
-            ) : (
-              filteredOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
-            )}
-          </SimpleGrid>
+          {(loading && !autoReload) ? (
+            [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
+          ) : (
+            <>
+              {filteredNewOrders.length > 0 && (
+                <Box p={3} border="1px solid green">
+                  <Heading my={3}>急單</Heading>
+                    <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
+                      {(
+                        filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
+                      )}
+                    </SimpleGrid>
+                </Box>
+              )}
+
+              {filteredExistingOrders.length > 0 && (
+                <Box p={3}>
+                  <Heading my={3}>舊單</Heading>
+                  <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
+                    {(loading && !autoReload) ? (
+                      [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
+                    ) : (
+                      filteredExistingOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
+                    )}
+                  </SimpleGrid>
+                </Box>
+              )}
+            </>
+          )}
       </Box>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
       <OrderStats display={['none', 'none', 'block', 'block']} />
