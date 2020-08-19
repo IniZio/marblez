@@ -70,7 +70,7 @@ function lineIf(o, fields, opt?: any) {
         return o[f].replace(/\([^(\))]*\)/g, '')
       }
 
-      if (f === 'decorations') {
+      if (f === 'decorations' || f === 'toppings') {
         return o[f].map(v => v.replace(/\([^(\))]*\)/g, ''))
       }
       return o[f]

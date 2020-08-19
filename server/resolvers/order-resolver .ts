@@ -60,6 +60,7 @@ const rowToOrder = (row: any[], index: any): Order => {
         }
         break;
       case 'decorations':
+      case 'toppings':
         order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
         break;
       case 'printed':
@@ -97,6 +98,7 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[]) => {
         value = format(value as any, 'M/d')
         break;
       case 'decorations':
+      case 'toppings':
         value = (value as string[]).filter(Boolean).join(', ')
         break;
       default:

@@ -45,6 +45,14 @@ export class Order {
 
   @Field({ nullable: true })
   @Property({ required: true })
+  inner_taste?: string;
+
+  @Field({ nullable: true })
+  @Property({ required: true })
+  bottom_taste?: string;
+
+  @Field({ nullable: true })
+  @Property({ required: true })
   size?: string;
 
   @Field({ nullable: true })
@@ -56,9 +64,15 @@ export class Order {
   @Field({ nullable: true })
   @Property({ required: true })
   sentence?: string;
+  @Field({ nullable: true })
+  @Property({ required: true })
+  paid_sentence?: string;
   @Field(() => [String], { nullable: true })
   @Property({ required: true })
   decorations?: string[];
+  @Field(() => [String], { nullable: true })
+  @Property({ required: true })
+  toppings?: string[];
   @Field({ nullable: true })
   @Property({ required: true })
   social_name?: string;

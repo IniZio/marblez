@@ -33,6 +33,12 @@ export class OrderInput {
   taste?: string;
 
   @Field({ nullable: true })
+  inner_taste?: string;
+
+  @Field({ nullable: true })
+  bottom_taste?: string;
+
+  @Field({ nullable: true })
   size?: string;
 
   @Field({ nullable: true })
@@ -41,8 +47,12 @@ export class OrderInput {
   color?: string;
   @Field({ nullable: true })
   sentence?: string;
+  @Field({ nullable: true })
+  paid_sentence?: string;
   @Field(() => [String], { nullable: true })
   decorations?: string[];
+  @Field(() => [String], { nullable: true })
+  toppings?: string[];
   @Field({ nullable: true })
   social_name?: string;
   @Field({ nullable: true })
