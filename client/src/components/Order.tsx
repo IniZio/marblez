@@ -30,7 +30,7 @@ function printPDF (domElement) {
         const imgData = canvas.toDataURL('image/png');
         // downloadURI(imgData, 'wtf.png');
         const pdf = new jsPdf('p', 'px', [domElement.clientHeight, domElement.clientWidth]);
-        const imgProps= pdf.getImageProperties(imgData);
+        const imgProps= (pdf as any).getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);

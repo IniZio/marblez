@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import {format, addDays, isValid, parse, isDate} from 'date-fns'
-import { IconButton, Flex, Editable, EditablePreview, EditableInput, Input } from '@chakra-ui/core';
+import { IconButton, Flex, Editable, EditablePreview, EditableInput, Input, BoxProps } from '@chakra-ui/core';
 import InputMask from 'react-input-mask';
 
-export interface DatePickerProps {
+export interface DatePickerProps extends BoxProps {
+  id?: string;
+  name?: string;
   value?: Date;
   onChange?: (e: any) => any;
   onValue?: (date: Date) => any;
@@ -13,7 +15,6 @@ export interface DatePickerProps {
 const valueToDate = (value: any) => isDate(value) ? value : new Date(value);
 
 function DatePicker({value = new Date(), onChange, onValue, id, name, withArrows = true, ...props}: DatePickerProps) {
-  console.log(value); 
   const [date, setDate] = useState(format(valueToDate(value), 'MM/dd/yyyy'));
   useEffect(() => { setDate(format(valueToDate(value), 'MM/dd/yyyy')); }, [value])
   const _onChange = useCallback((e) => {

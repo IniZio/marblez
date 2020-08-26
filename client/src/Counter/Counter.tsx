@@ -29,7 +29,6 @@ const Counter: FC = () => {
     <>
       <h1>Counter:</h1>
       <Button>chak</Button>
-      {MAGIC}
       <h2>{loading ? "Loading..." : JSON.stringify(data)}</h2>
       <IncrementButton />
       <DecrementButton />

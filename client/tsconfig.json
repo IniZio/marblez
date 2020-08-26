@@ -1,5 +1,6 @@
 {
   "extends": "../tsconfig.json",
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
   "compilerOptions": {
     "target": "es2017",
     "module": "esnext",
@@ -9,6 +10,13 @@
     "esModuleInterop": true,
     "jsx": "react",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "baseUrl": "./",
+    "paths": {
+      "*" : ["@types/*"]
+    }
   }
 }

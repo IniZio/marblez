@@ -1,0 +1,493 @@
+{
+  "name": "Conversational (using React)",
+  "clusters": [
+    {
+      "id": "d68aae43c32e158b53068dcaeb6bed8e1e3b397216332af3f425013eae868ee2",
+      "name": "Introduction",
+      "nodes": [
+        {
+          "id": "3aa3016e2ff41e789df25dcca54faf95c7b62bc2f05de6e8f93418530e172b19",
+          "name": "Welcome to Tripetto!",
+          "nameVisible": true,
+          "description": "**A full-fledged form kit to rapidly create and deploy smart flowing forms and surveys. Drop the kit into your codebase to get everything you need. And be the single host of your own data.**\n\nThis example shows you how to use the editor and collector in your own projects and demonstrates some powerful features available in Tripetto (e.g. a visual form editor, smart flows, **markdown** *support*, extensibility and many, many more). Can't wait to implement Tripetto? Head over to our **[documentation](https://docs.tripetto.com/)**.\n\n🗨 *This demo setup shows the form editor on the left and the so-called collector on the right, running the form being built in the editor. All editing is realtime. Have fun!*"
+        }
+      ]
+    },
+    {
+      "id": "a96965d63b719ab125498b3a55bafa87a43f5ca44d380e8d348423692ce22573",
+      "name": "Piping",
+      "nodes": [
+        {
+          "id": "a41e7aee8c63dfe1159c17f9610b11228f8400281c59b31c2941e983f0168de9",
+          "name": "Smart flows (piping)",
+          "description": "Tripetto handles the piping of data anywhere in the form. Type your name in the input box below to see how this works.",
+          "block": { "type": "statement", "version": "0.0.0" }
+        },
+        {
+          "id": "6bb19d29b0a05b8fc37240916d3ec779f7cf469b986bd5d4e78e6d50a03e8b48",
+          "explanation": "You can use collected data *anywhere*. Yes, even in this help text, **@2dfc6a6947325ae704a80b579a321cf44dd980f1b3178ef1c518f76dec4b46d0**!",
+          "name": "👋 Hello there, @2dfc6a6947325ae704a80b579a321cf44dd980f1b3178ef1c518f76dec4b46d0!",
+          "nameVisible": true,
+          "placeholder": "What's your name?",
+          "slots": [
+            {
+              "id": "2dfc6a6947325ae704a80b579a321cf44dd980f1b3178ef1c518f76dec4b46d0",
+              "type": "text",
+              "kind": "static",
+              "reference": "value",
+              "label": "Text",
+              "alias": "NAME",
+              "required": true,
+              "transformation": "capitalize"
+            }
+          ],
+          "block": { "type": "tripetto-block-text", "version": "1.0.13-11" }
+        }
+      ]
+    },
+    {
+      "id": "1ddd78d139f960c45651ae27d1b9b09d483c7904d1200e44352ae8ef70ef2f6c",
+      "name": "Logic",
+      "nodes": [
+        {
+          "id": "7720412dd05b3288b6e7c45168ee40e6b5a83fca09dc151417138d6b5a62e946",
+          "name": "Sound logic for creating conversations",
+          "description": "We believe good forms are smart forms. They should flow like conversations. But those only really work with sound logic. That's where Tripetto comes in.",
+          "block": { "type": "statement", "version": "0.0.0" }
+        },
+        {
+          "id": "042817650b9d54643faa0723741a694ef84bbc006cd49133cfa48dce0eed847b",
+          "name": "What would you like to learn about Tripetto, @2dfc6a6947325ae704a80b579a321cf44dd980f1b3178ef1c518f76dec4b46d0?",
+          "description": "Select your topics from the list below. We suggest selecting more than one for the optimal experience 😉.",
+          "slots": [
+            {
+              "id": "95711e69a444af626661e81b79a98ae8cf828c38c7a2e12444cafd8c532a9cea",
+              "type": "boolean",
+              "kind": "dynamic",
+              "reference": "d00ad4fd510ca9cae0ae0aa1cc422f078acbe7c018371b457844846aac59e330",
+              "sequence": 0,
+              "label": "Choice",
+              "name": "Visual editor for form creation",
+              "pipable": {
+                "group": "Choice",
+                "label": "Choice",
+                "template": "name",
+                "alias": "TOPICS"
+              }
+            },
+            {
+              "id": "76b75920e70951325f114323776e03cef090b02c9f9ed2ede129ae2258ca8e9c",
+              "type": "boolean",
+              "kind": "dynamic",
+              "reference": "da6f087e92ff343778935c6209add6776b2c3ff6e13722651eb9a0056eb86a9f",
+              "sequence": 1,
+              "label": "Choice",
+              "name": "Collector for response gathering",
+              "pipable": {
+                "group": "Choice",
+                "label": "Choice",
+                "template": "name",
+                "alias": "TOPICS"
+              }
+            },
+            {
+              "id": "0b2c280cb6bdb9d59a80a9045af821d7a4f25dbbd6c09dda31b7e583d7a389f4",
+              "type": "boolean",
+              "kind": "dynamic",
+              "reference": "8f8306cc7e7d452fe74ead3c0376422cb35ad4389da7772321f5bce542b4c3b7",
+              "sequence": 2,
+              "label": "Choice",
+              "name": "Custom building blocks",
+              "pipable": {
+                "group": "Choice",
+                "label": "Choice",
+                "template": "name",
+                "alias": "TOPICS"
+              }
+            }
+          ],
+          "block": {
+            "type": "multiple-choice",
+            "version": "0.0.0",
+            "choices": [
+              {
+                "id": "d00ad4fd510ca9cae0ae0aa1cc422f078acbe7c018371b457844846aac59e330",
+                "name": "Visual editor for form creation"
+              },
+              {
+                "id": "da6f087e92ff343778935c6209add6776b2c3ff6e13722651eb9a0056eb86a9f",
+                "name": "Collector for response gathering"
+              },
+              {
+                "id": "8f8306cc7e7d452fe74ead3c0376422cb35ad4389da7772321f5bce542b4c3b7",
+                "name": "Custom building blocks"
+              }
+            ],
+            "multiple": true,
+            "alias": "TOPICS"
+          }
+        }
+      ],
+      "branches": [
+        {
+          "id": "4726e8946d0ad76a5e4e4ffeb536d84044964a1bbd09180311c34b5ef17e9991",
+          "name": "Editor topic",
+          "clusters": [
+            {
+              "id": "c1ac720fd8f00df0c5bdaff08e63caba213421ebee9b869bd46c2523a80e8107",
+              "nodes": [
+                {
+                  "id": "45f32e70b67ec511532b3d7ff2e9c647d17289da7ccf7ceaa29c653ac1d2874e",
+                  "name": "Visual editor for form creation",
+                  "nameVisible": true,
+                  "description": "The visual editor is for creating forms with clever flows on a self-organizing drawing board. It visualizes your form's flow and structure and helps you use all the right logic for skipping questions, branching the flow and much more.\n\n👨‍💻 **[Start integrating the visual editor](https://docs.tripetto.com/guide/editor/)**\n\n🗨 *You see this information because you've selected the topic '**@b38068ed5b34cf73b98a43977c2eadb7b8b64cb00a6ed006db016badc0f3d583**' just now.*"
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "id": "e3491b0a3e341e8cca4b764b28b9ce753dd5209813acb660fb563a6771e9153d",
+              "block": {
+                "choice": "d00ad4fd510ca9cae0ae0aa1cc422f078acbe7c018371b457844846aac59e330",
+                "type": "multiple-choice",
+                "version": "0.0.0",
+                "node": "042817650b9d54643faa0723741a694ef84bbc006cd49133cfa48dce0eed847b",
+                "slot": "95711e69a444af626661e81b79a98ae8cf828c38c7a2e12444cafd8c532a9cea"
+              }
+            }
+          ]
+        },
+        {
+          "id": "de79ef15c0b3bda1dcc43e84a496b770bb978391c3969f06279554822600be76",
+          "name": "Collector topic",
+          "clusters": [
+            {
+              "id": "d0c60cab0aa6ef95a39130af543d4cc00d8e43eb2fd88f77b3603969d34ec193",
+              "nodes": [
+                {
+                  "id": "49254d29ef6d79a69dcd5528b0413df55498dc5a78f2b572df5eb59b288bdf54",
+                  "name": "Collector for response gathering",
+                  "nameVisible": true,
+                  "description": "The collector library is for form deployment and response collection in your projects. It runs your forms built with the editor, handling all logic and response delivery. Also, it's the front-end for your forms, and infinitely customizable.\n\n👨‍💻 **[Start implementing your own collector](https://docs.tripetto.com/guide/collector/)**\n\n🗨 *You see this information because you've selected the topic '**@b38068ed5b34cf73b98a43977c2eadb7b8b64cb00a6ed006db016badc0f3d583**' just now.*"
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "id": "08e4f469ad6ae032bc96dcbf54242e5762e1a731bed3429d77ac1d2723c1d6eb",
+              "block": {
+                "choice": "da6f087e92ff343778935c6209add6776b2c3ff6e13722651eb9a0056eb86a9f",
+                "type": "multiple-choice",
+                "version": "0.0.0",
+                "node": "042817650b9d54643faa0723741a694ef84bbc006cd49133cfa48dce0eed847b",
+                "slot": "76b75920e70951325f114323776e03cef090b02c9f9ed2ede129ae2258ca8e9c"
+              }
+            }
+          ]
+        },
+        {
+          "id": "6af61dfce89e99ec7a1d3707821f5997725ae10a83c31b1266dfa2ea81679fd1",
+          "name": "Blocks topic",
+          "clusters": [
+            {
+              "id": "c48b9526c95d904c1b8cb609da72ad485b47f4e7c4a2f697b76390c6947309ee",
+              "nodes": [
+                {
+                  "id": "c0ced66783813d02ecb9addd0cc662cbdba57e2ea29884ee58996b6fd14f47ae",
+                  "name": "SDK for developing form building blocks",
+                  "nameVisible": true,
+                  "description": "The TypeScript SDK is for developing customized form building blocks to extend Tripetto far beyond its default capabilities. With custom blocks you can hook our form kit up to anything, making your forms ever more sophisticated.\n\n👨‍💻 **[Start developing your own building blocks](https://docs.tripetto.com/guide/blocks/)**\n\n🗨 *You see this information because you've selected the topic '**@b38068ed5b34cf73b98a43977c2eadb7b8b64cb00a6ed006db016badc0f3d583**' just now.*"
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "id": "6a899533825ff35b5987bc189d044c90001931fd9f4cac996cec7266e28911ea",
+              "block": {
+                "choice": "8f8306cc7e7d452fe74ead3c0376422cb35ad4389da7772321f5bce542b4c3b7",
+                "type": "multiple-choice",
+                "version": "0.0.0",
+                "node": "042817650b9d54643faa0723741a694ef84bbc006cd49133cfa48dce0eed847b",
+                "slot": "0b2c280cb6bdb9d59a80a9045af821d7a4f25dbbd6c09dda31b7e583d7a389f4"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "690de751b9ea3f5d4dd7ad2dd5a01fb18a7be007b47f1ba363084683bc4f503b",
+      "name": "Iterations",
+      "nodes": [
+        {
+          "id": "fdf028d6dd8917181e2b3332fd35162063f45c77d0f524bcf6dd02940a79b163",
+          "name": "Clever iterations",
+          "description": "You can also iterate a certain set of questions based on previously given answers. For example, to dig deeper into selected topics. In this case **@b38068ed5b34cf73b98a43977c2eadb7b8b64cb00a6ed006db016badc0f3d583**.\n\n🗨 *If you checked one or more items earlier, you'll now be taken through the same set of questions for each selected topic.*",
+          "block": { "type": "statement", "version": "0.0.0" }
+        }
+      ],
+      "branches": [
+        {
+          "id": "18cdd71e3f3b32f640e2155045fd61ce1544c3b407bd4d696db509082c684035",
+          "name": "Topics",
+          "clusters": [
+            {
+              "id": "2f40a06957aa2bf56ebdcfbef9561a0ec60ac37d2f619fccb20a0948951507f6",
+              "nodes": [
+                {
+                  "id": "f2b5c86735df695f5c361279729d3867a512ce46b04b2ba1438dff4e8ad92513",
+                  "name": "How do you rate the information about _@b38068ed5b34cf73b98a43977c2eadb7b8b64cb00a6ed006db016badc0f3d583_?",
+                  "slots": [
+                    {
+                      "id": "8fb103ed029c4d5924f4497f1ed732f666c6b7640d60946cdaa1a9960d9ee91e",
+                      "type": "number",
+                      "kind": "static",
+                      "reference": "rating",
+                      "label": "Rating"
+                    }
+                  ],
+                  "block": { "type": "rating", "version": "0.0.0" }
+                }
+              ],
+              "branches": [
+                {
+                  "id": "7e36a151e6d314bee0a2a71d9d784b3216e99b738c344aae158f3c306723320f",
+                  "clusters": [
+                    {
+                      "id": "e03c66353a698942f617a18052760f22ef4ef885d989f0bf50b5c190b4751952",
+                      "nodes": [
+                        {
+                          "id": "2fc2031fb8900a1f1658823a607928caf9e7acca92904407e2320723ab1c673e",
+                          "explanation": "This is a demo. No data is actually sent. If you really want to share something with us, contact us **[here](https://tripetto.com/contact/)**.",
+                          "name": "Ouch, what can we do to improve this?",
+                          "nameVisible": true,
+                          "description": "Could you tell us what we can do to improve the information about the '@b38068ed5b34cf73b98a43977c2eadb7b8b64cb00a6ed006db016badc0f3d583'?",
+                          "slots": [
+                            {
+                              "id": "907c15c8f2914247eef2911e320d6b81ca3aa986d3c87729949b1d2d68a3e4de",
+                              "type": "text",
+                              "kind": "static",
+                              "reference": "value",
+                              "label": "Multi-line text",
+                              "required": true
+                            }
+                          ],
+                          "block": {
+                            "type": "tripetto-block-textarea",
+                            "version": "1.0.12-8"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "conditions": [
+                    {
+                      "id": "eb5e998918174abc74003845fe268ecb154447a581cb886c3fa96fc6eeb9b7e9",
+                      "block": {
+                        "type": "rating",
+                        "version": "0.0.0",
+                        "node": "f2b5c86735df695f5c361279729d3867a512ce46b04b2ba1438dff4e8ad92513",
+                        "stars": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "707850815f08e59cb39bc04df051d6d7671a409005e84900838ca5590bb8f8b3",
+                  "clusters": [
+                    {
+                      "id": "fcfab806567c6c1ae42a4b02e79917a445544f3cdd2bd06a0b9a2aaf994e0a0c",
+                      "nodes": [
+                        {
+                          "id": "fdb7c33dae3fbd84f5785878e52ef3c871e7c36d2812fe809cadd8b1404803d3",
+                          "explanation": "This is a demo. No data is actually sent. If you really want to share something with us, contact us **[here](https://tripetto.com/contact/)**.",
+                          "name": "What can we do to improve this?",
+                          "nameVisible": true,
+                          "description": "Could you tell us what we can do to improve the information about the '@b38068ed5b34cf73b98a43977c2eadb7b8b64cb00a6ed006db016badc0f3d583'?",
+                          "slots": [
+                            {
+                              "id": "65d855cf11f2e1da73098401e71e7e93e1e4ae0c03387fc1df553f1b117be55c",
+                              "type": "text",
+                              "kind": "static",
+                              "reference": "value",
+                              "label": "Multi-line text"
+                            }
+                          ],
+                          "block": {
+                            "type": "tripetto-block-textarea",
+                            "version": "1.0.12-8"
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "conditions": [
+                    {
+                      "id": "a82dac94196571cf32cb5d91c907199bf61813ba34565a8de06d6b88ae575866",
+                      "block": {
+                        "type": "rating",
+                        "version": "0.0.0",
+                        "node": "f2b5c86735df695f5c361279729d3867a512ce46b04b2ba1438dff4e8ad92513",
+                        "stars": 2
+                      }
+                    },
+                    {
+                      "id": "cda9fe10ce65725d9e3f2635d99679e85503a90c58ece10e778303242699f7e5",
+                      "block": {
+                        "type": "rating",
+                        "version": "0.0.0",
+                        "node": "f2b5c86735df695f5c361279729d3867a512ce46b04b2ba1438dff4e8ad92513",
+                        "stars": 3
+                      }
+                    },
+                    {
+                      "id": "0117888b2e266f63c0380afaf0707bcd1098744b1b8ec0859537c82616e438ba",
+                      "block": {
+                        "type": "rating",
+                        "version": "0.0.0",
+                        "node": "f2b5c86735df695f5c361279729d3867a512ce46b04b2ba1438dff4e8ad92513",
+                        "stars": 4
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "id": "e8f226db0af4d80a400c18e428c9e9d1a4c3e54f5db67ea8b36699591e05ca0a",
+              "block": {
+                "choice": "d00ad4fd510ca9cae0ae0aa1cc422f078acbe7c018371b457844846aac59e330",
+                "type": "multiple-choice",
+                "version": "0.0.0",
+                "node": "042817650b9d54643faa0723741a694ef84bbc006cd49133cfa48dce0eed847b",
+                "slot": "95711e69a444af626661e81b79a98ae8cf828c38c7a2e12444cafd8c532a9cea"
+              }
+            },
+            {
+              "id": "86e35a4dca87ac3dc081335ee26b43b6360f9b8b0e183ccb453f1415f03e5ffc",
+              "block": {
+                "choice": "da6f087e92ff343778935c6209add6776b2c3ff6e13722651eb9a0056eb86a9f",
+                "type": "multiple-choice",
+                "version": "0.0.0",
+                "node": "042817650b9d54643faa0723741a694ef84bbc006cd49133cfa48dce0eed847b",
+                "slot": "76b75920e70951325f114323776e03cef090b02c9f9ed2ede129ae2258ca8e9c"
+              }
+            },
+            {
+              "id": "7a6cfd159c417618ddb9454c256ed300dde67950cbcf5e58ddd95c4dc40344a8",
+              "block": {
+                "choice": "8f8306cc7e7d452fe74ead3c0376422cb35ad4389da7772321f5bce542b4c3b7",
+                "type": "multiple-choice",
+                "version": "0.0.0",
+                "node": "042817650b9d54643faa0723741a694ef84bbc006cd49133cfa48dce0eed847b",
+                "slot": "0b2c280cb6bdb9d59a80a9045af821d7a4f25dbbd6c09dda31b7e583d7a389f4"
+              }
+            }
+          ],
+          "culling": "each"
+        }
+      ]
+    },
+    {
+      "id": "c364b30c39d3ce04bd9549683a5527231115bc139d2f71f3bba4509e37c4d4ad",
+      "name": "Conversion",
+      "nodes": [
+        {
+          "id": "2efaf33dbe2394dc1c7dc85e158460a3eafebc344fe477e5960b74e33dbcbb98",
+          "name": "Get started with Tripetto!",
+          "description": "So @2dfc6a6947325ae704a80b579a321cf44dd980f1b3178ef1c518f76dec4b46d0, do you fancy using the Tripetto form kit?",
+          "slots": [
+            {
+              "id": "63a3b34c34a89a3373ef46257101b534c7b4aeddec919e935195e6664602c979",
+              "type": "string",
+              "kind": "static",
+              "reference": "answer",
+              "label": "Answer"
+            }
+          ],
+          "block": { "type": "yes-no", "version": "0.0.0" }
+        }
+      ],
+      "branches": [
+        {
+          "id": "c9c2c6cf320c1b81a6e4eec166f2c2b718a43d17ebddd515567dcb14d9e19961",
+          "name": "🙂",
+          "clusters": [
+            {
+              "id": "11846c8513d6ff97d05350573b2a5ae7ea4a28fbbbc2f1685a595613cf95f72c",
+              "nodes": [
+                {
+                  "id": "84442bf92fcd4b13c5c1cd60082532b9aac3ac1af4dfda98a5d7381827287fe7",
+                  "name": "👏 Sweet!",
+                  "nameVisible": true,
+                  "description": "Start with reading our docs or dive into one of our example projects!\n\n📘 You can find all the stuff you need **[here](https://docs.tripetto.com/)**.\n\n👨‍💻 Or take a peek under the hood of this **[demo](https://gitlab.com/tripetto/examples/react-conversational)**. You may use the code of this example free of charge for your own collector. Have a blast!"
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "id": "9c1f230765926a0f086b02b846e4c246c17a15e4aa033d878c0a74e33a6a01d0",
+              "block": {
+                "type": "yes-no:yes",
+                "version": "0.0.0",
+                "node": "2efaf33dbe2394dc1c7dc85e158460a3eafebc344fe477e5960b74e33dbcbb98",
+                "slot": "63a3b34c34a89a3373ef46257101b534c7b4aeddec919e935195e6664602c979"
+              }
+            }
+          ]
+        },
+        {
+          "id": "74050a9046603dbea59af40d4d5310e06ab46eceaa1f37cc7dac5375712e5ac5",
+          "name": "😢",
+          "clusters": [
+            {
+              "id": "fef30e046a019155e757f20f7652fffdefdae2636a8df8a58a77f7efe31bd171",
+              "nodes": [
+                {
+                  "id": "ca0760c6b0e57c7898833d4e226168b828f0d60ce9a3c4796dfa049500db6d39",
+                  "explanation": "This is a demo. No data is actually sent. If you really want to share something with us, contact us **[here](https://tripetto.com/contact/)**.",
+                  "name": "😢 We're sorry Tripetto isn't right for you.",
+                  "nameVisible": true,
+                  "description": "Could you elaborate a bit on what you feel is wrong? Are you missing certain features? What can we do to make it better?",
+                  "slots": [
+                    {
+                      "id": "8dfff7e0a838709d0d0b5b76765faa077cd23604053f301a0354d12deb07c5a5",
+                      "type": "text",
+                      "kind": "static",
+                      "reference": "value",
+                      "label": "Multi-line text",
+                      "required": true
+                    }
+                  ],
+                  "block": {
+                    "type": "tripetto-block-textarea",
+                    "version": "1.0.12-8"
+                  }
+                }
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "id": "a7a7ad883defbeee8d44aa484fb45254b93c442cd9ec6dce277e0ffedb8f8bcf",
+              "block": {
+                "type": "yes-no:no",
+                "version": "0.0.0",
+                "node": "2efaf33dbe2394dc1c7dc85e158460a3eafebc344fe477e5960b74e33dbcbb98",
+                "slot": "63a3b34c34a89a3373ef46257101b534c7b4aeddec919e935195e6664602c979"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "editor": { "name": "tripetto", "version": "0.4.13-63" },
+  "builder": { "name": "tripetto", "version": "0.4.13-63" }
+}

@@ -36,8 +36,8 @@ class CopyToClipboard extends React.PureComponent<CopyToClipboardProps> {
     }
 
     // Bypass onClick if it was present
-    if (typeof elem?.props?.onClick === 'function') {
-      elem.props.onClick(event);
+    if (typeof (elem as any)?.props?.onClick === 'function') {
+      (elem as any).props.onClick(event);
     }
   };
 
@@ -52,7 +52,7 @@ class CopyToClipboard extends React.PureComponent<CopyToClipboardProps> {
     } = this.props;
     const elem = React.Children.only(children);
 
-    return React.cloneElement(elem, {...props, onClick: this.onClick});
+    return React.cloneElement(elem as any, {...props, onClick: this.onClick});
   }
 }
 
