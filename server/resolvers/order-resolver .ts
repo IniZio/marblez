@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
-import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format } from 'date-fns';
+import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth } from 'date-fns';
 import agent from 'superagent';
 
 import { Order } from "../entities/order";
@@ -145,12 +145,38 @@ export class OrderResolver {
      await pubsub.publish(PubSubEvent.NOTIFICATION, payload.toObject());
      return payload;
   }
-  
+
   @Query(returns => [Order], { nullable: true })
-  async orders(
-    @Arg("pickupDate", type => Date, { nullable: true }) pickupDate?: Date,
-    @Arg("keyword", type => String, { nullable: true }) _keyword?: string,
+  async ordersOfMonth(
+    @Arg("pickupMonth", type => Number, { nullable: true }) pickupMonth?: number,
+    @Arg("keyword", type => String, { nullable: true }) keyword?: string,
   ) {
+    return this._orders({
+      pickupMonth,
+      keyword,
+    })
+  }
+
+  @Query(returns => [Order], { nullable: true })
+  async ordersOfDay(
+    @Arg("pickupDate", type => Date, { nullable: true }) pickupDate?: Date,
+    @Arg("keyword", type => String, { nullable: true }) keyword?: string,
+  ) {
+    return this._orders({
+      pickupDate,
+      keyword,
+    })
+  }
+  
+  async _orders({
+    pickupDate,
+    pickupMonth,
+    keyword: _keyword,
+  }: {
+    pickupDate?: Date;
+    pickupMonth?: number;
+    keyword?: string;
+  }) {
     const records = await (await googleSheet.init()).getAllRows()
     const orders = records.map(rowToOrder);
 
@@ -158,13 +184,14 @@ export class OrderResolver {
 
     return orders
     .filter(order => !pickupDate || isSameDay(order.date, addHours(pickupDate, 8)))
+    .filter(order => !pickupMonth || getMonth(order.date) === pickupMonth)
     .filter(order => !keyword || order.phone?.includes(keyword) || order.name?.includes(keyword) || order.social_name?.includes(keyword))
     // Sort from latest pickup date
     .sort((a, b) => compareDesc(a.date, b.date))
     // And sort from earliest time
     .sort((a, b) => a.time?.localeCompare(b.time))
     .sort((a, b) => (Number(a.paid) || -1) - (Number(b.paid) || -1))
-    .slice(0, 100);
+    .slice(0, keyword ? 100 : undefined);
   }
 
   @Query(returns => String)

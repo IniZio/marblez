@@ -21,7 +21,7 @@ function OrderStats(props: StackProps) {
     query ordersOfToday(
       $pickupDate: DateTime
     ) {
-      orders(
+      ordersOfDay(
         pickupDate: $pickupDate
       ) {
         paid
@@ -36,7 +36,7 @@ function OrderStats(props: StackProps) {
     query ordersOfTomorrow(
       $pickupDate: DateTime
     ) {
-      orders(
+      ordersOfDay(
         pickupDate: $pickupDate
       ) {
         paid
@@ -52,11 +52,11 @@ function OrderStats(props: StackProps) {
     <Stack spacing={2} p={4} {...props}>
       <StatItem
         label="No. orders of today"
-        number={ordersOfToday?.orders?.filter(o => o.paid).length}
+        number={ordersOfToday?.ordersOfDay?.filter(o => o.paid).length}
       />
       <StatItem
         label="No. orders of tomorrow"
-        number={ordersOfTomorrow?.orders?.filter(o => o.paid).length}
+        number={ordersOfTomorrow?.ordersOfDay?.filter(o => o.paid).length}
       />
     </Stack>
   )

@@ -95,24 +95,26 @@ const StyledBox = styled(Box)`
   }
 `;
 
+export const order2Lines = (order) => [
+  lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
+  lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
+  lineIf(order, ['cake', 'size'], {prefix: '🎂 '}),
+  lineIf(order, ['decorations', 'toppings'], {prefix: '📿 '}),
+  lineIf(order, ['shape', 'color'], {prefix: '‎‎‎⠀⠀ '}),
+  lineIf(order, ['taste', 'letter'], {prefix: '‎‎⠀⠀ '}),
+  lineIf(order, ['inner_taste', 'bottom_taste'], {prefix: '‎‎⠀⠀ '}),
+  lineIf(order, ['sentence'], {prefix: '✍️️ '}),
+  lineIf(order, ['paid_sentence'], {prefix: '朱古力牌 ✍️️ '}),
+  lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '}),
+  lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
+  lineIf(order, ['remarks']),
+].filter(Boolean)
+
 function Order({ order, onUpdate = () => {} }: OrderProps) {
   const [updateOrder] = useMutation(UPDATE_ORDER);
   const screenshotRef = useRef();
   
-  const lines = useMemo(() => [
-    lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
-    lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
-    lineIf(order, ['cake', 'size'], {prefix: '🎂 '}),
-    lineIf(order, ['decorations', 'toppings'], {prefix: '📿 '}),
-    lineIf(order, ['shape', 'color'], {prefix: '‎‎‎⠀⠀ '}),
-    lineIf(order, ['taste', 'letter'], {prefix: '‎‎⠀⠀ '}),
-    lineIf(order, ['inner_taste', 'bottom_taste'], {prefix: '‎‎⠀⠀ '}),
-    lineIf(order, ['sentence'], {prefix: '✍️️ '}),
-    lineIf(order, ['paid_sentence'], {prefix: '朱古力牌 ✍️️ '}),
-    lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '}),
-    lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
-    lineIf(order, ['remarks']),
-  ].filter(Boolean), [order]);
+  const lines = useMemo(() => order2Lines(order), [order]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef<HTMLInputElement>();

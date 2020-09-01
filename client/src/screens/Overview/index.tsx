@@ -28,7 +28,7 @@ function Overview() {
       $pickupDate: DateTime
       $keyword: String
     ) {
-      orders(
+      ordersOfDay(
         pickupDate: $pickupDate
         keyword: $keyword
       ) {
@@ -44,20 +44,20 @@ function Overview() {
   });
 
   const paidOrders = useMemo(() => {
-    if (!data || !data.orders) {
+    if (!data || !data.ordersOfDay) {
       return [];
     }
 
-    return data.orders
+    return data.ordersOfDay
       .filter(order => order.paid);
   }, [data]);
 
   const filteredOrders = useMemo(() => {
-    if (!data || !data.orders) {
+    if (!data || !data.ordersOfDay) {
       return [];
     }
 
-    return data.orders
+    return data.ordersOfDay
       .filter(order => includeUnpaid || order.paid);
   }, [data, includeUnpaid]);
   const filteredNewOrders = useMemo(
@@ -164,7 +164,7 @@ function Overview() {
   //     }
   //   }
   // );
-  
+
   return (
     <Flex>
       <Box padding={5} flex={1}>
