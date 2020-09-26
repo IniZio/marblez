@@ -178,6 +178,7 @@ function Overview() {
           <Button mb={[3, 0]} leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
           <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
         </ButtonGroup>
+        <OrderStats />
           {(loading && !autoReload) ? (
             [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
           ) : (
@@ -209,7 +210,6 @@ function Overview() {
           )}
       </Box>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
-      <OrderStats display={['none', 'none', 'block', 'block']} />
     </Flex>
   );
 }
