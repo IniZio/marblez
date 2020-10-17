@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import Calendar from '@toast-ui/react-calendar';
 import 'tui-calendar/dist/tui-calendar.css';
 import { addDays } from 'date-fns/esm';
-import { addHours, parse } from 'date-fns';
+import { addHours, isValid, parse, parseISO } from 'date-fns';
 import { Flex, Box } from '@chakra-ui/core';
 import DatePicker from './DatePicker';
 import { useQuery } from 'react-apollo';
@@ -12,6 +12,10 @@ import { order2Lines } from './Order';
 import { Global, css } from '@emotion/core';
 
 const today = new Date();
+
+function isValidDate(d) {
+  return d instanceof Date && !isNaN(d);
+}
 
 function OrdersCalendar() {
   const [pickupDate, setPickupDate] = React.useState<Date>(new Date());  
@@ -51,7 +55,7 @@ function OrdersCalendar() {
         return []
       }
 
-      return ordersOfMonth.map((order, index) => ({
+      return ordersOfMonth.filter(order => isValidDate(order.date)).map((order, index) => ({
         id: index,
         calendarId: '0',
         title: order.cake,
