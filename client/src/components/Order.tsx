@@ -110,6 +110,17 @@ export const order2Lines = (order) => [
   lineIf(order, ['remarks']),
 ].filter(Boolean)
 
+function downloadPDFFromGoogle(index) {
+  const urlPopup = window.open('', '_blank', 'width=200,height=100')
+  
+  fetch(`https://script.google.com/macros/s/AKfycbwg0O8hDydyA_qU8W1M91Wa5J_YeclQY9ZNZfmmdIu2Mfj820I/exec?index=${index}`)
+    .then(urlResponse => urlResponse.json().then(json => {
+      if (urlPopup) {
+        urlPopup.location.href = json.url;
+      }
+    }))
+}
+
 function Order({ order, onUpdate = () => {} }: OrderProps) {
   const [updateOrder] = useMutation(UPDATE_ORDER);
   const screenshotRef = useRef();
@@ -121,7 +132,8 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
   const downloadPDF = React.useCallback(async (e) => {
     e.stopPropagation();
     e.preventDefault();
-    printPDF(screenshotRef.current);
+    // printPDF(screenshotRef.current);
+    downloadPDFFromGoogle(order?.index);
   }, [screenshotRef.current]);
 
   return (
