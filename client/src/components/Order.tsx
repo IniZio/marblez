@@ -132,8 +132,8 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
   const downloadPDF = React.useCallback(async (e) => {
     e.stopPropagation();
     e.preventDefault();
-    // printPDF(screenshotRef.current);
-    downloadPDFFromGoogle(order?.index);
+    printPDF(screenshotRef.current);
+    // downloadPDFFromGoogle(order?.index);
   }, [screenshotRef.current]);
 
   return (
