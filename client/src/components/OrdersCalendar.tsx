@@ -55,14 +55,31 @@ function OrdersCalendar() {
         return []
       }
 
-      return ordersOfMonth.filter(order => isValidDate(order.date)).map((order, index) => ({
+      console.log('=== ordesr of month',  ordersOfMonth.filter(order => order.date && isValidDate(new Date(order.date))).map(o => o.time.split('-')[0]?.trim()?.replace(/\D/g, '')))
+
+      return ordersOfMonth.filter(order => {
+        if (!(order.date && isValidDate(new Date(order.date)))) {
+          return false;
+        }
+
+        // try {
+        //   parse(order.time.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString();
+        //   parse(order.time.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString();
+        // } catch {
+        //   console.log(order.time)
+          
+        //   return false;
+        // }
+
+        return true;
+      ).map((order, index) => ({
         id: index,
         calendarId: '0',
         title: order.cake,
         category: 'time',
         dueDateClass: '',
-        start: parse(order.time.split('-')[0]?.trim()?.replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString(),
-        end: parse(order.time.split('-')[1]?.trim()?.replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString(),
+        start: parse(order.time.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString(),
+        end: parse(order.time.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString(),
         rawTime: order.time,
         body:  order2Lines(order).join('\n'),
       }))
