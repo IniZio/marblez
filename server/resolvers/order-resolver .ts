@@ -72,14 +72,26 @@ const rowToOrder = (row: any[], index: any): Order => {
           order[key] = undefined;
         }
         break;
+      case 'cake':
+      case 'shape':
+      case 'color':
+      case 'taste':
+      case 'letter':
+        order[key] = (order[key] as string)?.replace(/\([^(\))]*\)/g, '').trim();
+        break;
       default:
-        if (['cake', 'shape', 'color', 'taste', 'letter'].includes(key)) {
-          return order[key]?.replace(/\([^(\))]*\)/g, '');
-        }
         return order[key]
     }
   })
   return order;
+}
+
+const validateOrder = (order: Order): boolean => {
+  if (!order.cake) {
+    return false;
+  }
+
+  return true;
 }
 
 const orderToRow = (orderInput: OrderInput, prevRow: any[]) => {
@@ -101,10 +113,13 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[]) => {
       case 'toppings':
         value = (value as string[]).filter(Boolean).join(', ')
         break;
-      default:
-        if (['cake', 'shape', 'color', 'taste', 'letter'].includes(key)) {
-          value = (value as any)?.replace(/\([^(\))]*\)/g, '');
-        }
+      case 'cake':
+      case 'shape':
+      case 'color':
+      case 'taste':
+      case 'letter':
+        value = (value as string)?.replace(/\([^(\))]*\)/g, '').trim();
+        break;
     }
 
     let found;
@@ -178,7 +193,7 @@ export class OrderResolver {
     keyword?: string;
   }) {
     const records = await (await googleSheet.init()).getAllRows()
-    const orders = records.map(rowToOrder);
+    const orders = records.map(rowToOrder).filter(validateOrder);
 
     const keyword = _keyword?.replace(' ', '');
 
