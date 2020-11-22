@@ -1,6 +1,6 @@
 const ngrok = require('ngrok');
 
-const { PORT = '4000' }   = process.env;
+const { PORT = '1234' }   = process.env;
 
 (async () => {
   const url = await ngrok.connect(parseInt(PORT));

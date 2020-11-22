@@ -10,6 +10,7 @@ import { gql } from 'apollo-boost';
 import { FRAGMENT_ORDER } from '../apollo/fragments';
 import { order2Lines } from './Order';
 import { Global, css } from '@emotion/core';
+import {useMediaLayout} from 'use-media';
 
 const today = new Date();
 
@@ -55,8 +56,6 @@ function OrdersCalendar() {
         return []
       }
 
-      console.log('=== ordesr of month',  ordersOfMonth.filter(order => order.date && isValidDate(new Date(order.date))).map(o => o.time.split('-')[0]?.trim()?.replace(/\D/g, '')))
-
       return ordersOfMonth.filter(order => {
         if (!(order.date && isValidDate(new Date(order.date)))) {
           return false;
@@ -86,6 +85,8 @@ function OrdersCalendar() {
     }, 
     [ordersOfMonth]
   )
+
+  const showFullCalendar = useMediaLayout({minWidth: '700px'});
   
   return (
     <Flex>
@@ -101,14 +102,14 @@ function OrdersCalendar() {
         <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
         <Calendar
           ref={calendarRef}
-          defaultView="month"
-          view="month"
+          defaultView="day"
+          view={showFullCalendar ? 'month' : 'day'}
           height="900px"
           calendars={[
             {
               id: '0',
               name: 'Order',
-              bgColor: '#9e5fff',
+              bgColor: '#transparent',
               borderColor: '#9e5fff'
             },
           ]}
@@ -119,7 +120,7 @@ function OrdersCalendar() {
             startDayOfWeek: 0
           }}
           schedules={ordersAsEvents}
-          // scheduleView
+          scheduleView={['time']}
           taskView={['task']}
           // template={{
           //   milestone(schedule) {
