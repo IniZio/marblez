@@ -1,16 +1,15 @@
-import React, { useMemo } from 'react';
+import { Box, Flex } from '@chakra-ui/react';
+import { css, Global } from '@emotion/react';
 import Calendar from '@toast-ui/react-calendar';
-import 'tui-calendar/dist/tui-calendar.css';
-import { addDays } from 'date-fns/esm';
-import { addHours, isValid, parse, parseISO } from 'date-fns';
-import { Flex, Box } from '@chakra-ui/core';
-import DatePicker from './DatePicker';
-import { useQuery } from 'react-apollo';
 import { gql } from 'apollo-boost';
+import { parse } from 'date-fns';
+import React, { useMemo } from 'react';
+import { useQuery } from 'react-apollo';
+import 'tui-calendar/dist/tui-calendar.css';
+import { useMediaLayout } from 'use-media';
 import { FRAGMENT_ORDER } from '../apollo/fragments';
+import DatePicker from './DatePicker';
 import { order2Lines } from './Order';
-import { Global, css } from '@emotion/core';
-import {useMediaLayout} from 'use-media';
 
 const today = new Date();
 
@@ -74,7 +73,7 @@ function OrdersCalendar() {
       ).map((order, index) => ({
         id: index,
         calendarId: '0',
-        title: order.cake,
+        title: `${order.cake} ${order.size}`,
         category: 'time',
         dueDateClass: '',
         start: parse(order.time.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString(),

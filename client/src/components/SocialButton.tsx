@@ -1,13 +1,12 @@
-import React, { useMemo, useCallback } from 'react';
-import { Box, useClipboard, Button, useToast, Tooltip, IconButton, IconProps } from '@chakra-ui/core';
-import { FaWhatsapp, FaClipboard, FaInstagram } from 'react-icons/fa';
-
+import { IconButton, Tooltip, useClipboard } from '@chakra-ui/react';
+import React, { ReactElement, useMemo } from 'react';
+import { FaClipboard, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 import { isMobile } from '../util/device';
-import { Icons } from '@chakra-ui/core/dist/theme/icons';
+
 
 export interface SocialButtonProps {
   text?: string;
-  icon?: Icons;
+  icon?: ReactElement;
   phone?: string;
   username?: string;
 }
@@ -25,7 +24,7 @@ function SocialButtonInstagram ({ username, icon }: SocialButtonProps) {
 
   return (
     <a href={href} target="_blank">
-      <IconButton icon={icon || FaInstagram} aria-label="View Instagram profile" />
+      <IconButton icon={icon || <FaInstagram />} aria-label="View Instagram profile" />
     </a>
   )
 }
@@ -51,7 +50,7 @@ function SocialButtonWhatsApp ({ text = '', icon, phone = '' }: SocialButtonProp
 
   return (
     <a href={href} target="_blank">
-      <IconButton icon={icon || FaWhatsapp} aria-label="Share on WhatsApp" />
+      <IconButton icon={icon || <FaWhatsapp />} aria-label="Share on WhatsApp" />
     </a>
   )
 }
@@ -61,7 +60,7 @@ function SocialButtonClipBoard({ text = '' }: SocialButtonProps) {
 
   return (
     <Tooltip aria-label="Copied Order" label="Order Copied!" isOpen={hasCopied} placement="top">
-     <IconButton icon={FaClipboard} onClick={onCopy} aria-label="Copy Order" />
+     <IconButton icon={<FaClipboard />} onClick={onCopy} aria-label="Copy Order" />
     </Tooltip>
   )
 }

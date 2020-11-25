@@ -1,6 +1,6 @@
-import {theme as defaultTheme, ITheme} from '@chakra-ui/core';
+import { theme as defaultTheme } from '@chakra-ui/react';
 
-export const theme: ITheme =  {
+export const theme: typeof defaultTheme =  {
   ...defaultTheme,
   fonts: {
     ...defaultTheme.fonts,

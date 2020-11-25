@@ -1,22 +1,23 @@
-import React, { useMemo, useRef } from 'react';
-import { format, parseISO } from 'date-fns';
-import { Box, Badge, Drawer, DrawerOverlay, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, DrawerCloseButton, Stack, FormLabel, Input, InputGroup, InputLeftAddon, InputRightAddon, Select, Textarea, FormControl, Button, IconButton, Flex, Checkbox } from '@chakra-ui/core';
+import { AddIcon, DeleteIcon, ExternalLinkIcon } from '@chakra-ui/icons';
+import { Badge, Box, Button, Checkbox, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, FormLabel, IconButton, Input, Stack, Textarea, useDisclosure } from '@chakra-ui/react';
 import styled from '@emotion/styled';
-import { Formik, Field, FieldArray } from 'formik';
 import { gql } from 'apollo-boost';
-import { useMutation } from 'react-apollo';
-import { capitalize } from 'lodash';
-import {RemoveScroll} from 'react-remove-scroll';
-import { FaFileDownload } from 'react-icons/fa';
-import html2canvas from 'html2canvas'
+import { format, parseISO } from 'date-fns';
+import { Field, FieldArray, Formik } from 'formik';
+import html2canvas from 'html2canvas';
 import jsPdf from 'jspdf';
-
-import { theme } from '../theme';
+import { capitalize } from 'lodash';
+import React, { useMemo, useRef } from 'react';
+import { useMutation } from 'react-apollo';
+import { FaFileDownload } from 'react-icons/fa';
+import { RemoveScroll } from 'react-remove-scroll';
 import SocialButton from '../components/SocialButton';
+import { Order } from '../models/Order';
+import { theme } from '../theme';
 import DatePicker from './DatePicker';
-import { downloadURI } from '../util/dom';
 
-function printPDF (domElement) { 
+
+function printPDF (domElement?: any) { 
   domElement.ownerDocument.defaultView.innerHeight = 10000000;
   // domElement.ownerDocument.defaultView.innerWidth = domElement.clientWidth;
   window.scroll(0, 0)
@@ -30,7 +31,7 @@ function printPDF (domElement) {
         const imgData = canvas.toDataURL('image/png');
         // downloadURI(imgData, 'wtf.png');
         const pdf = new jsPdf('p', 'px', [domElement.clientHeight, domElement.clientWidth]);
-        const imgProps= pdf.getImageProperties(imgData);
+        const imgProps= (pdf as unknown as any).getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
@@ -51,8 +52,8 @@ const UPDATE_ORDER = gql`
   }
 `;
 
-function lineIf(o, fields, opt?: any) {
-  if (!o) {
+function lineIf(o?: any, fields?: (keyof Order)[], opt?: any) {
+  if (!o || !fields) {
     return null;
   }
   
@@ -63,7 +64,7 @@ function lineIf(o, fields, opt?: any) {
         return opt.overrides[i](o[f])
       }
       if (f === 'date') {
-        return  format(parseISO(o[f]), 'MM/dd');
+        return  format(parseISO(o[f] as string), 'MM/dd');
       }
 
       if (['cake', 'shape', 'color', 'taste', 'letter'].includes(f)) {
@@ -71,7 +72,7 @@ function lineIf(o, fields, opt?: any) {
       }
 
       if (f === 'decorations' || f === 'toppings') {
-        return o[f].map(v => v.replace(/\([^(\))]*\)/g, ''))
+        return o[f].map((v: string) => v.replace(/\([^(\))]*\)/g, ''))
       }
       return o[f]
     })
@@ -95,7 +96,7 @@ const StyledBox = styled(Box)`
   }
 `;
 
-export const order2Lines = (order) => [
+export const order2Lines = (order: any) => [
   lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
   lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
   lineIf(order, ['cake', 'size'], {prefix: '🎂 '}),
@@ -110,7 +111,7 @@ export const order2Lines = (order) => [
   lineIf(order, ['remarks']),
 ].filter(Boolean)
 
-function downloadPDFFromGoogle(index) {
+function downloadPDFFromGoogle(index: any) {
   const urlPopup = window.open('', '_blank', 'width=200,height=100')
   
   fetch(`https://script.google.com/macros/s/AKfycbwg0O8hDydyA_qU8W1M91Wa5J_YeclQY9ZNZfmmdIu2Mfj820I/exec?index=${index}`)
@@ -157,12 +158,12 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         </Box>
         </Box>
         <SocialButtonGroup pos="absolute" right="5" top="5">
-          <SocialButton.WhatsApp icon="external-link" text={lines.join('\n')} />
+          <SocialButton.WhatsApp icon={<ExternalLinkIcon />} text={lines.join('\n')} />
         </SocialButtonGroup>
         <SocialButtonGroup pos="absolute" right="5" bottom="5" bg="orange">
           <SocialButton.WhatsApp phone={order && order.phone} />
           {order?.order_from?.toLowerCase()?.includes('ig') && !order?.social_name?.trim()?.includes(' ') && <SocialButton.Instagram username={order?.social_name} />}
-           <IconButton icon={FaFileDownload} aria-label="Download Order as PDF" onClick={downloadPDF} />
+           <IconButton icon={<FaFileDownload />} aria-label="Download Order as PDF" onClick={downloadPDF} />
         </SocialButtonGroup>
       </StyledBox>
       {order && (
@@ -255,13 +256,13 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                                 {({field}: { field: any }) => (
                                   <Flex mt={1}>
                                     <Input mr={2} {...field} />
-                                    <IconButton aria-label="Delete decoration" icon="delete" onClick={() => remove(index)} />
+                                    <IconButton aria-label="Delete decoration" icon={<DeleteIcon />} onClick={() => remove(index)} />
                                   </Flex>
                                 )}
                               </Field>
                             </FormControl>
                           ))}
-                          <IconButton size="sm" aria-label="Add decoration" icon="add" w="100%" onClick={() => push('')} />
+                          <IconButton size="sm" aria-label="Add decoration" icon={<AddIcon />} w="100%" onClick={() => push('')} />
                         </div>
                       )}
                     </FieldArray>

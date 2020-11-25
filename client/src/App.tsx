@@ -1,18 +1,15 @@
+import { Button, ChakraProvider, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import ApolloClient from "apollo-boost";
 import React, { FC } from "react";
 import { ApolloProvider } from "react-apollo";
-import ApolloClient from "apollo-boost";
-import { ThemeProvider, CSSReset, Button, Tabs  } from "@chakra-ui/core";
-import { TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/core";
-
-import { theme } from './theme'
-import Counter from "./Counter/Counter";
-import OverviewScreen from './screens/Overview';
 import OrdersCalendar from './components/OrdersCalendar';
+import OverviewScreen from './screens/Overview';
+import { theme } from './theme';
+
 
 const App: FC<{ client: ApolloClient<any> }> = ({ client }) => (
   <ApolloProvider client={client}>
-    <ThemeProvider theme={theme}>
-      <CSSReset />
+    <ChakraProvider theme={theme}>
       <Button data-feedbackok-trigger="l4xncog">Give Feedback</Button>
       <Tabs defaultIndex={1}>
         <TabList>
@@ -29,7 +26,7 @@ const App: FC<{ client: ApolloClient<any> }> = ({ client }) => (
             </TabPanel>
         </TabPanels>
         </Tabs>
-    </ThemeProvider>
+    </ChakraProvider>
   </ApolloProvider>
 );
 

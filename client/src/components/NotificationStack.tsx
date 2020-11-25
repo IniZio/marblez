@@ -1,13 +1,19 @@
+import { Box, BoxProps, Heading, Stack, StackProps, Text } from '@chakra-ui/react';
 import React from 'react';
-import { Stack, Box, Heading, Text, StackProps } from '@chakra-ui/core';
+import { Order } from '../models/Order';
 
-function Notification({ title, desc, ...rest }) {
+function Notification({ title, desc, ...rest }: NotificationProps) {
   return (
     <Box p={5} shadow="sm" borderWidth="1px" {...rest}>
       <Heading fontSize="l">{title}</Heading>
       <Text fontSize="sm" mt={4}>{desc}</Text>
     </Box>
   );
+}
+
+export interface NotificationProps extends BoxProps {
+  title: string;
+  desc: string;
 }
 
 export interface NotificationStackProps extends StackProps {
@@ -19,7 +25,7 @@ function NotificationStack({notifications, ...props}: NotificationStackProps) {
     <Stack spacing={2} p={4} {...props}>
       {notifications.map(noti => (
         <Notification
-          title={`${noti.event}-ed ${noti.orders.map(o => o.phone)}`}
+          title={`${noti.event}-ed ${noti.orders.map((o: Order) => o.phone)}`}
           desc=""
         />
       ))}

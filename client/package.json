@@ -7,9 +7,11 @@
     "build": "parcel build ./src/index.html"
   },
   "dependencies": {
-    "@chakra-ui/core": "^0.8.0",
-    "@emotion/core": "^10.0.28",
-    "@emotion/styled": "^10.0.27",
+    "@chakra-ui/icons": "^1.0.1",
+    "@chakra-ui/react": "^1.0.0",
+    "@emotion/core": "^11.0.0",
+    "@emotion/react": "^11.0.0",
+    "@emotion/styled": "^11.0.0",
     "@toast-ui/react-calendar": "^1.0.5",
     "@types/react": "^16.9.23",
     "@types/react-dom": "^16.9.5",
@@ -21,6 +23,7 @@
     "date-fns": "^2.13.0",
     "emotion-theming": "^10.0.27",
     "formik": "^2.1.4",
+    "framer-motion": "^2.9.4",
     "graphql": "^15.0.0",
     "html2canvas": "^1.0.0-rc.6",
     "immer": "^6.0.9",

@@ -1,11 +1,10 @@
+import { Button } from '@chakra-ui/react';
+import { gql } from "apollo-boost";
 import React, { FC } from "react";
 import { useQuery } from "react-apollo";
-import { gql } from "apollo-boost";
-import { Button } from '@chakra-ui/core';
-
-import IncrementButton from "./IncrementButton";
 import DecrementButton from "./DecrementButton";
-import CounterType from "./counter.type";
+import IncrementButton from "./IncrementButton";
+
 
 const Counter: FC = () => {
   // const { data, loading } = useQuery<{ counter: CounterType }>(gql`

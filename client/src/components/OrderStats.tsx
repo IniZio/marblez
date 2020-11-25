@@ -1,8 +1,8 @@
-import  React, { useMemo } from 'react';
-import { StatGroup, Stat, StatLabel, StatNumber, StatHelpText, Stack, Box, Heading, Text, StackProps } from '@chakra-ui/core';
-import { useQuery } from 'react-apollo';
+import { Box, Heading, Stack, StackProps, Text } from '@chakra-ui/react';
 import { gql } from 'apollo-boost';
-import { startOfTomorrow, startOfToday } from 'date-fns';
+import { startOfToday, startOfTomorrow } from 'date-fns';
+import React from 'react';
+import { useQuery } from 'react-apollo';
 
 const todayFilter = { pickupDate: startOfToday() };
 const tomorrowFilter = { pickupDate: startOfTomorrow() }
