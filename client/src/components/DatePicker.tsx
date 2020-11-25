@@ -1,4 +1,4 @@
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import { Flex, FlexProps, IconButton, Input } from '@chakra-ui/react';
 import { addDays, format, isDate, isValid, parse } from 'date-fns';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -42,7 +42,7 @@ function DatePicker({value = new Date(), onChange, onValue, id, name, withArrows
   
   return (
     <Flex alignItems="center" justifyContent="center" {...props}>
-      {withArrows && <IconButton aria-label="yesterday" icon={<ArrowForwardIcon />} onClick={(e) => handleChange(e, addDays(value, -1))}  mr={3} />}
+      {withArrows && <IconButton aria-label="yesterday" icon={<ArrowBackIcon />} onClick={(e) => handleChange(e, addDays(value, -1))}  mr={3} />}
       <Flex flex={1} alignItems="center" justifyContent="center">
         <InputMask id={id} name={name} mask="99/99/9999" value={date} onChange={_onChange}>
           {() => <Input textAlign="center" />}

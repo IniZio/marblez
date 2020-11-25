@@ -11,17 +11,17 @@ const App: FC<{ client: ApolloClient<any> }> = ({ client }) => (
   <ApolloProvider client={client}>
     <ChakraProvider theme={theme}>
       <Button data-feedbackok-trigger="l4xncog">Give Feedback</Button>
-      <Tabs defaultIndex={1}>
+      <Tabs mt={5} defaultIndex={1} isFitted variant="enclosed-colored">
         <TabList>
             <Tab>Today</Tab>
             <Tab>Calendar</Tab>
         </TabList>
 
         <TabPanels>
-            <TabPanel>
+            <TabPanel p={[2]}>
                 <OverviewScreen />
             </TabPanel>
-            <TabPanel>
+            <TabPanel p={[2]}>
                 <OrdersCalendar />
             </TabPanel>
         </TabPanels>

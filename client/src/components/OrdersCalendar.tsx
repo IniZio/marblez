@@ -97,7 +97,7 @@ function OrdersCalendar() {
           }
         `}
       />
-      <Box padding={5} flex={1}>
+      <Box flex={1}>
         <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
         <Calendar
           ref={calendarRef}
