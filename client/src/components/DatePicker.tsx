@@ -15,7 +15,6 @@ export interface DatePickerProps {
 const valueToDate = (value: any) => isDate(value) ? value : new Date(value);
 
 function DatePicker({value = new Date(), onChange, onValue, id, name, withArrows = true, ...props}: DatePickerProps & FlexProps) {
-  console.log(value); 
   const [date, setDate] = useState(format(valueToDate(value), 'MM/dd/yyyy'));
   useEffect(() => { setDate(format(valueToDate(value), 'MM/dd/yyyy')); }, [value])
   const _onChange = useCallback((e) => {

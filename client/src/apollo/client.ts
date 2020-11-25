@@ -1,14 +1,14 @@
-import ApolloClient, { Resolver, Resolvers } from "apollo-client";
-import { buildTypeDefsAndResolvers } from "type-graphql";
-import { WebSocketLink } from 'apollo-link-ws';
-import { withClientState } from 'apollo-link-state';
-import { HttpLink } from 'apollo-link-http';
-import { split, ApolloLink } from 'apollo-link';
-import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-
+import ApolloClient, { Resolvers } from "apollo-client";
+import { ApolloLink, split } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { withClientState } from 'apollo-link-state';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+import { buildTypeDefsAndResolvers } from "type-graphql";
 import CounterResolver from "../Counter/counter.resolver";
 import CounterType from "../Counter/counter.type";
+
 
 const API_URL = process.env.API_URL;
 
@@ -59,7 +59,7 @@ export default async function createApolloClient() {
       link,
     ]),
     cache: new InMemoryCache({
-      addTypename: false
+      // addTypename: false
     }),
     typeDefs,
     resolvers: resolvers as Resolvers,

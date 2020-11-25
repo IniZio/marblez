@@ -177,6 +177,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
                 <Formik
                   initialValues={order}
                   onSubmit={(order, actions) => {
+                    delete order.__typename;
                     updateOrder({ variables: { order } })
                       .then(onUpdate)
                       .then(onClose)
