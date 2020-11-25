@@ -1,4 +1,5 @@
-import { Box, Button, ButtonGroup, Checkbox, Flex, Heading, Icon, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
+import { DownloadIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
+import { Box, Button, ButtonGroup, Checkbox, Flex, Heading, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
 import gql from 'graphql-tag';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from "react-apollo";
@@ -170,12 +171,12 @@ function Overview() {
       <Box padding={5} flex={1}>
         <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
         <InputGroup mb={5}>
-          <InputLeftElement children={<Icon name="phone" color="gray.300" />} />
+          <InputLeftElement children={<PhoneIcon color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
         <ButtonGroup pb={5}>
-          <Button mb={[3, 0]} leftIcon="repeat" onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
-          <Button mb={[3, 0]} leftIcon="download" onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
+          <Button mb={[3, 0]} leftIcon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
+          <Button mb={[3, 0]} leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
           <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
         </ButtonGroup>
         <OrderStats />
