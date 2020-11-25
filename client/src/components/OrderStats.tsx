@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, StackProps, Text } from '@chakra-ui/react';
+import { Box, Heading, StackProps, Stat, StatGroup, StatLabel, StatNumber, Text } from '@chakra-ui/react';
 import { gql } from 'apollo-boost';
 import { startOfToday, startOfTomorrow } from 'date-fns';
 import React from 'react';
@@ -49,16 +49,16 @@ function OrderStats(props: StackProps) {
   
   
   return (
-    <Stack spacing={2} p={4} {...props}>
-      <StatItem
-        label="No. orders of today"
-        number={ordersOfToday?.ordersOfDay?.filter(o => o.paid).length}
-      />
-      <StatItem
-        label="No. orders of tomorrow"
-        number={ordersOfTomorrow?.ordersOfDay?.filter(o => o.paid).length}
-      />
-    </Stack>
+    <StatGroup p={4} borderWidth={1} borderRadius="lg" {...props}>
+      <Stat>
+        <StatLabel>No. orders of today</StatLabel>
+        <StatNumber>{ordersOfToday?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
+      </Stat>
+      <Stat>
+        <StatLabel>No. orders of tomorrow</StatLabel>
+        <StatNumber>{ordersOfTomorrow?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
+      </Stat>
+    </StatGroup>
   )
 }
 
