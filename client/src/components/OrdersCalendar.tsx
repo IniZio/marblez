@@ -149,7 +149,9 @@ function OrdersCalendar() {
           // view={selectedView} // You can also set the `defaultView` option.
           week={{
             showTimezoneCollapseButton: true,
-            timezonesCollapsed: true
+            timezonesCollapsed: true,
+            hourStart: 11,
+            hourEnd: 21,
           }}
         />
       </Box>
