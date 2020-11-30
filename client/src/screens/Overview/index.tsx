@@ -1,9 +1,11 @@
 import { DownloadIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
 import { Box, Button, Checkbox, Flex, Heading, HStack, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
 import gql from 'graphql-tag';
+import produce from 'immer';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from "react-apollo";
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
+import { QUERY_NOTIFICATIONS_OF_DAY } from '../../apollo/query';
 import DatePicker from '../../components/DatePicker';
 import Order from '../../components/Order';
 import OrderStats from '../../components/OrderStats';
@@ -135,36 +137,36 @@ function Overview() {
   // )
   // useEffect(() => {refetchNotifications({ date: pickupDate })}, [pickupDate]);
 
-  // const { data: { newNotification } = { newNotification: null }, loading: loadingNewNotification } = useSubscription(
-  //   gql`
-  //     subscription {
-  //       newNotification {
-  //         orders {
-  //           ...OrderAllFields
-  //         }
-  //         event
-  //       }
-  //     }
-  //     ${FRAGMENT_ORDER}
-  //   `,
-  //   {
-  //     variables: { },
-  //     onSubscriptionData({ client, subscriptionData }) {
-  //       const cachedNotifications = client.readQuery({
-  //         query: QUERY_NOTIFICATIONS_OF_DAY,
-  //         variables: { date: pickupDate },
-  //       })
+  const { data: { newNotification } = { newNotification: null }, loading: loadingNewNotification } = useSubscription(
+    gql`
+      subscription {
+        newNotification {
+          orders {
+            ...OrderAllFields
+          }
+          event
+        }
+      }
+      ${FRAGMENT_ORDER}
+    `,
+    {
+      variables: { },
+      onSubscriptionData({ client, subscriptionData }) {
+        const cachedNotifications = client.readQuery({
+          query: QUERY_NOTIFICATIONS_OF_DAY,
+          variables: { date: pickupDate },
+        })
 
-  //       client.writeQuery({
-  //         query: QUERY_NOTIFICATIONS_OF_DAY,
-  //         variables: { date: pickupDate },
-  //         data: produce(cachedNotifications, state => {
-  //           state.notificationsOfDay.push(subscriptionData.data?.newNotification)
-  //         }),
-  //       })
-  //     }
-  //   }
-  // );
+        client.writeQuery({
+          query: QUERY_NOTIFICATIONS_OF_DAY,
+          variables: { date: pickupDate },
+          data: produce(cachedNotifications, state => {
+            state.notificationsOfDay.push(subscriptionData.data?.newNotification)
+          }),
+        })
+      }
+    }
+  );
 
   return (
     <Flex>

@@ -1,11 +1,14 @@
 import fs from 'fs';
+import { google, sheets_v4 } from 'googleapis';
 import path from 'path';
-import {google, GoogleApis, sheets_v4} from 'googleapis';
 
 
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
-const sheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
-// const sheetId = '1M2_P9atQWMy0yNbY5nM29-X9jOoQeyYa7o1cpmuFjmU';
+const SCOPES = [
+  'https://www.googleapis.com/auth/spreadsheets',
+];
+const spreadSheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
+// const spreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
+const snapshotSpreadSheetId = '1A8HAYl3OeEj_zetpD6HfGqUsW93nqXpn-f6oK3L45jI';
 
 const json = JSON.parse(process.env.SERVICE_ACCOUNT_KEY_FILE || fs.readFileSync(path.resolve(__dirname, '../../marble-service-account.json')) as unknown as string);
 
@@ -19,9 +22,13 @@ class GoogleSheetRespository {
     json.private_key,
     SCOPES
   );
+  spreadSheetId: string;
+  snapshotSpreadSheetId?: string;
   
-  constructor() {
+  constructor({ spreadSheetId: _spreadSheetId = spreadSheetId, snapshotSpreadSheetId }: {spreadSheetId?: string, snapshotSpreadSheetId?: string} = {}) {
     this.googleSheet = google.sheets('v4');
+    this.spreadSheetId = _spreadSheetId;
+    this.snapshotSpreadSheetId = snapshotSpreadSheetId
   }
 
   async init() {
@@ -42,7 +49,7 @@ class GoogleSheetRespository {
   async getAllRows() {
     const res = await this.googleSheet.spreadsheets.values.get({
       auth: this.jwtClient,
-      spreadsheetId: sheetId,
+      spreadsheetId: this.spreadSheetId,
       range: 'A1:CM'
     });
     return (res.data.values || []).slice(1);
@@ -51,7 +58,7 @@ class GoogleSheetRespository {
   async getRow(index: number | string) {
     const res = await this.googleSheet.spreadsheets.values.get({
       auth: this.jwtClient,
-      spreadsheetId: sheetId,
+      spreadsheetId: this.spreadSheetId,
       range: `A${index}:CM${Number(index) + 1}`
     });
     return (res.data.values || [])[0];
@@ -69,13 +76,47 @@ class GoogleSheetRespository {
     
     
     await this.googleSheet.spreadsheets.values.batchUpdate({
-      spreadsheetId: sheetId,
+      spreadsheetId: spreadSheetId,
       requestBody: {
         valueInputOption: 'raw',
         data,
       },
     });
   }
+
+  async snapshot() {
+    if (!this.snapshotSpreadSheetId) {
+      return;
+    }
+    
+    const rse = await this.googleSheet.spreadsheets.get({
+      spreadsheetId: this.snapshotSpreadSheetId
+    });
+    const expiredSheetId = rse.data.sheets[0].properties.sheetId
+    const res = await this.googleSheet.spreadsheets.sheets.copyTo({
+      auth: this.jwtClient,
+      spreadsheetId: this.spreadSheetId,
+      sheetId: 1623881788,
+      requestBody: {
+        destinationSpreadsheetId: this.snapshotSpreadSheetId,
+      }
+    })
+    await this.googleSheet.spreadsheets.batchUpdate({
+      spreadsheetId: this.snapshotSpreadSheetId,
+      requestBody: {
+        requests: [
+          { deleteSheet: {
+            sheetId: expiredSheetId
+          } }
+        ]
+      }
+    })
+  }
 }
 
-export default new GoogleSheetRespository()
+export default new GoogleSheetRespository({
+  spreadSheetId: spreadSheetId,
+  snapshotSpreadSheetId: snapshotSpreadSheetId,
+})
+
+export const snapshotGoogleSheetRepository = new GoogleSheetRespository({ spreadSheetId: snapshotSpreadSheetId });

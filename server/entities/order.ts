@@ -1,95 +1,103 @@
-import { prop as Property } from "@typegoose/typegoose";
+import { getModelForClass, index, prop as Property } from "@typegoose/typegoose";
+import { ObjectId } from 'mongodb';
 import { Field, ObjectType } from "type-graphql";
 
 @ObjectType()
+// @index({ phone: 1, date: 1, time: 1, cake: 1 }, { unique: true })
 export class Order {
+  // @Field()
+  // @Property({ unique: true, required: true })
+  // readonly _id: ObjectId;
+
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property({ unique: true })
   index?: string;
   
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   paid: boolean;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   name?: string;
   
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   phone?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   date?: Date;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   created_at?: Date;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   time?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   cake?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   letter?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   taste?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   inner_taste?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   bottom_taste?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   size?: string;
 
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   shape?: string;
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   color?: string;
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   sentence?: string;
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   paid_sentence?: string;
   @Field(() => [String], { nullable: true })
-  @Property({ required: true })
+  @Property()
   decorations?: string[];
   @Field(() => [String], { nullable: true })
-  @Property({ required: true })
+  @Property()
   toppings?: string[];
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   social_name?: string;
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   order_from?: string;
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   delivery_method?: string;
   @Field({ nullable: true })
-  @Property({ required: true })
+  @Property()
   delivery_address?: string;
   @Field({ nullable: true })
-  @Property({ required: true })
-  remarks?: string;
+  @Property()
+  remarks?: string; 
 
   @Field({ nullable: true })
-  @Property({ required: true })
-  printed?: string;
+  @Property()
+  printed?: boolean;
 }
+
+export const OrderModel = getModelForClass(Order);

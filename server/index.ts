@@ -1,19 +1,21 @@
-import "reflect-metadata";
 import { ApolloServer } from "apollo-server";
-import { connect } from "mongoose";
-import { ObjectId } from "mongodb";
-import * as path from "path";
-import { buildSchema } from "type-graphql";
 import dotenv from 'dotenv';
-
-import { RecipeResolver } from "./resolvers/recipe-resolver";
-import { RateResolver } from "./resolvers/rate-resolver";
-import { OrderResolver } from './resolvers/order-resolver ';
+import { ObjectId } from "mongodb";
+import { connect } from "mongoose";
+import cron from 'node-cron';
+import * as path from "path";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
 import { User } from "./entities/user";
 import { seedDatabase } from "./helpers";
-import { TypegooseMiddleware } from "./typegoose-middleware";
+import { syncGoogleForms } from './jobs/sync-google-forms';
 import { ObjectIdScalar } from "./object-id.scalar";
 import { NotificationResolver } from './resolvers/notification-resolver';
+import { OrderResolver } from './resolvers/order-resolver ';
+import { RateResolver } from "./resolvers/rate-resolver";
+import { RecipeResolver } from "./resolvers/recipe-resolver";
+import { TypegooseMiddleware } from "./typegoose-middleware";
+
 
 export interface Context {
   user: User;
@@ -59,3 +61,6 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+cron.schedule('*/10 * * * *', syncGoogleForms)
+syncGoogleForms()

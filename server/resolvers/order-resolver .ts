@@ -3,7 +3,7 @@ import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine,
 import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth } from 'date-fns';
 import agent from 'superagent';
 
-import { Order } from "../entities/order";
+import { Order, OrderModel } from "../entities/order";
 import * as GoogleSheetEvent from './types/google-sheet-event-input';
 import googleSheet from '../respository/google-sheet';
 import { NotificationModel, Notification } from '../entities/notification';
@@ -36,10 +36,10 @@ const orderFields = {
   delivery_address: 31,
   remarks: 32,
   printed: 90,
-//  index: ,
+  index: 91,
 };
 
-const rowToOrder = (row: any[], index: any): Order => {
+export const rowToOrder = (row: any[], index: any): Order => {
   const order: any = {};
   Object.entries(orderFields).forEach(([key, columns]) => {
     // +2 to compenstate column header and start with 1 index
@@ -51,6 +51,7 @@ const rowToOrder = (row: any[], index: any): Order => {
 
     switch(key) {
       case 'paid':
+      case 'printed':
         order[key] = order[key] === 'TRUE'
         break;
       case 'date':
@@ -62,9 +63,6 @@ const rowToOrder = (row: any[], index: any): Order => {
       case 'decorations':
       case 'toppings':
         order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
-        break;
-      case 'printed':
-        // order[key] = typeof order[key] === 'string' && order[key].toUpperCase() === 'TRUE'
         break;
       case 'created_at':
         order[key] = parse(order[key], 'M/d/y k:m:s', new Date());
