@@ -38,7 +38,7 @@ class GoogleSheetRespository {
           reject(err);
           return;
         } else {
-          resolve();
+          resolve(undefined);
         }
       });
       google.options({ auth: this.jwtClient });

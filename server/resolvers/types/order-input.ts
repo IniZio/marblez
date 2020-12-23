@@ -1,69 +1,39 @@
+import { IOrder } from '@marblez/graphql';
 import { InputType, Field, Int } from "type-graphql";
+import GraphQLJSON from 'graphql-type-json';
 
 @InputType()
 export class OrderInput {
   @Field({ nullable: true })
-  index?: string;
+  id?: string;
   
   @Field({ nullable: true })
   paid: boolean;
 
   @Field({ nullable: true })
-  name?: string;
+  customerName?: string;
   
   @Field({ nullable: true })
-  phone?: string;
+  customerPhone?: string;
 
   @Field({ nullable: true })
-  date?: Date;
+  deliveryDate?: Date;
 
   @Field({ nullable: true })
-  created_at?: Date;
+  createdAt?: Date;
 
   @Field({ nullable: true })
-  time?: string;
+  deliveryTime?: string;
+
+  @Field(() => GraphQLJSON, { nullable: true })
+  attributes: IOrder['attributes']
 
   @Field({ nullable: true })
-  cake?: string;
+  deliveryMethod?: string;
 
   @Field({ nullable: true })
-  letter?: string;
+  deliveryAddress?: string;
 
   @Field({ nullable: true })
-  taste?: string;
-
-  @Field({ nullable: true })
-  inner_taste?: string;
-
-  @Field({ nullable: true })
-  bottom_taste?: string;
-
-  @Field({ nullable: true })
-  size?: string;
-
-  @Field({ nullable: true })
-  shape?: string;
-  @Field({ nullable: true })
-  color?: string;
-  @Field({ nullable: true })
-  sentence?: string;
-  @Field({ nullable: true })
-  paid_sentence?: string;
-  @Field(() => [String], { nullable: true })
-  decorations?: string[];
-  @Field(() => [String], { nullable: true })
-  toppings?: string[];
-  @Field({ nullable: true })
-  social_name?: string;
-  @Field({ nullable: true })
-  order_from?: string;
-  @Field({ nullable: true })
-  delivery_method?: string;
-  @Field({ nullable: true })
-  delivery_address?: string;
-  @Field({ nullable: true })
-  remarks?: string;
-
-  @Field({ nullable: true })
-  printed?: string;
+  remarks?: string; 
 }

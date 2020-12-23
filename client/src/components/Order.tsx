@@ -12,7 +12,7 @@ import { useMutation } from 'react-apollo';
 import { FaFileDownload } from 'react-icons/fa';
 import { RemoveScroll } from 'react-remove-scroll';
 import SocialButton from '../components/SocialButton';
-import { Order } from '../models/Order';
+import { IOrder, NestedObjectType } from '@marblez/graphql';
 import { theme } from '../theme';
 import DatePicker from './DatePicker';
 
@@ -40,7 +40,7 @@ function printPDF (domElement?: any) {
   })
 }
 export interface OrderProps {
-  order?: any;
+  order?: OrderInput;
   onUpdate?: () => any;
 }
 
@@ -52,7 +52,37 @@ const UPDATE_ORDER = gql`
   }
 `;
 
-function lineIf(o?: any, fields?: (keyof Order)[], opt?: any) {
+type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+  11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
+
+type Join<K, P> = K extends string | number ?
+    P extends string | number ?
+    `${K}${"" extends P ? "" : "."}${P}`
+    : never : never;
+
+type Paths<T, D extends number = 10> = T extends Array<any> ? never : [D] extends [never] ? never : T extends object ?
+    { [K in keyof T]-?: K extends string ?
+        `${K}` | Join<K, Paths<T[K], Prev[D]>>
+        : never
+    }[keyof T] : ""
+
+type Leaves<T, D extends number = 10> = [D] extends [never] ? never : T extends object ?
+    { [K in keyof T]-?: Join<K, Leaves<T[K], Prev[D]>> }[keyof T] : "";
+
+function get<T>(obj: T, path: Paths<T, 3>, defValue: any = undefined) {
+  // If path is not defined or it has false value
+  if (!path) return undefined
+  // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
+  // Regex explained: https://regexr.com/58j0k
+  const pathArray = Array.isArray(path) ? path : (path as unknown as string).match(/([^[.\]])+/g)
+  // Find value if exist return otherwise return undefined value;
+  return (
+    pathArray.reduce((prevObj: any, key: string) => prevObj && prevObj[key], obj) || defValue
+  )
+}
+    
+
+function lineIf<T extends IOrder>(o: any, fields: Paths<T,  3>[], opt: any = {}) {
   if (!o || !fields) {
     return null;
   }
@@ -60,21 +90,22 @@ function lineIf(o?: any, fields?: (keyof Order)[], opt?: any) {
   const line = (
     fields
     .map(function(f, i) {
-      if (opt && opt.overrides && opt.overrides[i]) {
-        return opt.overrides[i](o[f])
+      if (!f) {
+        return null;
       }
-      if (f === 'date') {
+      
+      if (opt && opt.overrides && opt.overrides[i]) {
+        return opt.overrides[i](get(o, f))
+      }
+      if (f === 'deliveryDate') {
         return  format(parseISO(o[f] as string), 'MM/dd');
       }
 
       if (['cake', 'shape', 'color', 'taste', 'letter'].includes(f)) {
-        return o[f].replace(/\([^(\))]*\)/g, '')
+        return get(o, f).replace(/\([^(\))]*\)/g, '')
       }
 
-      if (f === 'decorations' || f === 'toppings') {
-        return o[f].map((v: string) => v.replace(/\([^(\))]*\)/g, ''))
-      }
-      return o[f]
+      return get(o, f)
     })
     .filter(Boolean)
     .join(' ')
@@ -97,17 +128,17 @@ const StyledBox = styled(Box)`
 `;
 
 export const order2Lines = (order: any) => [
-  lineIf(order, ['name', 'phone'], {prefix: '👨 '}),
-  lineIf(order, ['date', 'time'], {prefix: '🕐 '}),
-  lineIf(order, ['cake', 'size'], {prefix: '🎂 '}),
-  lineIf(order, ['decorations', 'toppings'], {prefix: '📿 '}),
-  lineIf(order, ['shape', 'color'], {prefix: '‎‎‎⠀⠀ '}),
-  lineIf(order, ['taste', 'letter'], {prefix: '‎‎⠀⠀ '}),
-  lineIf(order, ['inner_taste', 'bottom_taste'], {prefix: '‎‎⠀⠀ '}),
-  lineIf(order, ['sentence'], {prefix: '✍️️ '}),
-  lineIf(order, ['paid_sentence'], {prefix: '朱古力牌 ✍️️ '}),
-  lineIf(order, ['order_from', 'social_name'], {prefix: '📲 '}),
-  lineIf(order, ['delivery_method', 'delivery_address'], {prefix: '🚚 '}),
+  lineIf(order, ['customerName', 'customerPhone'], {prefix: '👨 '}),
+  lineIf(order, ['deliveryDate', 'deliveryTime'], {prefix: '🕐 '}),
+  lineIf(order, ['attributes.cake', 'attributes.size'], {prefix: '🎂 '}),
+  lineIf(order, ['attributes.decorations', 'attributes.toppings'], {prefix: '📿 '}),
+  lineIf(order, ['attributes.shape', 'attributes.color'], {prefix: '‎‎‎⠀⠀ '}),
+  lineIf(order, ['attributes.taste', 'attributes.letter'], {prefix: '‎‎⠀⠀ '}),
+  lineIf(order, ['attributes.innerTaste', 'attributes.bottomTaste'], {prefix: '‎‎⠀⠀ '}),
+  lineIf(order, ['attributes.sentence'], {prefix: '✍️️ '}),
+  lineIf(order, ['attributes.paidSentence'], {prefix: '朱古力牌 ✍️️ '}),
+  lineIf(order, ['customerSocialChannel', 'customerSocialName'], {prefix: '📲 '}),
+  lineIf(order, ['deliveryMethod', 'deliveryAddress'], {prefix: '🚚 '}),
   lineIf(order, ['remarks']),
 ].filter(Boolean)
 
@@ -139,8 +170,19 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
 
   return (
     <>
-      <StyledBox w="100%" borderWidth="1px" rounded="lg" overflow="hidden" p={5} shadow="md" minHeight={353} fontSize={20} position="relative" onClick={onOpen}>
-        {!order?.printed && (
+      <StyledBox 
+        w="100%" 
+        borderWidth="1px" 
+        rounded="lg" 
+        overflow="hidden" 
+        p={5} 
+        shadow="md" 
+        minHeight={353} 
+        fontSize={20} 
+        position="relative" 
+        // onClick={onOpen}
+      >
+        {!order?.attributes.printed && (
           <Badge ml="1" variantColor="blue">
             New
           </Badge>

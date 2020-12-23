@@ -9,6 +9,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@marblez/graphql": "0.0.0",
     "@typegoose/typegoose": "^6.4.0",
     "@types/dotenv": "^8.2.0",
     "@types/graphql": "^14.5.0",
@@ -22,6 +23,7 @@
     "googleapis": "^51.0.0",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
+    "graphql-type-json": "^0.3.2",
     "messagebird": "^3.5.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.6",
@@ -39,6 +41,6 @@
     "@types/superagent": "^4.1.7",
     "@types/tsc-watch": "^4.2.0",
     "tsc-watch": "^4.2.3",
-    "typescript": "^3.8.3"
+    "typescript": "^4.1.2"
   }
 }

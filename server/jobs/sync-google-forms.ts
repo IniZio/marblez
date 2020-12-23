@@ -28,18 +28,17 @@ export async function syncGoogleForms() {
   // const ordersToMatch = await OrderModel.find({
   //   date: {$gte: todayStart, $lt: tmwEnd}
   // });
-  
-  console.log('=== snapshot sheet id', snapshotGoogleSheetRepository.spreadSheetId)
+
   const snapshotOrders = (await (await snapshotGoogleSheetRepository.init()).getAllRows()).map(rowToOrder)
-  const oldOrdersToCheck = snapshotOrders.filter(order => isWithinInterval(order.date, {start: todayStart, end: tmwEnd}));
-  const newOrdersToCheck = orders.filter(order => isWithinInterval(order.date, {start: todayStart, end: tmwEnd}));
+  const oldOrdersToCheck = snapshotOrders.filter(order => isWithinInterval(order.deliveryDate, {start: todayStart, end: tmwEnd}));
+  const newOrdersToCheck = orders.filter(order => isWithinInterval(order.deliveryDate, {start: todayStart, end: tmwEnd}));
 
   // fs.writeFileSync(path.resolve(__dirname, '../../wtf1.json'), JSON.stringify(oldOrdersToCheck, null, 4))
 
 
   await (await googleSheet.init()).snapshot();
 
-  const difference = diff(oldOrdersToCheck, newOrdersToCheck, 'index', { updatedValues: diff.updatedValues.bothWithDeepDiff })
+  const difference = diff(oldOrdersToCheck, newOrdersToCheck, 'id', { updatedValues: diff.updatedValues.bothWithDeepDiff })
 
   // fs.writeFileSync(path.resolve(__dirname, '../../wtf.json'), JSON.stringify(difference, null, 4))
 
@@ -48,18 +47,18 @@ export async function syncGoogleForms() {
   // Added orders
   messages.push(
     'Added:\n'
-    + difference.added.map((order: Order) => `#${order.index}`).join('\n')
+    + difference.added.map((order: Order) => `#${order.id}`).join('\n')
   )
 
   messages.push(
     'Removed:\n'
-    + difference.removed.map((order: Order) => `#${order.index}`).join('\n')
+    + difference.removed.map((order: Order) => `#${order.id}`).join('\n')
   )
 
   messages.push(
     'Updated:\n'
     + difference.updated.map(([older, newer, patches]: [Order, Order, any[]]) => {
-      const patchNotes: string[] = [`#${older.index}`];
+      const patchNotes: string[] = [`#${older.id}`];
       const paths: { [index in keyof Order]?: boolean } = {}
       patches.forEach(patch => {
         let patchNote = '';

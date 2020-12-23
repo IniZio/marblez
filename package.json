@@ -13,7 +13,8 @@
     "heroku-postbuild": "npm run build"
   },
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "lerna": "^3.22.1",
+    "typescript": "^4.1.2"
   },
   "dependencies": {
     "typesync": "^0.6.1"

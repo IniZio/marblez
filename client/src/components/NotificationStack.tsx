@@ -1,6 +1,6 @@
 import { Box, BoxProps, Heading, Stack, StackProps, Text } from '@chakra-ui/react';
 import React from 'react';
-import { Order } from '../models/Order';
+import { IOrder } from '@marblez/graphql';
 
 function Notification({ title, desc, ...rest }: NotificationProps) {
   return (
@@ -25,7 +25,7 @@ function NotificationStack({notifications, ...props}: NotificationStackProps) {
     <Stack spacing={2} p={4} {...props}>
       {notifications.map(noti => (
         <Notification
-          title={`${noti.event}-ed ${noti.orders.map((o: Order) => o.phone)}`}
+          title={`${noti.event}-ed ${noti.orders.map((o: IOrder) => o.customerPhone)}`}
           desc=""
         />
       ))}
