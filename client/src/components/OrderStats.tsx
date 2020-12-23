@@ -1,11 +1,11 @@
 import { Box, Heading, StackProps, Stat, StatGroup, StatLabel, StatNumber, Text } from '@chakra-ui/react';
 import { gql } from 'apollo-boost';
-import { startOfToday, startOfTomorrow } from 'date-fns';
-import React from 'react';
+import { addDays, startOfDay, startOfToday, startOfTomorrow } from 'date-fns';
+import React, { useMemo } from 'react';
 import { useQuery } from 'react-apollo';
 
-const todayFilter = { pickupDate: startOfToday() };
-const tomorrowFilter = { pickupDate: startOfTomorrow() }
+// const todayFilter = { pickupDate: startOfToday() };
+// const tomorrowFilter = { pickupDate: startOfTomorrow() }
 
 function StatItem({ label, number, ...rest }) {
   return (
@@ -16,7 +16,14 @@ function StatItem({ label, number, ...rest }) {
   );
 }
 
-function OrderStats(props: StackProps) {
+export interface OrderStatsProps extends StackProps {
+  date: Date;
+}
+
+function OrderStats(props: OrderStatsProps) {
+  const todayFilter = useMemo(() => ({pickupDate: startOfDay(props.date)}), [props.date]);
+  const tomorrowFilter = useMemo(() => ({pickupDate: addDays(startOfDay(props.date), 1)}), [props.date]);
+  
   const {data: ordersOfToday, refetch: refetchOrdersOfToday} = useQuery(gql`
     query ordersOfToday(
       $pickupDate: DateTime

@@ -180,7 +180,7 @@ function Overview() {
           <Button mb={[3, 0]} leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
           <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
         </HStack>
-        <OrderStats />
+        <OrderStats date={pickupDate} />
           {(loading && !autoReload) ? (
             [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
           ) : (
