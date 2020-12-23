@@ -1,4 +1,4 @@
-import { Box, Heading, StackProps, Stat, StatGroup, StatLabel, StatNumber, Text } from '@chakra-ui/react';
+import { Box, Heading, StackProps, Stat, StatGroup, StatLabel, StatNumber, Text, CircularProgress } from '@chakra-ui/react';
 import { gql } from 'apollo-boost';
 import { addDays, startOfDay, startOfToday, startOfTomorrow } from 'date-fns';
 import React, { useMemo } from 'react';
@@ -24,7 +24,7 @@ function OrderStats(props: OrderStatsProps) {
   const todayFilter = useMemo(() => ({pickupDate: startOfDay(props.date)}), [props.date]);
   const tomorrowFilter = useMemo(() => ({pickupDate: addDays(startOfDay(props.date), 1)}), [props.date]);
   
-  const {data: ordersOfToday, refetch: refetchOrdersOfToday} = useQuery(gql`
+  const {data: ordersOfToday, refetch: refetchOrdersOfToday, loading: loadingOrdersOfToday} = useQuery(gql`
     query ordersOfToday(
       $pickupDate: DateTime
     ) {
@@ -39,7 +39,7 @@ function OrderStats(props: OrderStatsProps) {
     variables: todayFilter,
   });
 
-  const {data: ordersOfTomorrow, refetch: refetchOrdersOfTomorrow} = useQuery(gql`
+  const {data: ordersOfTomorrow, refetch: refetchOrdersOfTomorrow, loading: loadingOrdersOfTomorrow} = useQuery(gql`
     query ordersOfTomorrow(
       $pickupDate: DateTime
     ) {
@@ -59,11 +59,11 @@ function OrderStats(props: OrderStatsProps) {
     <StatGroup p={4} borderWidth={1} borderRadius="lg" {...props}>
       <Stat>
         <StatLabel>No. orders of today</StatLabel>
-        <StatNumber>{ordersOfToday?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
+        <StatNumber>{loadingOrdersOfToday ? <CircularProgress size={5} isIndeterminate /> : ordersOfToday?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
       </Stat>
       <Stat>
         <StatLabel>No. orders of tomorrow</StatLabel>
-        <StatNumber>{ordersOfTomorrow?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
+        <StatNumber>{loadingOrdersOfTomorrow ? <CircularProgress size={5} isIndeterminate /> : ordersOfTomorrow?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
       </Stat>
     </StatGroup>
   )

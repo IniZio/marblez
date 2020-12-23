@@ -140,7 +140,7 @@ function OrdersCalendar() {
           timezones={[
             {
               timezoneOffset: 480,
-              displayLabel: 'GMT+89:00',
+              displayLabel: 'GMT+8:00',
               tooltip: 'HK'
             },
           ]}
