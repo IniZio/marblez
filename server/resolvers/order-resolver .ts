@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
-import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth } from 'date-fns';
+import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth, isBefore, addYears } from 'date-fns';
 import agent from 'superagent';
 
 import { Order, OrderModel } from "../entities/order";
@@ -70,9 +70,11 @@ export const rowToOrder = (row: any[], index: any): Order => {
         order[key] = order[key] === 'TRUE'
         break;
       case 'deliveryDate':
-        order[key] = parse(order[key], 'M/d', new Date());
+        order[key] = parse(order[key], 'M/d', new Date(order.createdAt));
         if (!isValid(order[key])) {
           order[key] = undefined;
+        } else if(isBefore(order[key], order.createdAt)) {
+          order[key] = addYears(order[key], 1);
         }
         break;
       case 'attributes.decorations':
