@@ -45,7 +45,7 @@ function Overview() {
     variables: filter,
   });
 
-  const paidOrders = useMemo(() => {
+  const paidOrders = useMemo<IOrder[]>(() => {
     if (!data || !data.ordersOfDay) {
       return [];
     }
@@ -97,7 +97,7 @@ function Overview() {
     if (newPaidOrders.length !== 0 && previousPaidOrders.length !== 0) {
       toast({
         title: 'New Order',
-        description: newPaidOrders.map(o => o.customer_phone).join(', '),
+        description: newPaidOrders.map(o => o.customerPhone).join(', '),
         status: 'info',
         duration: null,
         isClosable: true,
