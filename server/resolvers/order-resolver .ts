@@ -42,7 +42,7 @@ const orderFields: Partial<{ [k in Paths<IOrder, 3>]: number | number[] }> = {
   'attributes.shape': [19, 20],
   'attributes.color': [9, 16],
   'attributes.sentence': 25,
-  'attributes.paidSentence': 26,
+  'attributes.paidSentence': [26, 27],
   'attributes.toppings': 21,
   'attributes.decorations': [22, 23],
   'customerSocialName': 28,
