@@ -23,8 +23,8 @@ export async function syncGoogleForms() {
   //   date: {$gte: todayStart, $lt: tmwEnd}
   // });
 
-  await OrderModel.deleteMany({})
-  await OrderModel.insertMany(orders);
+  // await OrderModel.deleteMany({})
+  // await OrderModel.insertMany(orders);
   // const ordersToMatch = await OrderModel.find({
   //   date: {$gte: todayStart, $lt: tmwEnd}
   // });
