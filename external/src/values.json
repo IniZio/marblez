@@ -1,0 +1,352 @@
+{
+  "202fb09e1468b67bd24bc240973d2a6fceea825fa43b8dab58a0957f7b614d96": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "f5aa3f69f3e17a1092cf9b2402e0d8d5d61d7bc307818f5b5c5ba7bb8043a458",
+      "name": "請選擇 Miss Marble 蛋糕款式"
+    },
+    "block": {
+      "type": "tripetto-block-dropdown",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "202fb09e1468b67bd24bc240973d2a6fceea825fa43b8dab58a0957f7b614d96",
+      "reference": "option",
+      "name": "attributes.cake",
+      "label": "Selected option"
+    },
+    "values": {
+      "*": {
+        "value": "雲石流心系列",
+        "reference": "6578cb2eef06da5b372e47fd4f342cd790b7894f7ea2593720475a1cf38ec407",
+        "time": 1609575370832
+      }
+    }
+  },
+  "00ba5b9a57079eca0e9a5502c59ba0a92d474ef8640088bd68f95ef2d558b420": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "88dc1d8b8c2d96f5231fbb919a1626712f9cb20713f7bcd1b1120a459192beb9",
+      "name": "蛋糕味道："
+    },
+    "block": {
+      "type": "tripetto-block-radiobuttons",
+      "version": "3.0.3"
+    },
+    "slot": {
+      "id": "00ba5b9a57079eca0e9a5502c59ba0a92d474ef8640088bd68f95ef2d558b420",
+      "reference": "button",
+      "name": "attributes.taste",
+      "label": "Selected button"
+    },
+    "values": {
+      "*": {
+        "value": "伊藤園抹茶牛奶",
+        "reference": "d7f485f244dbe8e2574a9e70217c770c2438931e18127e6ba017cb62f2863d70",
+        "time": 1609575857954
+      }
+    }
+  },
+  "43123cc07769b8d76aacd0a5e0ed9c3bd84615a8f01c13b849bbc17b3b0acd0e": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "490cc1534ba4658bccfb56c1e154afa814d2338f3341aefb497befcccdde2254",
+      "name": "插牌裝飾(想了解詳情可向CS查詢)"
+    },
+    "block": {
+      "type": "tripetto-block-multiple-choice",
+      "version": "2.1.6"
+    },
+    "slot": {
+      "id": "43123cc07769b8d76aacd0a5e0ed9c3bd84615a8f01c13b849bbc17b3b0acd0e",
+      "reference": "94ee244893e3e3648cde27cbb062262af8f4ca3ce3cebe97b9f55cb1028c25a0",
+      "name": "*(推介) 閃閃燈插牌 (+ $40)",
+      "label": "Choice"
+    },
+    "values": {
+      "*": {
+        "value": true,
+        "time": 1609575859823
+      }
+    }
+  },
+  "e0c8417f7825755d1f331e69b967b94a5e5662cd2c2aa7e24b3913b3c5c169d9": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "490cc1534ba4658bccfb56c1e154afa814d2338f3341aefb497befcccdde2254",
+      "name": "插牌裝飾(想了解詳情可向CS查詢)"
+    },
+    "block": {
+      "type": "tripetto-block-multiple-choice",
+      "version": "2.1.6"
+    },
+    "slot": {
+      "id": "e0c8417f7825755d1f331e69b967b94a5e5662cd2c2aa7e24b3913b3c5c169d9",
+      "reference": "511a1da5cc37eebea9c102d5dfee65833bf2416bfb06bd56e9ad88ec25c365e7",
+      "name": "生日插牌 (+ $20)",
+      "label": "Choice"
+    },
+    "values": {
+      "*": {
+        "value": true,
+        "time": 1609575860190
+      }
+    }
+  },
+  "bd1923a247ff820fda5f12f3ae017fdbcf615a1bd85995c0fe7e0ee3019d63b3": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "beb94390cb4d7eaed0326745e5105c27bd0360b3869b80a7fbdad47ae96e2de4",
+      "name": "寫字朱古力牌 (+$10)(只限20個字母)"
+    },
+    "block": {
+      "type": "tripetto-block-text",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "bd1923a247ff820fda5f12f3ae017fdbcf615a1bd85995c0fe7e0ee3019d63b3",
+      "reference": "value",
+      "name": "attributes.paidSentence",
+      "label": "Text"
+    },
+    "values": {
+      "*": {
+        "value": "qweqwe",
+        "time": 1609575869392
+      }
+    }
+  },
+  "73537006d33aec9177339786e372c0455e2847003c0d15f0e814e3c306d69350": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "39e1451c63b4af36a7d375a1849a0ac92890ac1130250b8c03c38e90a93453bc",
+      "name": "寫名： 板上免費朱古力寫字 (只限8個字母)"
+    },
+    "block": {
+      "type": "tripetto-block-text",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "73537006d33aec9177339786e372c0455e2847003c0d15f0e814e3c306d69350",
+      "reference": "value",
+      "name": "attributes.sentence",
+      "label": "Text"
+    },
+    "values": {
+      "*": {
+        "value": "tytyrty",
+        "time": 1609575871210
+      }
+    }
+  },
+  "adbde85f5e199315ba99bc47301856381e2588419d51f2ba27f6a4de03268e7a": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "ef32c0fb18307b4f8a64388a02d6020de1dfc617c0a7393d944835a62072aaa8",
+      "name": "取蛋糕日期"
+    },
+    "block": {
+      "type": "tripetto-block-date",
+      "version": "1.1.2"
+    },
+    "slot": {
+      "id": "adbde85f5e199315ba99bc47301856381e2588419d51f2ba27f6a4de03268e7a",
+      "reference": "date",
+      "name": "deliveryDate",
+      "label": "Date"
+    },
+    "values": {
+      "*": {
+        "value": 1609977600000,
+        "time": 1609575873573
+      }
+    }
+  },
+  "ff8a6371fa786a6a6a6ef70a1b0860142baf0f97bedfb6f5f9521122a73873e9": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "b12b569d6479ea5fde04346274f3e02e75b1c5b64b57b4a6abbf0ea8f044a048",
+      "name": "取蛋糕大約時間"
+    },
+    "block": {
+      "type": "tripetto-block-dropdown",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "ff8a6371fa786a6a6a6ef70a1b0860142baf0f97bedfb6f5f9521122a73873e9",
+      "reference": "option",
+      "name": "deliveryTime",
+      "label": "Selected option"
+    },
+    "values": {
+      "*": {
+        "value": "1200- 1300",
+        "reference": "877fa330f8b89a9e3164ae8c9d55da389bf5d1e2e22db318beba0f5ec4ca8546",
+        "time": 1609575860729
+      }
+    }
+  },
+  "a52717bf628d87fa2f1f7fe30f219b960d75f3ec2760b875c8c635b9f2127082": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "80e73e0fcfc7f59caa2587c37e752dde4ea887da0aaf6668a3e92ea7a9d914fc",
+      "name": "如何稱呼？"
+    },
+    "block": {
+      "type": "tripetto-block-text",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "a52717bf628d87fa2f1f7fe30f219b960d75f3ec2760b875c8c635b9f2127082",
+      "reference": "value",
+      "name": "customerName",
+      "label": "Text"
+    },
+    "values": {
+      "*": {
+        "value": "tyry",
+        "time": 1609575875801
+      }
+    }
+  },
+  "891a27fee03691ba580274959fe57edc438ae22af6c53a9b0cbe18c7dc8e8a3d": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "d4845294628e8251cfdf1f7d22537d6335a6dc25b614e30895ca79ec7f8f3cd6",
+      "name": "聯絡電話 📞"
+    },
+    "block": {
+      "type": "tripetto-block-phone-number",
+      "version": "1.0.18"
+    },
+    "slot": {
+      "id": "891a27fee03691ba580274959fe57edc438ae22af6c53a9b0cbe18c7dc8e8a3d",
+      "reference": "phone-number",
+      "name": "customerPhone",
+      "label": "Phone number"
+    },
+    "values": {
+      "*": {
+        "value": "345345345",
+        "time": 1609575876753
+      }
+    }
+  },
+  "403e2dfbfb055d6880393cd50369dbf1fd9e5e332fd5f9f3a5a7e3656329e350": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "babe25055ef5f263ae6051e2e98a85c30435edd0c2262474b296eef29fdda1f9",
+      "name": "IG/FB 名稱"
+    },
+    "block": {
+      "type": "tripetto-block-text",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "403e2dfbfb055d6880393cd50369dbf1fd9e5e332fd5f9f3a5a7e3656329e350",
+      "reference": "value",
+      "name": "customerSocialName",
+      "label": "Text"
+    },
+    "values": {
+      "*": {
+        "value": "fdgrt",
+        "time": 1609575877672
+      }
+    }
+  },
+  "49d894e5dab2b70fc6ba8626e839e8f4d56a3ec2449f0d3443aa0f69891c9c05": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "7171462e110ff502a70e917ca18ed2e3f94d4ac34b6ebc032086db78affef412",
+      "name": "從哪下單？"
+    },
+    "block": {
+      "type": "tripetto-block-dropdown",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "49d894e5dab2b70fc6ba8626e839e8f4d56a3ec2449f0d3443aa0f69891c9c05",
+      "reference": "option",
+      "name": "customerSocialChannel",
+      "label": "Selected option"
+    },
+    "values": {
+      "*": {
+        "value": "WhatsApp",
+        "reference": "f83e744793b8d3da8a7877305794d539bab72a18415a5e3a08ca00e019c5e50d",
+        "time": 1609575860732
+      }
+    }
+  },
+  "a7ff97a17798ba34c9c4363b15f3aebf1d2f96f4bfa917b91f35e971a2960245": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "8f44a5b20fe3d951daae8cf0c606fc376da9f3ec6ace1172e437484f91859dc8",
+      "name": "取蛋糕方式(如選擇步兵速遞,請於送貨時間留意電話)"
+    },
+    "block": {
+      "type": "tripetto-block-dropdown",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "a7ff97a17798ba34c9c4363b15f3aebf1d2f96f4bfa917b91f35e971a2960245",
+      "reference": "option",
+      "name": "deliveryMethod",
+      "label": "Selected option"
+    },
+    "values": {
+      "*": {
+        "value": "門市自取(門市地址:尖沙咀山林道10-12號山林閣地下2C號鋪)",
+        "reference": "01ad6191a6116c00f4399d029dfd353d6b3d122d1aa3fa285dbd047359ebb066",
+        "time": 1609575860733
+      }
+    }
+  },
+  "2d8d7225cb299fd9ccee8356b08c233c46370e4040db13990530c23a752d28ba": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "71ca476ba96c19b007ff94285752fe0ff854b83ff69b6c130a3c3bc3178b8008",
+      "name": "送貨地址(因人手送貨,時間有機會有出入🙏敬請體諒)"
+    },
+    "block": {
+      "type": "tripetto-block-textarea",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "2d8d7225cb299fd9ccee8356b08c233c46370e4040db13990530c23a752d28ba",
+      "reference": "value",
+      "name": "deliveryAddress",
+      "label": "Multi-line text"
+    },
+    "values": {
+      "*": {
+        "value": "ertewsdf",
+        "time": 1609575880335
+      }
+    }
+  },
+  "c14638b6d22b748e04e9e197fbf806ba3f6c64245d28257c9a5e7334b2c61f70": {
+    "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
+    "node": {
+      "id": "e284cd8431219185d1135c1d2cec5f009292fb2da4c80c72c2c2da5ea72174ed",
+      "name": "Remarks(🚨如有任何特別要求，必須於下欄清楚列明，如資料錯誤導致蛋糕未能完成，Miss Marble均不會承擔🚨 )"
+    },
+    "block": {
+      "type": "tripetto-block-textarea",
+      "version": "3.0.4"
+    },
+    "slot": {
+      "id": "c14638b6d22b748e04e9e197fbf806ba3f6c64245d28257c9a5e7334b2c61f70",
+      "reference": "value",
+      "name": "remarks",
+      "label": "Multi-line text"
+    },
+    "values": {
+      "*": {
+        "value": "ytyurtyutyu",
+        "time": 1609575881809
+      }
+    }
+  }
+}
