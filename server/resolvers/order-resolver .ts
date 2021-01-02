@@ -113,12 +113,12 @@ const validateOrder = (order: Order): boolean => {
   return true;
 }
 
-const orderToRow = (orderInput: OrderInput, prevRow: any[]) => {
+const orderToRow = (orderInput: OrderInput, prevRow: any[] = []) => {
   const row: any = [];
   Object.entries(orderFields).forEach(([key, _columns]) => {
     const columns = [].concat(_columns);
 
-    let value = orderInput[key as keyof OrderInput] || orderInput.attributes[key as keyof OrderInput['attributes']];
+    let value = orderInput[key as keyof OrderInput] || orderInput?.attributes?.[key as keyof OrderInput['attributes']];
 
     switch(key) {
       case 'paid':
@@ -243,6 +243,15 @@ export class OrderResolver {
     const row = await (await googleSheet.init()).getRow(orderInput.id);
     const updatedRow = orderToRow(orderInput, row);
     await (await googleSheet.init()).updateRow(orderInput.id, updatedRow)
+    return orderInput;
+  }
+
+  @Mutation(returns => Order)
+  async createOrder(
+    @Arg('order', type => OrderInput) orderInput?: OrderInput
+  ) {
+    const row = orderToRow(orderInput);
+    await (await googleSheet.init()).insertRow(row)
     return orderInput;
   }
 }

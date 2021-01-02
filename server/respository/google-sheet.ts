@@ -6,8 +6,8 @@ import path from 'path';
 const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
 ];
-const spreadSheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
-// const spreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
+// const spreadSheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
+const spreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
 const snapshotSpreadSheetId = '1A8HAYl3OeEj_zetpD6HfGqUsW93nqXpn-f6oK3L45jI';
 
 const json = JSON.parse(process.env.SERVICE_ACCOUNT_KEY_FILE || fs.readFileSync(path.resolve(__dirname, '../../marble-service-account.json')) as unknown as string);
@@ -62,6 +62,22 @@ class GoogleSheetRespository {
       range: `A${index}:CM${Number(index) + 1}`
     });
     return (res.data.values || [])[0];
+  }
+
+  async insertRow(row: any) {
+    const values = [
+      row
+    ];
+    
+    await this.googleSheet.spreadsheets.values.append({
+      spreadsheetId: spreadSheetId,
+      range: 'A:ZZ',
+      valueInputOption: 'USER_ENTERED',
+      insertDataOption: 'INSERT_ROWS',
+      requestBody: {
+        values: values,
+      },
+    });
   }
 
   async updateRow(index: any, row: any) {
