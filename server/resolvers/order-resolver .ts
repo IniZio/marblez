@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
 import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth, isBefore, addYears } from 'date-fns';
 import agent from 'superagent';
+import { get } from 'lodash';
 
 import { Order, OrderModel } from "../entities/order";
 import * as GoogleSheetEvent from './types/google-sheet-event-input';
@@ -82,7 +83,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
         order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
         break;
       case 'createdAt':
-        order[key] = parse(order[key], 'M/d/y k:m:s', new Date());
+        order[key] = parse(order[key], 'M/d/y h:m:s', new Date());
         if (!isValid(order[key])) {
           order[key] = undefined;
         }
@@ -118,31 +119,34 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[] = []) => {
   Object.entries(orderFields).forEach(([key, _columns]) => {
     const columns = [].concat(_columns);
 
-    let value = orderInput[key as keyof OrderInput] || orderInput?.attributes?.[key as keyof OrderInput['attributes']];
+    let value = get(orderInput, key);
 
     switch(key) {
       case 'paid':
-      case 'printed':
+      case 'attributes.printed':
         value =  [null, undefined].includes(value) ? undefined : value;
         break;
-      case 'date':
+      case 'deliveryDate':
         value = format(value as any, 'M/d')
         break;
-      case 'decorations':
-      case 'toppings':
-        value = (value as string[]).filter(Boolean).join(', ')
+      case 'createdAt':
+        value = format(value as any, 'M/d/y h:m:s')
         break;
-      case 'cake':
-      case 'shape':
-      case 'color':
-      case 'taste':
-      case 'letter':
+      case 'attributes.decorations':
+      case 'attributes.toppings':
+        value = ((value || []) as string[]).filter(Boolean).join(', ')
+        break;
+      case 'attributes.cake':
+      case 'attributes.shape':
+      case 'attributes.color':
+      case 'attributes.taste':
+      case 'attributes.letter':
         value = (value as string)?.replace(/\([^(\))]*\)/g, '').trim();
         break;
     }
 
     let found;
-    for (const column of columns) {
+    for (const column of columns.reverse()) {
       if (prevRow[column]) {
         found = true;
         row[column] = [null, undefined].includes(value) ? row[column] : value;

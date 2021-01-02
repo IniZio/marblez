@@ -1,10 +1,20 @@
 import * as React from 'react';
+import { gql } from 'apollo-boost';
 import { get, set } from 'lodash';
 import { run } from "tripetto-runner-classic";
 import { Export, IDefinition, INode } from "tripetto-runner-foundation";
 import Services from "tripetto-services";
+import { useMutation } from 'react-apollo';
 
 const { definition, styles, l10n, locale, translations, onSubmit } = Services.init({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoicmg1amlTWmNpMi9RVVFwc0JVODQ1TXlRcHpaOHpldUdpS0J5QTREaE9QRT0iLCJkZWZpbml0aW9uIjoiaDFETTNmM0JnMHN6YWlIL1RmYk5kTHAxZ3gxZUZDTnZ5L29TaTRKdW1iRT0iLCJ0eXBlIjoiY29sbGVjdCJ9.YCKVhrT5_v5RbPeMdGBgZZe6hXsfyFMpUAEjlcmm3fc" });
+
+const CREATE_ORDER = gql`
+  mutation createOrder($order: OrderInput!) {
+    createOrder(order: $order) {
+      id
+    }
+  }
+`;
 
 function Form({
   cake,
@@ -40,6 +50,8 @@ function Form({
     [cake],
   )
 
+  const [createOrder] = useMutation(CREATE_ORDER);
+
   React.useEffect(
     () => {
       run({
@@ -72,16 +84,19 @@ function Form({
 
               if (
                 (type.includes('multiple') || type.includes('checkboxes'))
-                && value === true
               ) {
-                name = nodeIdToNodeMap[node.id].block?.alias as any || name;
-                value = (get(orderInput, name) || []).concat(_name);
+                if (value === true) {
+                  name = nodeIdToNodeMap[node.id].block?.alias as any || name;
+                  value = (get(orderInput, name) || []).concat(_name);
+                } else {
+                  return;
+                }
               }
 
               set(orderInput, name, value);
             })
-            console.log('=== order input', orderInput)
-
+            createOrder({ variables: { order: orderInput } })
+              .then(console.log)
             return undefined
         },
         snapshot,
@@ -91,7 +106,7 @@ function Form({
         persistent: false
       });
     },
-    [snapshot],
+    [createOrder, snapshot],
   );
   
   return (

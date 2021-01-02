@@ -68,10 +68,12 @@ class GoogleSheetRespository {
     const values = [
       row
     ];
+
+    console.log('=== values', values);
     
     await this.googleSheet.spreadsheets.values.append({
       spreadsheetId: spreadSheetId,
-      range: 'A:ZZ',
+      range: 'A:A',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {

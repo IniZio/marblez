@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "reflect-metadata";
-import createApolloClient from "./apollo/client";
+import { createApolloClient } from "./apollo/client";
 import App from "./App";
 
 
