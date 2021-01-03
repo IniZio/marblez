@@ -18,17 +18,19 @@ const CREATE_ORDER = gql`
 
 function Form({
   cake,
+  onSubmit: _onSubmit,
   ...props
 }: {
   cake: string;
-} & React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
+  onSubmit: () => any;
+}) {
   const formRef = React.useRef<HTMLDivElement>(null);
   const formDefinitionRef = React.useRef<IDefinition>();
   React.useEffect(() => {
     definition.then(def => { formDefinitionRef.current = def; console.log('=== def', def) });
   }, [])
 
-  const [snapshot, setSnapshot] = React.useState({"a":[{"a":"0bb27fb849172d746f09d1af06f1a3702318025c231b8bb5e4e7b32061fab6a7","b":[{"a":[{"a":"953817ae7981c1a1d1a0a69e06b0a3df4ce3e17d42837057c233dec228adff4d","b":1,"c":9,"d":1,"f":"684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"},{"a":"42e4be1c0290077089662c1163de73568871ff842199bac8680c431757416705","c":3,"d":1,"e":"953817ae7981c1a1d1a0a69e06b0a3df4ce3e17d42837057c233dec228adff4d","f":"ebef07c003034dace7a6e904e9444302dbcdaa92435018f6268e00292048f884","h":"684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1","j":"106b2edc124d9c3a5dd5ecd291577938a8161867068fcaf3048688267859eec4","k":[{"a":"f5aa3f69f3e17a1092cf9b2402e0d8d5d61d7bc307818f5b5c5ba7bb8043a458","b":7},{"a":"f03a572dbdada5317e43d9be46a65e80a0fb2e71872c0fa48c5ef2fc3746dfb2","b":7}]}],"b":"42e4be1c0290077089662c1163de73568871ff842199bac8680c431757416705"}],"c":[{"a":"202fb09e1468b67bd24bc240973d2a6fceea825fa43b8dab58a0957f7b614d96","b":[{"a":"*","b":"雲石鏡面芝士凍餅系列","c":"163b253110e802fbe3439bd30fad9cc1e82f4c82f5800111e9f9028e3e5aef9d","d":1,"e":1609583442872}]}]}],"b":{"b":{"_08c32314f8f2a91e45946a3216d68b2005a63e5f488520d7cd67cdaff9dfd638":false},"e":1609583445950}});
+  const [snapshot, setSnapshot] = React.useState({"a":[{"a":"4fd665129084743b726c2d8a3a91ac9e2dc4b38cc307c4080024aeabd863151a","b":[{"a":[{"a":"4315d1b91f7c26f10875234048aaacc492454842e37f14e01a55c04ca8ddcc56","b":1,"c":9,"d":1,"f":"684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"},{"a":"bf51be883cc67e8fb05247c0ca48f84c960ce4591d7b20b6aec5c609ea5b1c56","c":3,"d":1,"e":"4315d1b91f7c26f10875234048aaacc492454842e37f14e01a55c04ca8ddcc56","f":"ebef07c003034dace7a6e904e9444302dbcdaa92435018f6268e00292048f884","h":"684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1","j":"106b2edc124d9c3a5dd5ecd291577938a8161867068fcaf3048688267859eec4","k":[{"a":"f5aa3f69f3e17a1092cf9b2402e0d8d5d61d7bc307818f5b5c5ba7bb8043a458","b":7},{"a":"f03a572dbdada5317e43d9be46a65e80a0fb2e71872c0fa48c5ef2fc3746dfb2","b":7}]}],"b":"bf51be883cc67e8fb05247c0ca48f84c960ce4591d7b20b6aec5c609ea5b1c56"},{"a":[{"a":"4315d1b91f7c26f10875234048aaacc492454842e37f14e01a55c04ca8ddcc56","b":1,"c":9,"d":1,"f":"684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1"},{"a":"bf51be883cc67e8fb05247c0ca48f84c960ce4591d7b20b6aec5c609ea5b1c56","b":1,"c":9,"d":1,"e":"4315d1b91f7c26f10875234048aaacc492454842e37f14e01a55c04ca8ddcc56","f":"ebef07c003034dace7a6e904e9444302dbcdaa92435018f6268e00292048f884","h":"684888c0ebb17f374298b65ee2807526c066094c701bcc7ebbe1c1095f494fc1","j":"106b2edc124d9c3a5dd5ecd291577938a8161867068fcaf3048688267859eec4","k":[{"a":"f5aa3f69f3e17a1092cf9b2402e0d8d5d61d7bc307818f5b5c5ba7bb8043a458","b":7},{"a":"f03a572dbdada5317e43d9be46a65e80a0fb2e71872c0fa48c5ef2fc3746dfb2","b":7}]},{"a":"a8e65f93f487acd212c61712b40746d36ee806ecbc8cea8b4ce68d21c6154ff4","c":3,"d":1,"e":"bf51be883cc67e8fb05247c0ca48f84c960ce4591d7b20b6aec5c609ea5b1c56","f":"9a87bbef27ecf02fdece990a12d89cd9100324ed82388e1d94bfce191e2e630a","h":"1e6500fe1aa76a53e5a89e2835545acf7bd824aab651b8adb83652ae9e636abf","j":"106b2edc124d9c3a5dd5ecd291577938a8161867068fcaf3048688267859eec4","k":[{"a":"792aacb6fb533385d01a6daf5e9c8131122e9a09ba9efdac00c65c6089a34c69","b":7},{"a":"88dc1d8b8c2d96f5231fbb919a1626712f9cb20713f7bcd1b1120a459192beb9","b":7}]}],"b":"a8e65f93f487acd212c61712b40746d36ee806ecbc8cea8b4ce68d21c6154ff4"}],"c":[{"a":"6afc617e2d6ef10c65cad42a005e9c075319abe9d63367afb8a348a8d7bf3524","b":[{"a":"*","b":"海鹽流心系列","c":"eea8e10e8737e68828cc7fadb52bd411b937077767cd12f5b40214f1d2cc1a0a","d":1,"e":1609676247979}]},{"a":"00ba5b9a57079eca0e9a5502c59ba0a92d474ef8640088bd68f95ef2d558b420","b":[{"a":"*","d":1}]}]}],"b":{"b":{"_08c32314f8f2a91e45946a3216d68b2005a63e5f488520d7cd67cdaff9dfd638":false,"_8530655688605f1544bf8ae8d67f8480fff03650cc88be008ccfeb462369ce7e":false},"e":1609676336356}});
   React.useEffect(
     () => {
       (async () => {
@@ -36,11 +38,11 @@ function Form({
 
         if (_definition) {
           const newSnapshot = {...snapshot};
-          newSnapshot.a[0].c[0].b[0].b = cake;
-          // @ts-ignore-next-line
-          newSnapshot.a[0].c[0].b[0].c = _definition.clusters?.[0]?.nodes?.[0].block?.options?.find(({ value, name }) => [name, value].includes(cake))?.id || '';
+          (newSnapshot.a[0].c[0].b[0] as any).b = cake;
+          // // // @ts-ignore-next-line
+          (newSnapshot.a[0].c[0].b[0] as any).c = (_definition.clusters?.[0]?.nodes?.[0].block?.options as any)?.find(({ value, name }: { value: any; name: string }) => [name, value].includes(cake))?.id || '';
 
-          console.log('=== cake', newSnapshot.a[0].c[0].b[0].b, newSnapshot.a[0].c[0].b[0].c, _definition.clusters?.[0]?.nodes?.[0].block?.options)
+          // console.log('=== cake', newSnapshot.a[0].c[0].b[0].b, newSnapshot.a[0].c[0].b[0].c, _definition.clusters?.[0]?.nodes?.[0].block?.options)
 
           setSnapshot(newSnapshot);
         } 
@@ -95,8 +97,8 @@ function Form({
 
               set(orderInput, name, value);
             })
-            createOrder({ variables: { order: orderInput } })
-              .then(console.log)
+            await createOrder({ variables: { order: orderInput } })
+            await _onSubmit();
             return undefined
         },
         snapshot,
@@ -106,16 +108,12 @@ function Form({
         persistent: false
       });
     },
-    [createOrder, snapshot],
+    [_onSubmit, createOrder, snapshot],
   );
   
   return (
     <div ref={formRef} {...props} />
   );
 }
-
-Form.defaultProps = {
-  cake: '星空流心系列',
-};
 
 export default Form;

@@ -1,6 +1,6 @@
 import tw, { css, styled, theme } from 'twin.macro'
 
-const Button = styled.button<{isPrimary?: boolean; isSecondary?: boolean; isSmall?: boolean}>(({ isPrimary, isSecondary, isSmall }) => [
+const ExampleButton = styled.button<{isPrimary?: boolean; isSecondary?: boolean; isSmall?: boolean}>(({ isPrimary, isSecondary, isSmall }) => [
   // The common button styles added with the tw import
   tw`text-lg px-8 py-2 rounded focus:outline-none`,
   tw`transform transition-transform duration-75`,
@@ -9,7 +9,7 @@ const Button = styled.button<{isPrimary?: boolean; isSecondary?: boolean; isSmal
   tw`hocus:(scale-105 text-yellow-400)`,
 
   // Use props to conditionally style your components
-  isPrimary && tw`bg-electric text-white border-black`,
+  isPrimary && tw`bg-primary text-white border-black`,
 
   // Combine regular css with tailwind classes within backticks
   isSecondary && [
@@ -28,4 +28,4 @@ const Button = styled.button<{isPrimary?: boolean; isSecondary?: boolean; isSmal
   `,
 ])
 
-export default Button
+export default ExampleButton

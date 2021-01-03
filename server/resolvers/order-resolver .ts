@@ -6,7 +6,7 @@ import { get } from 'lodash';
 
 import { Order, OrderModel } from "../entities/order";
 import * as GoogleSheetEvent from './types/google-sheet-event-input';
-import googleSheet from '../respository/google-sheet';
+import googleSheet, { testGoogleSheetRepository } from '../respository/google-sheet';
 import { NotificationModel, Notification } from '../entities/notification';
 import PubSubEvent from '../pubsub';
 
@@ -244,9 +244,9 @@ export class OrderResolver {
   async updateOrder(
     @Arg('order', type => OrderInput) orderInput?: OrderInput
   ) {
-    const row = await (await googleSheet.init()).getRow(orderInput.id);
+    const row = await (await testGoogleSheetRepository.init()).getRow(orderInput.id);
     const updatedRow = orderToRow(orderInput, row);
-    await (await googleSheet.init()).updateRow(orderInput.id, updatedRow)
+    await (await testGoogleSheetRepository.init()).updateRow(orderInput.id, updatedRow)
     return orderInput;
   }
 
@@ -255,7 +255,7 @@ export class OrderResolver {
     @Arg('order', type => OrderInput) orderInput?: OrderInput
   ) {
     const row = orderToRow(orderInput);
-    await (await googleSheet.init()).insertRow(row)
+    await (await testGoogleSheetRepository.init()).insertRow(row)
     return orderInput;
   }
 }

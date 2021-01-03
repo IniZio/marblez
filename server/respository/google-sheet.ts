@@ -6,8 +6,8 @@ import path from 'path';
 const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
 ];
-// const spreadSheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
-const spreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
+const spreadSheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
+const testSpreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
 const snapshotSpreadSheetId = '1A8HAYl3OeEj_zetpD6HfGqUsW93nqXpn-f6oK3L45jI';
 
 const json = JSON.parse(process.env.SERVICE_ACCOUNT_KEY_FILE || fs.readFileSync(path.resolve(__dirname, '../../marble-service-account.json')) as unknown as string);
@@ -69,10 +69,8 @@ class GoogleSheetRespository {
       row
     ];
 
-    console.log('=== values', values);
-    
     await this.googleSheet.spreadsheets.values.append({
-      spreadsheetId: spreadSheetId,
+      spreadsheetId: this.spreadSheetId,
       range: 'A:A',
       valueInputOption: 'USER_ENTERED',
       insertDataOption: 'INSERT_ROWS',
@@ -94,7 +92,7 @@ class GoogleSheetRespository {
     
     
     await this.googleSheet.spreadsheets.values.batchUpdate({
-      spreadsheetId: spreadSheetId,
+      spreadsheetId: this.spreadSheetId,
       requestBody: {
         valueInputOption: 'raw',
         data,
@@ -138,3 +136,4 @@ export default new GoogleSheetRespository({
 })
 
 export const snapshotGoogleSheetRepository = new GoogleSheetRespository({ spreadSheetId: snapshotSpreadSheetId });
+export const testGoogleSheetRepository = new GoogleSheetRespository({ spreadSheetId: testSpreadSheetId })
