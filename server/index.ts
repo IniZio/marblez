@@ -1,3 +1,5 @@
+import 'source-map-support/register';
+
 import { ApolloServer } from "apollo-server";
 import dotenv from 'dotenv';
 import { ObjectId } from "mongodb";

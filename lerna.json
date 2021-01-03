@@ -2,7 +2,8 @@
   "packages": [
     "client",
     "server",
-    "graphql"
+    "graphql",
+    "external"
   ],
   "version": "0.0.0"
 }

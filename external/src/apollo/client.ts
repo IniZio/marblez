@@ -1,11 +1,9 @@
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import ApolloClient, { Resolvers } from "apollo-client";
+import ApolloClient from "apollo-client";
 import { ApolloLink, split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
-import { withClientState } from 'apollo-link-state';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { buildTypeDefsAndResolvers } from "type-graphql";
 
 
 const API_URL = process.env.REACT_APP_API_URL || process.env.API_URL;
@@ -31,8 +29,6 @@ export async function createApolloClient() {
     wsLink,
     httpLink,
   )
-
-  const cache = new InMemoryCache();
 
   const client = new ApolloClient({
     link: ApolloLink.from([

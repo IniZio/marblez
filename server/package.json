@@ -24,6 +24,7 @@
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
     "graphql-type-json": "^0.3.2",
+    "lodash": "^4.17.20",
     "messagebird": "^3.5.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.6",
@@ -31,12 +32,14 @@
     "node-cron": "^2.0.3",
     "recursive-diff": "^1.0.8",
     "reflect-metadata": "^0.1.13",
+    "source-map-support": "^0.5.19",
     "superagent": "^5.2.2",
     "twilio": "^3.49.2",
     "type-graphql": "^0.17.6"
   },
   "devDependencies": {
     "@types/graphql-iso-date": "^3.3.3",
+    "@types/lodash": "^4.14.167",
     "@types/node-cron": "^2.0.3",
     "@types/superagent": "^4.1.7",
     "@types/tsc-watch": "^4.2.0",

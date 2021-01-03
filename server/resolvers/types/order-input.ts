@@ -17,6 +17,12 @@ export class OrderInput {
   customerPhone?: string;
 
   @Field({ nullable: true })
+  customerSocialChannel?: string;
+
+  @Field({ nullable: true })
+  customerSocialName?: string;
+
+  @Field({ nullable: true })
   deliveryDate?: Date;
 
   @Field({ nullable: true })
