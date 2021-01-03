@@ -11,9 +11,9 @@ function App() {
   return (
     <div tw="font-normal">
       <GlobalStyles />
-      <div tw="container my-5 max-w-screen-md!">
-        <h1 tw="font-title font-semibold text-4xl text-gray-900">Miss Marble</h1>
-        <div tw="my-9 mx-2 sm:mx-0 h-80">
+      <div tw="container px-2 sm:px-0 my-5 max-w-screen-md!">
+        <h1 tw="font-title font-semibold text-3xl text-gray-900">Miss Marble</h1>
+        <div tw="mt-5 my-9 sm:h-80 h-44">
           <img
             src={logoBannerSrc} 
             alt="banner" 

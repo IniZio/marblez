@@ -20,7 +20,7 @@ function ListingsBoard() {
   }
 
   return (
-    <div tw="grid grid-cols-2 grid-rows-3 gap-4">
+    <div tw="grid grid-cols-1 sm:grid-cols-2 grid-rows-3 gap-4">
       {(formDefinition.clusters[0]?.nodes?.[0]?.block?.choices as IListing[])?.map(listing => (
         <ListingCard 
           listing={listing}

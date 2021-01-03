@@ -25,7 +25,7 @@ function Modal({
   
   return (
     <div tw="h-screen w-full fixed left-0 top-0 flex justify-center items-center bg-black bg-opacity-50">
-      <div tw="my-auto bg-white rounded shadow-lg w-1/3 overflow-hidden">
+      <div tw="my-auto bg-white rounded shadow-lg w-full sm:w-1/3 overflow-hidden">
         <div tw="border-b px-4 py-2 flex justify-between items-center">
           <h3 tw="font-semibold text-lg">{title}</h3>
           <button onClick={onRequestClose}><FiX /></button>
