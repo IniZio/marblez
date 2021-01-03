@@ -83,7 +83,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
         order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
         break;
       case 'createdAt':
-        order[key] = parse(order[key], 'M/d/y h:m:s', new Date());
+        order[key] = parse(order[key], 'M/d/y H:mm:ss', new Date());
         if (!isValid(order[key])) {
           order[key] = undefined;
         }
@@ -130,7 +130,7 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[] = []) => {
         value = format(value as any, 'M/d')
         break;
       case 'createdAt':
-        value = format(value as any, 'M/d/y h:m:s')
+        value = format(value as any, 'M/d/y H:mm:ss')
         break;
       case 'attributes.decorations':
       case 'attributes.toppings':
@@ -221,6 +221,7 @@ export class OrderResolver {
     const keyword = _keyword?.replace(' ', '');
 
     return orders
+    .reverse()
     .filter(order => !pickupDate || isSameDay(order.deliveryDate, addHours(pickupDate, 8)))
     .filter(order => !pickupMonth || getMonth(order.deliveryDate) === pickupMonth)
     .filter(order => !keyword || order.customerPhone?.includes(keyword) || order.customerName?.includes(keyword) || order.customerSocialName?.includes(keyword))
