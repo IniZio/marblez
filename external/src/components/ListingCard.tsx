@@ -20,7 +20,7 @@ function ListingCard({
   return (
     <>
       <div 
-        tw="flex max-w-md bg-white shadow-sm rounded-md overflow-hidden bg-gray-50"
+        tw="transition-all transform hover:-translate-y-1 hover:scale-105 flex max-w-md bg-white shadow-sm rounded-md overflow-hidden bg-gray-50"
       >
         <div tw="w-1/3 bg-cover" style={{ backgroundImage: `url('${listing.image}')` }} />
         <div tw="w-2/3 p-4 flex flex-col">

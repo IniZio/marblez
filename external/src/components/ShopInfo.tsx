@@ -17,7 +17,7 @@ ContactLink.defaultProps = {
 
 function ShopInfo() {
   return (
-    <div tw="my-6">
+    <div tw="my-10">
       <div tw="flex items-center">
         <h3 tw="font-title font-semibold text-lg text-gray-900">Shop Info</h3>
         <FiClock tw="ml-4 mr-1" /> 12PM - 8PM
