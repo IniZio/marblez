@@ -5,6 +5,7 @@ import logoBannerSrc from './assets/logo-banner.jpg';
 
 import './App.css';
 import ListingsBoard from './components/ListingsBoard';
+import ShopInfo from './components/ShopInfo';
 
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
       <GlobalStyles />
       <div tw="container px-2 sm:px-0 my-5 max-w-screen-md!">
         <h1 tw="font-title font-semibold text-3xl text-gray-900">Miss Marble</h1>
-        <div tw="mt-5 my-9 sm:h-80 h-44">
+        <div tw="my-5 sm:h-80 h-44">
           <img
             src={logoBannerSrc} 
             alt="banner" 
@@ -26,6 +27,7 @@ function App() {
             `}
           />
         </div>
+        <ShopInfo />
         <ListingsBoard />
       </div>
     </div>
