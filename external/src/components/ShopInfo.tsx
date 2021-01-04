@@ -4,8 +4,8 @@ import { FiClock, FiMapPin } from 'react-icons/fi'
 import { FaInstagram, FaWhatsapp } from 'react-icons/fa'
 
 const ContactLink = styled.a`
-  ${tw`flex items-center bg-blue-50 px-3 py-2 w-44 flex justify-center text-xs text-blue-600 rounded`}
-
+  ${tw`flex items-center bg-blue-50 px-3 py-2 w-full flex justify-center text-xs text-blue-600 rounded`}
+  ${tw`sm:w-44`}
   > svg {
     ${tw`mr-1`}
   }
@@ -22,7 +22,7 @@ function ShopInfo() {
         <h3 tw="font-title font-semibold text-lg text-gray-900">Shop Info</h3>
         <FiClock tw="ml-4 mr-1" /> 12PM - 8PM
       </div>
-      <div tw="my-4 flex space-x-4">
+      <div tw="my-4 flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
         <ContactLink href="https://www.google.com.hk/maps/place/Miss+Marble/@22.3026222,114.1701171,17z/data=!3m1!4b1!4m5!3m4!1s0x34040194492f3381:0x6f1560137f0d270a!8m2!3d22.3026222!4d114.1723111">
           <FiMapPin />
           尖沙咀山林道
