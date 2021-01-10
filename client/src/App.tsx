@@ -10,7 +10,6 @@ import { theme } from './theme';
 const App: FC<{ client: ApolloClient<any> }> = ({ client }) => (
   <ApolloProvider client={client}>
     <ChakraProvider theme={theme}>
-      <Button mb={5} data-feedbackok-trigger="l4xncog">Give Feedback</Button>
       <Tabs defaultIndex={0} isFitted variant="enclosed-colored">
         <TabList>
             <Tab>Today</Tab>
