@@ -10,21 +10,7 @@ import { theme } from './theme';
 const App: FC<{ client: ApolloClient<any> }> = ({ client }) => (
   <ApolloProvider client={client}>
     <ChakraProvider theme={theme}>
-      <Tabs defaultIndex={0} isFitted variant="enclosed-colored">
-        <TabList>
-            <Tab>Today</Tab>
-            <Tab>Calendar</Tab>
-        </TabList>
-
-        <TabPanels>
-            <TabPanel p={[2]}>
-                <OverviewScreen />
-            </TabPanel>
-            <TabPanel p={[2]}>
-                <OrdersCalendar />
-            </TabPanel>
-        </TabPanels>
-        </Tabs>
+      <OverviewScreen />
     </ChakraProvider>
   </ApolloProvider>
 );

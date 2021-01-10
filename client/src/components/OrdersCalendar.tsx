@@ -17,13 +17,28 @@ function isValidDate(d) {
   return d instanceof Date && !isNaN(d);
 }
 
-function OrdersCalendar() {
+function canBeParsed(time, date) {
+  try {
+    parse(time.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(date))?.toISOString()
+    parse(time.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(date))?.toISOString()
+  } catch {
+    return false;
+  }
+
+  return true;
+}
+
+function OrdersCalendar({
+  filter
+} : {
+  filter: any
+}) {
   const [pickupDate, setPickupDate] = React.useState<Date>(new Date());  
   const calendarRef = React.useRef<Calendar>(null);
 
-  const filter = useMemo(() => ({
-    pickupMonth: pickupDate.getMonth(),
-  }), [pickupDate]);
+  // const filter = useMemo(() => ({
+  //   pickupMonth: pickupDate.getMonth(),
+  // }), [pickupDate]);
   const {data: { ordersOfMonth } = { }, loading, called} = useQuery(gql`
     query ordersOfMonth(
       $pickupMonth: Float
@@ -44,9 +59,9 @@ function OrdersCalendar() {
 
   React.useEffect(
     () => {
-      calendarRef.current?.getInstance().setDate(pickupDate);
+      calendarRef.current?.getInstance().setDate(filter.pickupDate);
     }, 
-    [pickupDate]
+    [filter]
   );
 
   const ordersAsEvents = useMemo(
@@ -56,15 +71,23 @@ function OrdersCalendar() {
       }
 
       return ordersOfMonth.filter(order => {
-        if (!(order.date && isValidDate(new Date(order.date)))) {
+        if (!(order.deliveryDate && isValidDate(new Date(order.deliveryDate)))) {
+          return false;
+        }
+
+        if (!(order.deliveryTime && (canBeParsed(order.deliveryTime, order.deliveryDate)))) {
+          if (order.deliveryTime) {
+            console.log('=== invalid time', order.deliveryTime)
+          }
+          
           return false;
         }
 
         // try {
-        //   parse(order.time.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString();
-        //   parse(order.time.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString();
+        //   parse(order.deliveryTime.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.deliveryDate))?.toISOString();
+        //   parse(order.deliveryTime.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.deliveryDate))?.toISOString();
         // } catch {
-        //   console.log(order.time)
+        //   console.log(order.deliveryTime)
           
         //   return false;
         // }
@@ -73,12 +96,12 @@ function OrdersCalendar() {
       ).map((order, index) => ({
         id: index,
         calendarId: '0',
-        title: `${order.cake} ${order.size}`,
-        category: 'time',
+        title: `${order.attributes.cake} ${order.attributes.size}`,
+        category: 'task',
         dueDateClass: '',
-        start: parse(order.time.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString(),
-        end: parse(order.time.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.date))?.toISOString(),
-        rawTime: order.time,
+        start: parse(order.deliveryTime.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.deliveryDate))?.toISOString(),
+        end: parse(order.deliveryTime.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.deliveryDate))?.toISOString(),
+        rawTime: order.deliveryTime,
         body:  order2Lines(order).join('\n'),
       }))
     }, 
@@ -88,7 +111,7 @@ function OrdersCalendar() {
   const showFullCalendar = useMediaLayout({minWidth: '700px'});
   
   return (
-    <Flex>
+    <Flex h={300} overflow="hidden" mt={4}>
       <Global
         styles={css`
           .tui-full-calendar-popup-detail .tui-full-calendar-content {
@@ -98,12 +121,13 @@ function OrdersCalendar() {
         `}
       />
       <Box flex={1}>
-        <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
+        {/* <DatePicker value={pickupDate} onValue={setPickupDate} my={5} /> */}
         <Calendar
           ref={calendarRef}
           defaultView="day"
-          view={showFullCalendar ? 'month' : 'day'}
-          height="900px"
+          view={showFullCalendar ? 'week' : 'day'}
+          // height="900px"
+          height="100px"
           calendars={[
             {
               id: '0',
@@ -119,7 +143,7 @@ function OrdersCalendar() {
             startDayOfWeek: 0
           }}
           schedules={ordersAsEvents}
-          scheduleView={['time']}
+          scheduleView={false}
           taskView={['task']}
           // template={{
           //   milestone(schedule) {

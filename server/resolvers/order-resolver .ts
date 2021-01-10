@@ -223,7 +223,7 @@ export class OrderResolver {
     return orders
     .reverse()
     .filter(order => !pickupDate || isSameDay(order.deliveryDate, addHours(pickupDate, 8)))
-    .filter(order => !pickupMonth || getMonth(order.deliveryDate) === pickupMonth)
+    .filter(order => pickupMonth === undefined || getMonth(order.deliveryDate) === pickupMonth)
     .filter(order => !keyword || order.customerPhone?.includes(keyword) || order.customerName?.includes(keyword) || order.customerSocialName?.includes(keyword))
     // Sort from latest pickup date
     .sort((a, b) => compareDesc(a.deliveryDate, b.deliveryDate))

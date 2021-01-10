@@ -7,6 +7,7 @@ import { useQuery } from "react-apollo";
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
 import DatePicker from '../../components/DatePicker';
 import Order from '../../components/Order';
+import OrdersCalendar from '../../components/OrdersCalendar';
 import OrderStats from '../../components/OrderStats';
 import { useDebounce } from '../../hooks';
 import { downloadURI } from '../../util/dom';
@@ -181,35 +182,36 @@ function Overview() {
           <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
         </HStack>
         <OrderStats date={pickupDate} />
-          {(loading && !autoReload) ? (
-            [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
-          ) : (
-            <>
-              {filteredNewOrders.length > 0 && (
-                <Box p={3} border="1px solid green">
-                  <Heading my={3}>急單</Heading>
-                    <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
-                      {(
-                        filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
-                      )}
-                    </SimpleGrid>
-                </Box>
-              )}
-
-              {filteredExistingOrders.length > 0 && (
-                <Box p={3}>
-                  <Heading my={3}>舊單</Heading>
+        <OrdersCalendar filter={filter} />
+        {(loading && !autoReload) ? (
+          [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
+        ) : (
+          <>
+            {filteredNewOrders.length > 0 && (
+              <Box p={3} border="1px solid green">
+                <Heading my={3}>急單</Heading>
                   <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
-                    {(loading && !autoReload) ? (
-                      [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
-                    ) : (
-                      filteredExistingOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
+                    {(
+                      filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
                     )}
                   </SimpleGrid>
-                </Box>
-              )}
-            </>
-          )}
+              </Box>
+            )}
+
+            {filteredExistingOrders.length > 0 && (
+              <Box p={3}>
+                <Heading my={3}>舊單</Heading>
+                <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
+                  {(loading && !autoReload) ? (
+                    [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
+                  ) : (
+                    filteredExistingOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
+                  )}
+                </SimpleGrid>
+              </Box>
+            )}
+          </>
+        )}
       </Box>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
     </Flex>
