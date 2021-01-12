@@ -169,20 +169,20 @@ function Overview() {
   // );
 
   return (
-    <Flex>
-      <Box padding={[0, 5]} flex={1} maxW="100%">
+    <Flex px={[2, 5]}>
+      <Box flex={1} maxW="100%">
         <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
         <InputGroup mb={5}>
           <InputLeftElement children={<PhoneIcon color="gray.300" />} />
           <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
-        <HStack spacing={[0, 5]} pb={5} flexWrap={['wrap']}>
-          <Button mb={[3, 0]} leftIcon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
-          <Button mb={[3, 0]} leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
+        <HStack spacing={[1, 5]} pb={5} flexWrap={['wrap']}>
+          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
+          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
           <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
         </HStack>
         <OrderStats date={pickupDate} />
-        <OrdersCalendar filter={filter} />
+        {/* <OrdersCalendar filter={filter} /> */}
         {(loading && !autoReload) ? (
           [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
         ) : (

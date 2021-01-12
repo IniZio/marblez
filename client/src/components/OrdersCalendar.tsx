@@ -75,22 +75,11 @@ function OrdersCalendar({
           return false;
         }
 
-        if (!(order.deliveryTime && (canBeParsed(order.deliveryTime, order.deliveryDate)))) {
-          if (order.deliveryTime) {
-            console.log('=== invalid time', order.deliveryTime)
-          }
+        if (order.deliveryTime && !canBeParsed(order.deliveryTime, order.deliveryDate)) {
+          order.deliveryTime = '1200-1300'
           
           return false;
         }
-
-        // try {
-        //   parse(order.deliveryTime.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.deliveryDate))?.toISOString();
-        //   parse(order.deliveryTime.split('-')[1]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.deliveryDate))?.toISOString();
-        // } catch {
-        //   console.log(order.deliveryTime)
-          
-        //   return false;
-        // }
 
         return true;
       ).map((order, index) => ({
@@ -111,7 +100,7 @@ function OrdersCalendar({
   const showFullCalendar = useMediaLayout({minWidth: '700px'});
   
   return (
-    <Flex h={300} overflow="hidden" mt={4}>
+    <Flex h={300} overflow="scroll" mt={4}>
       <Global
         styles={css`
           .tui-full-calendar-popup-detail .tui-full-calendar-content {
