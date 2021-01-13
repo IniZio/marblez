@@ -52,7 +52,17 @@ async function bootstrap() {
     const context: Context = { user: defaultUser };
 
     // Create GraphQL server
-    const server = new ApolloServer({ schema, context });
+    const server = new ApolloServer({ 
+      schema, 
+      context,
+      cors: {
+        origin: [
+          'https://marblez.netlify.app', 'https://miss-marble.netlify.app/',
+          'http://localhost:1234', 'http://localhost:3000'
+        ],
+        credentials: true
+      }
+    });
 
     // Start the server
     const { url } = await server.listen(PORT);
