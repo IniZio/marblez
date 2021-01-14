@@ -20,8 +20,8 @@ async function printPDF (domElement?: any) {
   // domElement.ownerDocument.defaultView.innerWidth = domElement.clientWidth;
   window.scroll(0, 0)
 
-  const html2canvas = (await import('html2canvas')).default;
-  const jsPdf = (await (await import('jspdf')).default;
+  const html2canvas = (await import('html2canvas'));
+  const jsPdf = (await import('jspdf'));
   
   return html2canvas(domElement, { 
     width: domElement.clientWidth, 
@@ -162,7 +162,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef<HTMLInputElement>();
-  const downloadPDF = React.useCallback(async (e) => {
+  const downloadPDF = React.useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
     printPDF(screenshotRef.current);
