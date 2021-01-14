@@ -1,6 +1,7 @@
 import React from 'react';
 import 'twin.macro'
-import { FiX } from 'react-icons/fi';
+import { FiX } from '@react-icons/all-files/fi/FiX';
+
 
 interface RenderProp<TChildrenProps = {}, TElement = any> {
   (props?: TChildrenProps): React.ReactElement<TElement>;

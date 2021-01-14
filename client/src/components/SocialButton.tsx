@@ -1,6 +1,8 @@
 import { IconButton, Tooltip, useClipboard } from '@chakra-ui/react';
 import React, { ReactElement, useMemo } from 'react';
-import { FaClipboard, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { FaClipboard } from '@react-icons/all-files/fa/FaClipboard';
+import { FaInstagram } from '@react-icons/all-files/fa/FaInstagram';
+import { FaWhatsapp } from '@react-icons/all-files/fa/FaWhatsapp';
 import { isMobile } from '../util/device';
 
 

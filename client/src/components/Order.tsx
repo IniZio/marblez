@@ -4,12 +4,10 @@ import styled from '@emotion/styled';
 import { gql } from 'apollo-boost';
 import { format, parseISO } from 'date-fns';
 import { Field, FieldArray, Formik } from 'formik';
-import html2canvas from 'html2canvas';
-import jsPdf from 'jspdf';
 import { capitalize } from 'lodash';
 import React, { useMemo, useRef } from 'react';
 import { useMutation } from 'react-apollo';
-import { FaFileDownload } from 'react-icons/fa';
+import { FaFileDownload } from '@react-icons/all-files/fa/FaFileDownload';
 import { RemoveScroll } from 'react-remove-scroll';
 import SocialButton from '../components/SocialButton';
 import { IOrder, NestedObjectType } from '@marblez/graphql';
@@ -17,10 +15,13 @@ import { theme } from '../theme';
 import DatePicker from './DatePicker';
 
 
-function printPDF (domElement?: any) { 
+async function printPDF (domElement?: any) { 
   domElement.ownerDocument.defaultView.innerHeight = 10000000;
   // domElement.ownerDocument.defaultView.innerWidth = domElement.clientWidth;
   window.scroll(0, 0)
+
+  const html2canvas = (await import('html2canvas')).default;
+  const jsPdf = (await (await import('jspdf')).default;
   
   return html2canvas(domElement, { 
     width: domElement.clientWidth, 

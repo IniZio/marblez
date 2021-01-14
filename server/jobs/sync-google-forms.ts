@@ -19,6 +19,9 @@ export async function syncGoogleForms() {
   
   await OrderModel.deleteMany({})
   await OrderModel.insertMany(orders);
+
+  console.log('[Sync Google Form]: Finished!')
+
   return
 
   const [todayStart, tmwEnd] = [startOfToday(), endOfTomorrow()];
@@ -84,7 +87,4 @@ export async function syncGoogleForms() {
   )
 
   console.log('=== messages\n', messages.join('\n\n'));
-
-  console.log('[Sync Google Form]: Finished!')
-
 }

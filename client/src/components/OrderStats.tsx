@@ -21,8 +21,8 @@ export interface OrderStatsProps extends StackProps {
 }
 
 function OrderStats(props: OrderStatsProps) {
-  const todayFilter = useMemo(() => ({pickupDate: startOfDay(props.date)}), [props.date]);
-  const tomorrowFilter = useMemo(() => ({pickupDate: addDays(startOfDay(props.date), 1)}), [props.date]);
+  const todayFilter = useMemo(() => ({pickupDate: props.date}), [props.date]);
+  const tomorrowFilter = useMemo(() => ({pickupDate: addDays(props.date, 1)}), [props.date]);
   
   const {data: ordersOfToday, refetch: refetchOrdersOfToday, loading: loadingOrdersOfToday} = useQuery(gql`
     query ordersOfToday(

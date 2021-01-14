@@ -1,7 +1,10 @@
 import React from 'react';
 import tw, { styled } from 'twin.macro';
-import { FiClock, FiMapPin } from 'react-icons/fi'
-import { FaInstagram, FaWhatsapp } from 'react-icons/fa'
+import { FiClock } from '@react-icons/all-files/fi/FiClock';
+import { FiMapPin } from '@react-icons/all-files/fi/FiMapPin';
+import { FaInstagram } from '@react-icons/all-files/fa/FaInstagram';
+import { FaWhatsapp } from '@react-icons/all-files/fa/FaWhatsapp';
+
 
 const ContactLink = styled.a`
   ${tw`flex items-center bg-blue-50 px-3 py-2 w-full flex justify-center text-xs text-blue-600 rounded`}
