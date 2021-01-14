@@ -15,7 +15,7 @@ export async function syncGoogleForms() {
   console.log('[Sync Google Form]: Starting to sync...')
 
   const records = await (await googleSheet.init()).getAllRows()
-  const orders = records.map(rowToOrder);
+  const orders = records.map(rowToOrder).filter(o => o.id);
   
   await OrderModel.deleteMany({})
   await OrderModel.insertMany(orders);

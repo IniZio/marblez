@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
-import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth, isBefore, addYears } from 'date-fns';
+import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth, isBefore, addYears, startOfDay, endOfDay, startOfMonth, endOfMonth } from 'date-fns';
 import agent from 'superagent';
 import { get } from 'lodash';
 
@@ -12,6 +12,7 @@ import PubSubEvent from '../pubsub';
 
 import { OrderInput } from './types/order-input';
 import { IOrder } from '@marblez/graphql';
+import { FilterQuery } from 'mongoose';
 
 type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
   11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
@@ -106,13 +107,6 @@ export const rowToOrder = (row: any[], index: any): Order => {
   return order;
 }
 
-const validateOrder = (order: Order): boolean => {
-  // if (!order.attributes.cake) {
-  //   return false;
-  // }
-
-  return true;
-}
 
 const orderToRow = (orderInput: OrderInput, prevRow: any[] = []) => {
   const row: any = [];
@@ -215,22 +209,33 @@ export class OrderResolver {
     pickupMonth?: number;
     keyword?: string;
   }) {
-    const records = await (await googleSheet.init()).getAllRows()
-    const orders = records.map(rowToOrder).filter(validateOrder);
-
     const keyword = _keyword?.replace(' ', '');
 
-    return orders
-    .reverse()
-    .filter(order => !pickupDate || isSameDay(order.deliveryDate, addHours(pickupDate, 8)))
-    .filter(order => pickupMonth === undefined || getMonth(order.deliveryDate) === pickupMonth)
-    .filter(order => !keyword || order.customerPhone?.includes(keyword) || order.customerName?.includes(keyword) || order.customerSocialName?.includes(keyword))
-    // Sort from latest pickup date
-    .sort((a, b) => compareDesc(a.deliveryDate, b.deliveryDate))
-    // And sort from earliest time
-    .sort((a, b) => a.deliveryTime?.localeCompare(b.deliveryTime))
-    .sort((a, b) => (Number(a.paid) || -1) - (Number(b.paid) || -1))
-    .slice(0, keyword ? 100 : undefined);
+    const findFilter: FilterQuery<Order> = {};
+
+    if (pickupDate) {
+      findFilter.deliveryDate = {$gte: startOfDay(pickupDate), $lt: endOfDay(pickupDate)}
+    }
+
+    if (pickupMonth !== undefined) {
+      const pickupDate = new Date();
+      pickupDate.setMonth(pickupMonth);
+
+      findFilter.deliveryDate = {$gte: startOfMonth(pickupDate), $lt: endOfMonth(pickupDate)};
+    }
+
+    if (keyword) {
+      findFilter.$or = [
+        { customerPhone: { $regex: keyword, $options: 'i' } },
+        { customerName: { $regex: keyword, $options: 'i' } },
+        { customerSocialName: { $regex: keyword, $options: 'i' } },
+      ]
+    }
+
+    return OrderModel
+      .find(findFilter)
+      .sort([['deliveryDate', 1], ['deliveryTime', 1], ['paid', -1]])
+      .limit(keyword ? 100 : undefined)
   }
 
   @Query(returns => String)
