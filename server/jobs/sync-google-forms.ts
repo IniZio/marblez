@@ -13,9 +13,13 @@ const lineIf = (order: Order, key: keyof Order) => {
 
 export async function syncGoogleForms() {
   console.log('[Sync Google Form]: Starting to sync...')
-  
+
   const records = await (await googleSheet.init()).getAllRows()
   const orders = records.map(rowToOrder);
+  
+  await OrderModel.deleteMany({})
+  await OrderModel.insertMany(orders);
+  return
 
   const [todayStart, tmwEnd] = [startOfToday(), endOfTomorrow()];
 
@@ -23,11 +27,10 @@ export async function syncGoogleForms() {
   //   date: {$gte: todayStart, $lt: tmwEnd}
   // });
 
-  // await OrderModel.deleteMany({})
-  // await OrderModel.insertMany(orders);
-  // const ordersToMatch = await OrderModel.find({
-  //   date: {$gte: todayStart, $lt: tmwEnd}
-  // });
+
+  const ordersToMatch = await OrderModel.find({
+    date: {$gte: todayStart, $lt: tmwEnd}
+  });
 
   const snapshotOrders = (await (await snapshotGoogleSheetRepository.init()).getAllRows()).map(rowToOrder)
   const oldOrdersToCheck = snapshotOrders.filter(order => isWithinInterval(order.deliveryDate, {start: todayStart, end: tmwEnd}));
