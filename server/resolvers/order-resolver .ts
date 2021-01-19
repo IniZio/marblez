@@ -8,6 +8,7 @@ import { Order, OrderModel } from "../entities/order";
 import * as GoogleSheetEvent from './types/google-sheet-event-input';
 import googleSheet, { testGoogleSheetRepository } from '../respository/google-sheet';
 import { NotificationModel, Notification } from '../entities/notification';
+import { OrderMeta, OrderMetaModel } from '../entities/order_meta';
 import PubSubEvent from '../pubsub';
 
 import { OrderInput } from './types/order-input';
@@ -263,5 +264,10 @@ export class OrderResolver {
     const row = orderToRow(orderInput);
     await (await testGoogleSheetRepository.init()).insertRow(row)
     return orderInput;
+  }
+
+  @FieldResolver(returns => OrderMeta, { nullable: true })
+  async meta(@Root() order: Order): Promise<OrderMeta> {
+    return OrderMetaModel.findOne({ orderId: order.id });
   }
 }

@@ -56,7 +56,7 @@ export class Order implements IOrder {
   deliveryAddress?: string;
   @Field({ nullable: true })
   @Property()
-  remarks?: string; 
+  remarks?: string;
 }
 
 export const OrderModel = getModelForClass(Order);

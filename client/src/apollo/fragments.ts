@@ -15,5 +15,14 @@ export const FRAGMENT_ORDER = gql`
       deliveryMethod
       deliveryAddress
       remarks
+      meta {
+        orderId
+        labels {
+          _id
+          name
+          color
+          conditions
+        }
+      }
     }
 `;

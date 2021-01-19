@@ -2,14 +2,14 @@ import { Recipe, RecipeModel } from "./entities/recipe";
 import { User, UserModel } from "./entities/user";
 
 export async function seedDatabase() {
-  const defaultUser = (
-    (await UserModel.findOne({ email: "test@github.com" })) || 
-    (await new UserModel({
-      email: "test@github.com",
-      nickname: "MichalLytek",
-      password: "s3cr3tp4ssw0rd",
-    } as User).save())
-  );
+  // const defaultUser = (
+  //   (await UserModel.findOne({ email: "test@github.com" })) || 
+  //   (await new UserModel({
+  //     email: "test@github.com",
+  //     nickname: "MichalLytek",
+  //     password: "s3cr3tp4ssw0rd",
+  //   } as User).save())
+  // );
 
   // await RecipeModel.create([
   //   {
@@ -32,6 +32,6 @@ export async function seedDatabase() {
   // ] as Recipe[]);
 
   return {
-    defaultUser,
+    // defaultUser,
   };
 }

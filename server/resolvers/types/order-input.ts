@@ -43,3 +43,39 @@ export class OrderInput {
   @Field({ nullable: true })
   remarks?: string; 
 }
+
+@InputType()
+class OrderLabelConditionInput {
+  @Field({ nullable: true })
+  keyword?: string;
+}
+
+@InputType()
+export class OrderLabelInput {
+  @Field({ nullable: true })
+  _id?: string;
+
+  @Field({ nullable: true })
+  name: string;
+
+  @Field({ nullable: true })
+  color: string;
+
+  @Field(type => [OrderLabelConditionInput], { nullable: true })
+  conditions?: OrderLabelConditionInput[];
+}
+
+@InputType()
+export class OrderMetaInput {
+  @Field({ nullable: true })
+  orderId?: string;
+  
+  @Field(type => [OrderLabelInput], { nullable: true })
+  labels?: OrderLabelInput[];
+}
+
+@InputType()
+export class OrderLabelsInput {
+  @Field(type => [OrderLabelInput], { nullable: true })
+  labels?: OrderLabelInput[];
+}

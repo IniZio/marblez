@@ -1,18 +1,25 @@
 import { AddIcon, DeleteIcon, ExternalLinkIcon } from '@chakra-ui/icons';
-import { Badge, Box, Button, Checkbox, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, FormLabel, IconButton, Input, Stack, Textarea, useDisclosure } from '@chakra-ui/react';
+import { Badge, Box, Button, Checkbox, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, FormLabel, IconButton, Input, Portal, Stack, Textarea, useDisclosure } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { gql } from 'apollo-boost';
 import { format, parseISO } from 'date-fns';
 import { Field, FieldArray, Formik } from 'formik';
-import { capitalize } from 'lodash';
-import React, { useMemo, useRef } from 'react';
-import { useMutation } from 'react-apollo';
+import { capitalize, map } from 'lodash';
+import { omit } from 'lodash/fp';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import { useMutation, useQuery } from 'react-apollo';
 import { FaFileDownload } from '@react-icons/all-files/fa/FaFileDownload';
 import { RemoveScroll } from 'react-remove-scroll';
 import SocialButton from '../components/SocialButton';
 import { IOrder, NestedObjectType } from '@marblez/graphql';
+import { Slate, Editable, withReact, useSlate, ReactEditor } from 'slate-react'
+import { Text, Node, createEditor, Range, Editor } from 'slate'
+import { withHistory } from 'slate-history'
+import { css } from '@chakra-ui/react';
 import { theme } from '../theme';
 import DatePicker from './DatePicker';
+import OrderLabelsModal from './OrderLabelsModal'
+import { condition } from 'tripetto-runner-foundation';
 
 
 async function printPDF (domElement?: any) { 
@@ -154,12 +161,171 @@ function downloadPDFFromGoogle(index: any) {
     }))
 }
 
+const Leaf = ({ attributes, children, leaf }) => {
+  return (
+    <Box
+      as="span"
+      {...attributes}
+      fontWeight={leaf.bold && 'bold'}
+      bgColor={leaf.highlight && leaf.highlightColor}
+    >
+      {children}
+    </Box>
+  )
+}
+
+const HoveringToolbar = ({
+  order,
+  onSaveOrderLabelsSuccess
+}: {
+  order: IOrder,
+  onSaveOrderLabelsSuccess: () => any;
+}) => {
+  const [saveOrderLabels] = useMutation(gql`
+    mutation($orderLabelsInput: OrderLabelsInput!) {
+      saveOrderLabels(orderLabelsInput: $orderLabelsInput) {
+        name
+        color
+      }
+    }
+  `, {
+    onCompleted: onSaveOrderLabelsSuccess
+  });
+  
+  const ref = useRef<any>()
+  const editor = useSlate()
+
+  useEffect(() => {
+    const el = ref.current
+    const { selection } = editor
+
+    if (!el) {
+      return
+    }
+
+    if (
+      !selection ||
+      !ReactEditor.isFocused(editor) ||
+      Range.isCollapsed(selection) ||
+      Editor.string(editor, selection) === ''
+    ) {
+      el.removeAttribute('style')
+      return
+    }
+
+    const domSelection = window.getSelection()
+    const domRange = domSelection.getRangeAt(0)
+    const rect = domRange.getBoundingClientRect()
+    el.style.opacity = '1'
+    el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`
+    el.style.left = `${rect.left +
+      window.pageXOffset -
+      el.offsetWidth / 2 +
+      rect.width / 2}px`
+  })
+
+  const addSelectedOrderLabel = useCallback(
+    async () => {
+      if (!editor.selection) {
+        return;
+      }
+      
+      await saveOrderLabels({
+        variables: {
+          orderLabelsInput: {
+            // orderId: order.id,
+            labels: [
+              // ...map((order.meta || {}).labels || [], omit('__typename')),
+              { name: Editor.string(editor, editor.selection), conditions: [{ keyword: Editor.string(editor, editor.selection) }] }
+            ]
+          }
+        },
+      })
+    },
+    [order, editor, saveOrderLabels]
+  )
+
+  return (
+    <Portal>
+      <Box
+        ref={ref}
+        css={css`
+          padding: 8px 7px 6px;
+          position: absolute;
+          z-index: 1;
+          top: -10000px;
+          left: -10000px;
+          margin-top: -6px;
+          opacity: 0;
+          background-color: #222;
+          border-radius: 4px;
+          transition: opacity 0.75s;
+        `}
+      >
+        <Button onClick={addSelectedOrderLabel}>標記</Button>
+      </Box>
+    </Portal>
+  )
+}
+
+
 function Order({ order, onUpdate = () => {} }: OrderProps) {
+  const lines = useMemo(() => order2Lines(order), [order]);
+
+  const { data: { orderLabels = [] } = {}, refetch: refetchOrderLabels } = useQuery(gql`
+    query {
+      orderLabels {
+        name
+        color
+        conditions
+      }
+    }
+  `);
+  const [value, setValue] = useState<Node[]>([{
+    children: [
+      {
+        text: lines.join('\n'),
+      },
+    ],
+  }])
+  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+  const decorate = useCallback(
+    ([node, path]) => {
+      const ranges = []
+
+      if (orderLabels.length && Text.isText(node)) {
+        const conditionsWithLabel = [];
+        for (const label of orderLabels || []) {
+          conditionsWithLabel.push(...(label.conditions || []).map(condition => (
+            {
+              ...condition,
+              label,
+            }
+          )))
+        }
+        
+        const { text } = node
+        const regex = new RegExp(conditionsWithLabel.map(condition => condition.keyword).join('|'), 'g')
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+          ranges.push({
+            anchor: { path, offset: match.index },
+            focus: { path, offset: match.index + match[0].length },
+            highlight: true,
+            highlightColor: conditionsWithLabel.find(conditionWithLabel => conditionWithLabel.keyword ===  match[0]).label.color,
+          })
+        }
+      }
+
+      return ranges
+    },
+    [order]
+  )
+  
   const [updateOrder] = useMutation(UPDATE_ORDER);
   const screenshotRef = useRef();
   
-  const lines = useMemo(() => order2Lines(order), [order]);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef<HTMLInputElement>();
   const downloadPDF = React.useCallback((e) => {
@@ -181,7 +347,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         minHeight={353} 
         fontSize={20} 
         position="relative" 
-        // onClick={onOpen}
+        onDoubleClick={onOpen}
       >
         {!order?.attributes.printed && (
           <Badge ml="1" variantColor="blue">
@@ -195,9 +361,14 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         )}
         <Box>
         <Box ref={screenshotRef}>
-          {lines.map( 
-            line => line && <Box key={line} mb={2}>{line}</Box>
-          )}
+          <Slate 
+            editor={editor} 
+            value={value} 
+            onChange={value => setValue(value)}
+          >
+            <HoveringToolbar order={order} onSaveOrderLabelsSuccess={() => refetchOrderLabels().then(onUpdate)} />
+            <Editable decorate={decorate} renderLeaf={props => <Leaf {...props} />} />
+          </Slate>
         </Box>
         </Box>
         <SocialButtonGroup pos="absolute" right="5" top="5">
@@ -209,7 +380,10 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
            <IconButton icon={<FaFileDownload />} aria-label="Download Order as PDF" onClick={downloadPDF} />
         </SocialButtonGroup>
       </StyledBox>
-      {order && (
+      {/* {order && (
+        <OrderLabelsModal order={order} isOpen={isOpen} onClose={onClose} />
+      )} */}
+      {/* {order && (
         <Drawer onClose={onClose} isOpen={isOpen} size="md">
           <DrawerOverlay />
             <RemoveScroll>
@@ -335,9 +509,9 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
           </DrawerContent>
             </RemoveScroll>
         </Drawer>
-      )}
+      )} */}
     </>
   )
 }
 
-export default Order;
+export default  Order;

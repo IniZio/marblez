@@ -16,6 +16,7 @@ import { NotificationResolver } from './resolvers/notification-resolver';
 import { OrderResolver } from './resolvers/order-resolver ';
 import { RateResolver } from "./resolvers/rate-resolver";
 import { RecipeResolver } from "./resolvers/recipe-resolver";
+import { OrderMetaResolver } from './resolvers/order-meta-resolver';
 import { TypegooseMiddleware } from "./typegoose-middleware";
 
 
@@ -35,11 +36,11 @@ async function bootstrap() {
 
     // clean and seed database with some data
     // await mongoose.connection.db.dropDatabase();
-    const { defaultUser } = await seedDatabase();
+    // const { defaultUser } = await seedDatabase();
 
     // build TypeGraphQL executable schema
     const schema = await buildSchema({
-      resolvers: [RecipeResolver, RateResolver, OrderResolver, NotificationResolver],
+      resolvers: [RecipeResolver, RateResolver, OrderResolver, NotificationResolver, OrderMetaResolver],
       emitSchemaFile: path.resolve(__dirname, "schema.gql"),
       // use document converting middleware
       globalMiddlewares: [TypegooseMiddleware],
@@ -49,12 +50,12 @@ async function bootstrap() {
     });
 
     // create mocked context
-    const context: Context = { user: defaultUser };
+    // const context: Context = { user: defaultUser };
 
     // Create GraphQL server
     const server = new ApolloServer({ 
       schema, 
-      context,
+      // context,
       cors: {
         origin: [
           'https://marblez.netlify.app', 'https://miss-marble.netlify.app/',
@@ -68,11 +69,11 @@ async function bootstrap() {
     const { url } = await server.listen(PORT);
     console.log(`Server is running, GraphQL Playground available at ${url}`);
   } catch (err) {
-    console.error('???', JSON.stringify(err));
+    console.error('???', err, JSON.stringify(err));
   }
 }
 
 bootstrap();
 
-cron.schedule('*/5 * * * *', syncGoogleForms)
+// cron.schedule('*/5 * * * *', syncGoogleForms)
 syncGoogleForms()

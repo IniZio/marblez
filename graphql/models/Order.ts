@@ -30,4 +30,6 @@ export type IOrder = {
     toppings?: string[];
     printed?: string;
   }  
+
+  meta?: any
 }
