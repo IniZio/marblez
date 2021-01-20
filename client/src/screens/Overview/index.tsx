@@ -72,6 +72,14 @@ function Overview() {
     [filteredOrders]
   );
 
+  useEffect(
+    () => {
+      console.log('=== orders of day', filteredOrders, filteredNewOrders);
+    },
+    [filteredOrders, filteredNewOrders]
+  )
+
+
   const previousPaidOrdersRef = useRef(paidOrders);
   const previousPickupDateRef = useRef(pickupDate);
   useEffect(() => {
@@ -192,7 +200,7 @@ function Overview() {
                 <Heading my={3}>急單</Heading>
                   <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
                     {(
-                      filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
+                      filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={order.id} />)
                     )}
                   </SimpleGrid>
               </Box>
@@ -205,7 +213,7 @@ function Overview() {
                   {(loading && !autoReload) ? (
                     [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
                   ) : (
-                    filteredExistingOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={index} />)
+                    filteredExistingOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={order.id} />)
                   )}
                 </SimpleGrid>
               </Box>
