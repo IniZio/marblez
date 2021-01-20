@@ -32,7 +32,9 @@ export class OrderMetaResolver {
       }
 
       updatedLabel.name = label.name;
-      updatedLabel.color = label.color || randomColor();
+      updatedLabel.color = label.color || randomColor({
+        luminosity: 'light',
+      });
       updatedLabel.conditions = label.conditions;
 
       return updatedLabel
@@ -52,7 +54,9 @@ export class OrderMetaResolver {
           (label._id && await OrderLabelModel.findById(label._id)) || new OrderLabelModel();
 
       updatedLabel.name = label.name;
-      updatedLabel.color = label.color || randomColor();
+      updatedLabel.color = label.color || randomColor({
+        luminosity: 'light',
+      });
       updatedLabel.conditions = label.conditions;
 
       return updatedLabel
