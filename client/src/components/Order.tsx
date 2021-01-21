@@ -11,7 +11,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import { FaFileDownload } from '@react-icons/all-files/fa/FaFileDownload';
 import { RemoveScroll } from 'react-remove-scroll';
 import SocialButton from '../components/SocialButton';
-import { IOrder, NestedObjectType } from '@marblez/graphql';
+import { IOrder, IOrderLabel, NestedObjectType } from '@marblez/graphql';
 import { Slate, Editable, withReact, useSlate, ReactEditor } from 'slate-react'
 import { Text, Node, createEditor, Range, Editor } from 'slate'
 import { withHistory } from 'slate-history'
@@ -176,9 +176,11 @@ const Leaf = ({ attributes, children, leaf }) => {
 
 const HoveringToolbar = ({
   order,
+  orderLabels,
   onSaveOrderLabelsSuccess
 }: {
   order: IOrder,
+  orderLabels: IOrderLabel[],
   onSaveOrderLabelsSuccess: () => any;
 }) => {
   const [saveOrderLabels] = useMutation(gql`
@@ -191,9 +193,20 @@ const HoveringToolbar = ({
   `, {
     onCompleted: onSaveOrderLabelsSuccess
   });
+
+  const [deleteOrderLabels] = useMutation(gql`
+    mutation($orderLabelsInput: OrderLabelsInput!) {
+      deleteOrderLabels(orderLabelsInput: $orderLabelsInput)
+    }
+  `, {
+    onCompleted: onSaveOrderLabelsSuccess
+  });
   
   const ref = useRef<any>()
   const editor = useSlate()
+
+  const keyword = editor.selection ? Editor.string(editor, editor.selection) : '';
+  const matchedOrderLabel = orderLabels.find(label => label.conditions.find(condition => condition.keyword === keyword));
 
   useEffect(() => {
     const el = ref.current
@@ -222,21 +235,33 @@ const HoveringToolbar = ({
       window.pageXOffset -
       el.offsetWidth / 2 +
       rect.width / 2}px`
-  })
+  });
+
+  const deleteSelectedOrderLabel = useCallback(
+    async () => {
+      await deleteOrderLabels({
+        variables: {
+          orderLabelsInput: {
+            labels: omit('__typename')(matchedOrderLabel)
+          }
+        },
+      })
+    },
+    [order, editor, deleteOrderLabels, matchedOrderLabel]
+  )
 
   const addSelectedOrderLabel = useCallback(
     async () => {
       if (!editor.selection) {
         return;
       }
-      
       await saveOrderLabels({
         variables: {
           orderLabelsInput: {
             // orderId: order.id,
             labels: [
               // ...map((order.meta || {}).labels || [], omit('__typename')),
-              { name: Editor.string(editor, editor.selection), conditions: [{ keyword: Editor.string(editor, editor.selection) }] }
+              { name: keyword, conditions: [{ keyword  }] }
             ]
           }
         },
@@ -262,7 +287,7 @@ const HoveringToolbar = ({
           transition: opacity 0.75s;
         `}
       >
-        <Button onClick={addSelectedOrderLabel}>標記</Button>
+        {matchedOrderLabel ? <Button onClick={deleteSelectedOrderLabel}>刪除標記</Button> : <Button onClick={addSelectedOrderLabel}>標記</Button>}
       </Box>
     </Portal>
   )
@@ -275,6 +300,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
   const { data: { orderLabels = [] } = {}, refetch: refetchOrderLabels } = useQuery(gql`
     query {
       orderLabels {
+        _id
         name
         color
         conditions
@@ -366,7 +392,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
             value={value} 
             onChange={value => setValue(value)}
           >
-            <HoveringToolbar order={order} onSaveOrderLabelsSuccess={() => refetchOrderLabels().then(onUpdate)} />
+            <HoveringToolbar order={order} orderLabels={orderLabels} onSaveOrderLabelsSuccess={() => refetchOrderLabels().then(onUpdate)} />
             <Editable decorate={decorate} renderLeaf={props => <Leaf {...props} />} />
           </Slate>
         </Box>

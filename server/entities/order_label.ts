@@ -1,14 +1,15 @@
-import { getModelForClass, index, prop as Property } from "@typegoose/typegoose";
+import { getModelForClass, index, prop as Property, arrayProp as ArrayProperty, Ref } from "@typegoose/typegoose";
 import { Field, ObjectType } from "type-graphql";
 import { GraphQLJSON } from 'graphql-type-json';
 import { ObjectId } from 'mongodb';
 
-interface OrderLabelCondition {
-  keyword?: string,
-}
+import { Material } from './material'
+import { IMaterial, IOrderLabel, IOrderLabelCondition } from '@marblez/graphql';
+
+
 
 @ObjectType()
-export class OrderLabel {
+export class OrderLabel implements IOrderLabel {
   @Field()
   readonly _id: ObjectId;
   
@@ -22,7 +23,11 @@ export class OrderLabel {
 
   @Field(() => GraphQLJSON, { defaultValue: {} })
   @Property()
-  conditions: OrderLabelCondition[];
+  conditions: IOrderLabelCondition[];
+
+  @Field(type => [Material])
+  @ArrayProperty({ ref: Material, default: [] })
+  materials: Ref<IMaterial>[];
 }
 
 export const OrderLabelModel = getModelForClass(OrderLabel);

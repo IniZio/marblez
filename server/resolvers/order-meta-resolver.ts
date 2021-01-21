@@ -44,6 +44,19 @@ export class OrderMetaResolver {
 
     return labels
   }
+
+  @Mutation(returns => Boolean)
+  async deleteOrderLabels(
+    @Arg('orderLabelsInput') orderlabelsInput: OrderLabelsInput
+  ) {
+    const labelIds = orderlabelsInput.labels.map(label => label._id);
+
+    await OrderLabelModel.deleteMany({
+      _id: { $in: labelIds }
+    });
+
+    return true;
+  }
   
   @Mutation(returns => OrderMeta)
   async saveOrderMeta(
