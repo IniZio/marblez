@@ -6,7 +6,7 @@ import { format, parseISO } from 'date-fns';
 import { Field, FieldArray, Formik } from 'formik';
 import { capitalize, map } from 'lodash';
 import { omit } from 'lodash/fp';
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect, memo } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { FaFileDownload } from '@react-icons/all-files/fa/FaFileDownload';
 import { RemoveScroll } from 'react-remove-scroll';
@@ -161,7 +161,7 @@ function downloadPDFFromGoogle(index: any) {
     }))
 }
 
-const Leaf = ({ attributes, children, leaf }) => {
+const Leaf = memo(({ attributes, children, leaf }) => {
   return (
     <Box
       as="span"
@@ -172,7 +172,7 @@ const Leaf = ({ attributes, children, leaf }) => {
       {children}
     </Box>
   )
-}
+})
 
 const HoveringToolbar = ({
   order,
@@ -205,8 +205,14 @@ const HoveringToolbar = ({
   const ref = useRef<any>()
   const editor = useSlate()
 
-  const keyword = editor.selection ? Editor.string(editor, editor.selection) : '';
-  const matchedOrderLabel = orderLabels.find(label => label.conditions.find(condition => condition.keyword === keyword));
+  const keyword = useMemo(() => 
+    editor.selection ? Editor.string(editor, editor.selection) : '',
+    [editor.selection]
+  );
+  const matchedOrderLabel = useMemo(() => 
+    orderLabels.find(label => label.conditions.find(condition => condition.keyword === keyword)),
+    [orderLabels, keyword]
+  );
 
   useEffect(() => {
     const el = ref.current
@@ -331,7 +337,8 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         }
         
         const { text } = node
-        const regex = new RegExp(conditionsWithLabel.map(condition => condition.keyword).join('|'), 'g')
+        const regex = new RegExp(conditionsWithLabel.map(condition => condition.keyword).filter(Boolean).join('|'), 'g')
+
         let match;
 
         while ((match = regex.exec(text)) !== null) {
@@ -393,7 +400,10 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
             onChange={value => setValue(value)}
           >
             <HoveringToolbar order={order} orderLabels={orderLabels} onSaveOrderLabelsSuccess={() => refetchOrderLabels().then(onUpdate)} />
-            <Editable decorate={decorate} renderLeaf={props => <Leaf {...props} />} />
+            <Editable 
+              decorate={decorate} 
+              renderLeaf={props => <Leaf {...props} />} 
+            />
           </Slate>
         </Box>
         </Box>
