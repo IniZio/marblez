@@ -36,29 +36,29 @@ const orderFields: Partial<{ [k in Paths<IOrder, 3>]: number | number[] }> = {
   customerPhone: 3,
   deliveryDate: 4,
   deliveryTime: 5,
-  'attributes.cake': [6, 7, 24],
-  'attributes.letter': 8,
-  'attributes.taste': [10, 11, 12, 13],
-  'attributes.innerTaste': [14],
-  'attributes.bottomTaste': [15],
-  'attributes.size': 18,
-  'attributes.shape': [19, 20],
-  'attributes.color': [9, 16],
-  'attributes.sentence': 25,
-  'attributes.paidSentence': [26, 27],
-  'attributes.toppings': 21,
-  'attributes.decorations': [22, 23],
+  'otherAttributes.cake': [6, 7, 24],
+  'otherAttributes.letter': 8,
+  'otherAttributes.taste': [10, 11, 12, 13],
+  'otherAttributes.innerTaste': [14],
+  'otherAttributes.bottomTaste': [15],
+  'otherAttributes.size': 18,
+  'otherAttributes.shape': [19, 20],
+  'otherAttributes.color': [9, 16],
+  'otherAttributes.sentence': 25,
+  'otherAttributes.paidSentence': [26, 27],
+  'otherAttributes.toppings': 21,
+  'otherAttributes.decorations': [22, 23],
   'customerSocialName': 28,
   'customerSocialChannel': 29,
   'deliveryMethod': 30,
   'deliveryAddress': 31,
   remarks: 32,
-  'attributes.printed': 90,
+  'otherAttributes.printed': 90,
   id: 91,
 };
 
 export const rowToOrder = (row: any[], index: any): Order => {
-  const order: any = { attributes: {} };
+  const order: any = { otherAttributes: {} };
   Object.entries(orderFields).forEach(([key, columns]) => {
     // +2 to compenstate column header and start with 1 index
     order.id = index + 2;
@@ -69,7 +69,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
 
     switch(key) {
       case 'paid':
-      case 'attributes.printed':
+      case 'otherAttributes.printed':
         order[key] = order[key] === 'TRUE'
         break;
       case 'deliveryDate':
@@ -80,8 +80,8 @@ export const rowToOrder = (row: any[], index: any): Order => {
           order[key] = addYears(order[key], 1);
         }
         break;
-      case 'attributes.decorations':
-      case 'attributes.toppings':
+      case 'otherAttributes.decorations':
+      case 'otherAttributes.toppings':
         order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
         break;
       case 'createdAt':
@@ -90,17 +90,17 @@ export const rowToOrder = (row: any[], index: any): Order => {
           order[key] = undefined;
         }
         break;
-      case 'attributes.cake':
-      case 'attributes.shape':
-      case 'attributes.color':
-      case 'attributes.taste':
-      case 'attributes.letter':
+      case 'otherAttributes.cake':
+      case 'otherAttributes.shape':
+      case 'otherAttributes.color':
+      case 'otherAttributes.taste':
+      case 'otherAttributes.letter':
         order[key] = (order[key] as string)?.replace(/\([^(\))]*\)/g, '').trim();
         break;
     }
 
-    if (key.includes('attributes.')) {
-      order.attributes[key.replace('attributes.', '')] = order[key];
+    if (key.includes('otherAttributes.')) {
+      order.otherAttributes[key.replace('otherAttributes.', '')] = order[key];
       delete order[key];
     }
   })
@@ -118,7 +118,7 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[] = []) => {
 
     switch(key) {
       case 'paid':
-      case 'attributes.printed':
+      case 'otherAttributes.printed':
         value =  [null, undefined].includes(value) ? undefined : value;
         break;
       case 'deliveryDate':
@@ -127,15 +127,15 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[] = []) => {
       case 'createdAt':
         value = format(value as any, 'M/d/y H:mm:ss')
         break;
-      case 'attributes.decorations':
-      case 'attributes.toppings':
+      case 'otherAttributes.decorations':
+      case 'otherAttributes.toppings':
         value = ((value || []) as string[]).filter(Boolean).join(', ')
         break;
-      case 'attributes.cake':
-      case 'attributes.shape':
-      case 'attributes.color':
-      case 'attributes.taste':
-      case 'attributes.letter':
+      case 'otherAttributes.cake':
+      case 'otherAttributes.shape':
+      case 'otherAttributes.color':
+      case 'otherAttributes.taste':
+      case 'otherAttributes.letter':
         value = (value as string)?.replace(/\([^(\))]*\)/g, '').trim();
         break;
     }

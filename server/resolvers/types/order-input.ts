@@ -32,7 +32,7 @@ export class OrderInput {
   deliveryTime?: string;
 
   @Field(() => GraphQLJSON, { nullable: true })
-  attributes: IOrder['attributes']
+  otherAttributes: IOrder['otherAttributes']
 
   @Field({ nullable: true })
   deliveryMethod?: string;

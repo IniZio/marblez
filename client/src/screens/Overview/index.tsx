@@ -64,11 +64,11 @@ function Overview() {
       .filter(order => includeUnpaid || order.paid);
   }, [data, includeUnpaid]);
   const filteredNewOrders = useMemo(
-    () => filteredOrders.filter(order => !order.attributes.printed),
+    () => filteredOrders.filter(order => !order.otherAttributes.printed),
     [filteredOrders]
   );
   const filteredExistingOrders = useMemo(
-    () => filteredOrders.filter(order => order.attributes.printed),
+    () => filteredOrders.filter(order => order.otherAttributes.printed),
     [filteredOrders]
   );
 

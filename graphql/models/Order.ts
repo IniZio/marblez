@@ -15,7 +15,7 @@ export type IOrder = {
 
   remarks?: string;
 
-  attributes: {
+  otherAttributes: {
     cake: string;
     letter?: string;
     taste?: string;

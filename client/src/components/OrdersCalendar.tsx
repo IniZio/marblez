@@ -85,7 +85,7 @@ function OrdersCalendar({
       ).map((order, index) => ({
         id: index,
         calendarId: '0',
-        title: `${order.attributes.cake} ${order.attributes.size}`,
+        title: `${order.otherAttributes.cake} ${order.otherAttributes.size}`,
         category: 'task',
         dueDateClass: '',
         start: parse(order.deliveryTime.split('-')[0]?.trim()?.slice(0, 3).replace(/\D/g, ''), 'HHmm', new Date(order.deliveryDate))?.toISOString(),

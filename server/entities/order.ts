@@ -46,7 +46,7 @@ export class Order implements IOrder {
 
   @Field(() => GraphQLJSON, { defaultValue: {} })
   @Property()
-  attributes: IOrder['attributes'];
+  otherAttributes: IOrder['otherAttributes'];
 
   @Field({ nullable: true })
   @Property()

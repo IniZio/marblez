@@ -138,13 +138,13 @@ const StyledBox = styled(Box)`
 export const order2Lines = (order: any) => [
   lineIf(order, ['customerName', 'customerPhone'], {prefix: '👨 '}),
   lineIf(order, ['deliveryDate', 'deliveryTime'], {prefix: '🕐 '}),
-  lineIf(order, ['attributes.cake', 'attributes.size'], {prefix: '🎂 '}),
-  lineIf(order, ['attributes.decorations', 'attributes.toppings'], {prefix: '📿 '}),
-  lineIf(order, ['attributes.shape', 'attributes.color'], {prefix: '‎‎‎⠀⠀ '}),
-  lineIf(order, ['attributes.taste', 'attributes.letter'], {prefix: '‎‎⠀⠀ '}),
-  lineIf(order, ['attributes.innerTaste', 'attributes.bottomTaste'], {prefix: '‎‎⠀⠀ '}),
-  lineIf(order, ['attributes.sentence'], {prefix: '✍️️ '}),
-  lineIf(order, ['attributes.paidSentence'], {prefix: '朱古力牌 ✍️️ '}),
+  lineIf(order, ['otherAttributes.cake', 'otherAttributes.size'], {prefix: '🎂 '}),
+  lineIf(order, ['otherAttributes.decorations', 'otherAttributes.toppings'], {prefix: '📿 '}),
+  lineIf(order, ['otherAttributes.shape', 'otherAttributes.color'], {prefix: '‎‎‎⠀⠀ '}),
+  lineIf(order, ['otherAttributes.taste', 'otherAttributes.letter'], {prefix: '‎‎⠀⠀ '}),
+  lineIf(order, ['otherAttributes.innerTaste', 'otherAttributes.bottomTaste'], {prefix: '‎‎⠀⠀ '}),
+  lineIf(order, ['otherAttributes.sentence'], {prefix: '✍️️ '}),
+  lineIf(order, ['otherAttributes.paidSentence'], {prefix: '朱古力牌 ✍️️ '}),
   lineIf(order, ['customerSocialChannel', 'customerSocialName'], {prefix: '📲 '}),
   lineIf(order, ['deliveryMethod', 'deliveryAddress'], {prefix: '🚚 '}),
   lineIf(order, ['remarks']),
@@ -161,11 +161,11 @@ function downloadPDFFromGoogle(index: any) {
     }))
 }
 
-const Leaf = memo(({ attributes, children, leaf }) => {
+const Leaf = memo(({ otherAttributes, children, leaf }) => {
   return (
     <Box
       as="span"
-      {...attributes}
+      {...otherAttributes}
       fontWeight={leaf.bold && 'bold'}
       bgColor={leaf.highlight && leaf.highlightColor}
     >
@@ -382,7 +382,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         position="relative" 
         onDoubleClick={onOpen}
       >
-        {!order?.attributes.printed && (
+        {!order?.otherAttributes.printed && (
           <Badge ml="1" variantColor="blue">
             New
           </Badge>

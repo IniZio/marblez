@@ -12,7 +12,7 @@
   },
   "attributes": {
     "customerPhone": {
-      "type": "text"
+      "type": "string"
     },
     "remarks": {
       "type": "text"
@@ -28,6 +28,9 @@
     },
     "paid": {
       "type": "boolean"
+    },
+    "otherAttributes": {
+      "type": "json"
     }
   }
 }

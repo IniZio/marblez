@@ -7,7 +7,7 @@ module.exports = ({ env }) => ({
         host: env('DATABASE_HOST', 'marbles-4zvqy.mongodb.net'),
         srv: env.bool('DATABASE_SRV', true),
         port: env.int('DATABASE_PORT', 27017),
-        database: env('DATABASE_NAME', 'test'),
+        database: env('DATABASE_NAME', 'production'),
         username: env('DATABASE_USERNAME', 'marble'),
         password: env('DATABASE_PASSWORD', 'sCw9HvaxU3TQNJq'),
       },

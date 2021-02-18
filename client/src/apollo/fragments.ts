@@ -11,7 +11,7 @@ export const FRAGMENT_ORDER = gql`
       deliveryDate
       createdAt
       deliveryTime
-      attributes
+      otherAttributes
       deliveryMethod
       deliveryAddress
       remarks

@@ -12,7 +12,7 @@
     "slot": {
       "id": "202fb09e1468b67bd24bc240973d2a6fceea825fa43b8dab58a0957f7b614d96",
       "reference": "option",
-      "name": "attributes.cake",
+      "name": "otherAttributes.cake",
       "label": "Selected option"
     },
     "values": {
@@ -36,7 +36,7 @@
     "slot": {
       "id": "00ba5b9a57079eca0e9a5502c59ba0a92d474ef8640088bd68f95ef2d558b420",
       "reference": "button",
-      "name": "attributes.taste",
+      "name": "otherAttributes.taste",
       "label": "Selected button"
     },
     "values": {
@@ -106,7 +106,7 @@
     "slot": {
       "id": "bd1923a247ff820fda5f12f3ae017fdbcf615a1bd85995c0fe7e0ee3019d63b3",
       "reference": "value",
-      "name": "attributes.paidSentence",
+      "name": "otherAttributes.paidSentence",
       "label": "Text"
     },
     "values": {
@@ -129,7 +129,7 @@
     "slot": {
       "id": "73537006d33aec9177339786e372c0455e2847003c0d15f0e814e3c306d69350",
       "reference": "value",
-      "name": "attributes.sentence",
+      "name": "otherAttributes.sentence",
       "label": "Text"
     },
     "values": {

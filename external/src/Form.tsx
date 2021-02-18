@@ -75,7 +75,7 @@ function Form({
               })
             })
             
-            const orderInput = { createdAt: new Date(), attributes: {} };
+            const orderInput = { createdAt: new Date(), otherAttributes: {} };
             exportables.fields.forEach(({ name: _name, value: _value, datatype, node, type }) => {
               let name = _name;
               let value: any = _value;

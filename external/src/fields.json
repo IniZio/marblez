@@ -2,7 +2,7 @@
   "fingerprint": "8bfcb4098dd22de5fa0bb3f551c6bec92c8404474b390c8816d8a4726a469792",
   "stencil": "c76b33d36415d19215e3005f47632c1698384f1e85d029061619ae2336693b35",
   "fields": [{
-    "name": "attributes.cake",
+    "name": "otherAttributes.cake",
     "type": "tripetto-block-dropdown",
     "version": "3.0.4",
     "node": {
@@ -19,7 +19,7 @@
     "time": 1609574377591,
     "key": "086a382a5d70eee75f5eec764634049e087d2677aa609c84abaf1e89097abb1b"
   }, {
-    "name": "attributes.taste",
+    "name": "otherAttributes.taste",
     "type": "tripetto-block-radiobuttons",
     "version": "3.0.3",
     "node": {
@@ -68,7 +68,7 @@
     "time": 1609574383555,
     "key": "51275a6d28690f2b0e3e0305468f120fd0ad682f11cf694565bb268045567464"
   }, {
-    "name": "attributes.paidSentence",
+    "name": "otherAttributes.paidSentence",
     "type": "tripetto-block-text",
     "version": "3.0.4",
     "node": {
@@ -84,7 +84,7 @@
     "time": 1609574391412,
     "key": "3553bde3dacc3df402fb746ab6cac311b801733c813afd7c8c4bee19b4ea7022"
   }, {
-    "name": "attributes.sentence",
+    "name": "otherAttributes.sentence",
     "type": "tripetto-block-text",
     "version": "3.0.4",
     "node": {
