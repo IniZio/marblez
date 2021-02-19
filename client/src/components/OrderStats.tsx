@@ -58,11 +58,11 @@ function OrderStats(props: OrderStatsProps) {
   return (
     <StatGroup p={4} borderWidth={1} borderRadius="lg" {...props}>
       <Stat>
-        <StatLabel>No. orders of today</StatLabel>
+        <StatLabel>今天訂單數</StatLabel>
         <StatNumber>{loadingOrdersOfToday ? <CircularProgress size={5} isIndeterminate /> : ordersOfToday?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
       </Stat>
       <Stat>
-        <StatLabel>No. orders of tomorrow</StatLabel>
+        <StatLabel>明天訂單數</StatLabel>
         <StatNumber>{loadingOrdersOfTomorrow ? <CircularProgress size={5} isIndeterminate /> : ordersOfTomorrow?.ordersOfDay?.filter(o => o.paid).length}</StatNumber>
       </Stat>
     </StatGroup>

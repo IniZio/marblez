@@ -182,12 +182,12 @@ function Overview() {
         <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
         <InputGroup mb={5}>
           <InputLeftElement children={<PhoneIcon color="gray.300" />} />
-          <Input type="phone" placeholder="Phone number" onChange={e => setKeyword(e.target.value)} />
+          <Input type="phone" placeholder="電話號碼" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
         <HStack spacing={[1, 5]} pb={5} flexWrap={['wrap']}>
-          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} loadingText="Refreshing orders">Refresh orders</Button>
-          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="Downloading orders">Download orders</Button>
-          <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">Show Unpaid?</Checkbox>
+          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} loadingText="正在刷新...">刷新訂單</Button>
+          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="正在下載...">下載訂單</Button>
+          <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">顯示未付款訂單?</Checkbox>
         </HStack>
         <OrderStats date={pickupDate} />
         {/* <OrdersCalendar filter={filter} /> */}

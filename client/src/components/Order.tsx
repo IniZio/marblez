@@ -375,7 +375,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         borderWidth="1px" 
         rounded="lg" 
         overflow="hidden" 
-        p={5} 
+        p={5}
         shadow="md" 
         minHeight={353} 
         fontSize={20} 
