@@ -1,6 +1,5 @@
 import { CalendarIcon, DownloadIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
-import { Box, Button, Checkbox, Flex, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
-import { css } from '@emotion/react';
+import { Box, Button, Checkbox, css, Flex, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
 import { IOrder } from '@marblez/graphql';
 import gql from 'graphql-tag';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -232,7 +231,11 @@ function Overview() {
       </Box>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
       <Flex position="fixed" bottom={0} left={0} right={0} bg="white" css={css`
-        box-shadow: rgb(0 0 0 / 10%) 0px 0 40px;
+        ;box-shadow: rgb(0 0 0 / 10%) 0px 0 40px;
+        padding-top: constant(safe-area-inset-top);
+        padding-right: constant(safe-area-inset-right);
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-left: constant(safe-area-inset-left);
       `}>
         <NavigationIcon icon={<CalendarIcon />} />
       </Flex>
