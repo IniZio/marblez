@@ -41,14 +41,14 @@ function DatePicker({value = new Date(), onChange, onValue, id, name, withArrows
   }, [onChange, onValue])
   
   return (
-    <Flex alignItems="center" justifyContent="center" {...props}>
-      {withArrows && <IconButton aria-label="yesterday" icon={<ArrowBackIcon />} onClick={(e) => handleChange(e, addDays(value, -1))}  mr={3} />}
+    <Flex position="relative" alignItems="center" justifyContent="center" {...props}>
+      {withArrows && <IconButton borderRightRadius={0} aria-label="yesterday" icon={<ArrowBackIcon />} onClick={(e) => { e.stopPropagation(); handleChange(e, addDays(value, -1)) }} />}
       <Flex flex={1} alignItems="center" justifyContent="center">
         <InputMask id={id} name={name} mask="99/99/9999" value={date} onChange={_onChange}>
-          {() => <Input textAlign="center" />}
+          {() => <Input borderRadius={0} textAlign="center" />}
         </InputMask>
       </Flex>
-      {withArrows && <IconButton aria-label="tomorrow" icon={<ArrowForwardIcon />} onClick={(e) => handleChange(e, addDays(value, 1))}  ml={3} />}
+      {withArrows && <IconButton borderLeftRadius={0} aria-label="tomorrow" icon={<ArrowForwardIcon />} onClick={(e) => handleChange(e, addDays(value, 1))}  />}
     </Flex>
   )
 }

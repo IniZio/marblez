@@ -3,8 +3,7 @@
     "client",
     "server",
     "graphql",
-    "external",
-    "cms"
+    "external"
   ],
   "version": "0.0.0"
 }

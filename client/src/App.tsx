@@ -1,4 +1,4 @@
-import { Button, ChakraProvider, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { Button, ChakraProvider, css, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import ApolloClient from "apollo-boost";
 import React, { FC } from "react";
 import { ApolloProvider } from "react-apollo";

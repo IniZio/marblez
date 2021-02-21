@@ -1,5 +1,5 @@
 import { AddIcon, DeleteIcon, ExternalLinkIcon } from '@chakra-ui/icons';
-import { Badge, Box, Button, Checkbox, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, FormLabel, IconButton, Input, Portal, Stack, Textarea, useDisclosure } from '@chakra-ui/react';
+import { Badge, Box, Button, Checkbox, css, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, FormLabel, IconButton, Input, Portal, Stack, Textarea, useDisclosure } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import { gql } from 'apollo-boost';
 import { format, parseISO } from 'date-fns';
@@ -15,7 +15,6 @@ import { IOrder, IOrderLabel, NestedObjectType } from '@marblez/graphql';
 import { Slate, Editable, withReact, useSlate, ReactEditor } from 'slate-react'
 import { Text, Node, createEditor, Range, Editor } from 'slate'
 import { withHistory } from 'slate-history'
-import { css } from '@chakra-ui/react';
 import { theme } from '../theme';
 import DatePicker from './DatePicker';
 import OrderLabelsModal from './OrderLabelsModal'
@@ -372,13 +371,14 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
     <>
       <StyledBox 
         w="100%" 
-        borderWidth="1px" 
-        rounded="lg" 
-        overflow="hidden" 
+        overflow="hidden"
+        rounded="sm"
         p={5}
-        shadow="md" 
+        sx={{
+          boxShadow: 'rgb(0 0 0 / 8%) 0px 0 20px'
+        }}
         minHeight={353} 
-        fontSize={20} 
+        fontSize={16} 
         position="relative" 
         onDoubleClick={onOpen}
       >

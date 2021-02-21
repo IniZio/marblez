@@ -1,5 +1,6 @@
-import { DownloadIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
-import { Box, Button, Checkbox, Flex, Heading, HStack, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
+import { CalendarIcon, DownloadIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
+import { Box, Button, Checkbox, Flex, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
+import { css } from '@emotion/react';
 import { IOrder } from '@marblez/graphql';
 import gql from 'graphql-tag';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -12,6 +13,11 @@ import OrderStats from '../../components/OrderStats';
 import { useDebounce } from '../../hooks';
 import { downloadURI } from '../../util/dom';
 
+const NavigationIcon = ({ icon }: { icon: React.ReactElement }) => (
+  <Flex flex={1} h={10} align="center" justify="center">
+    {icon}
+  </Flex>
+)
 
 function Overview() {
   const toast = useToast();
@@ -177,27 +183,30 @@ function Overview() {
   // );
 
   return (
-    <Flex px={[2, 5]}>
-      <Box flex={1} maxW="100%">
-        <DatePicker value={pickupDate} onValue={setPickupDate} my={5} />
-        <InputGroup mb={5}>
+    <Flex flexDirection="column" maxH="100vh">
+      <Heading as="h1" size="xl" fontWeight="bold" mx={2} my={2}>訂單</Heading>
+      <Box flex={1} maxW="100%" maxH="100vh" overflowY="auto" px={[2, 5]}>
+        <InputGroup my={5}>
           <InputLeftElement children={<PhoneIcon color="gray.300" />} />
           <Input type="phone" placeholder="電話號碼" onChange={e => setKeyword(e.target.value)} />
         </InputGroup>
         <HStack spacing={[1, 5]} pb={5} flexWrap={['wrap']}>
-          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} loadingText="正在刷新...">刷新訂單</Button>
-          <Button mb={[3, 0]} w={['46vw', 'initial']} leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="正在下載...">下載訂單</Button>
-          <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">顯示未付款訂單?</Checkbox>
+          <DatePicker flex={1} value={pickupDate} onValue={setPickupDate} />
+          <IconButton aria-label="Reload" icon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} />
         </HStack>
         <OrderStats date={pickupDate} />
+        {/* <HStack spacing={[1, 5]} py={2} flexWrap={['wrap']}>
+          <Button leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="正在下載...">下載訂單</Button>
+          <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">顯示未付款訂單?</Checkbox>
+        </HStack> */}
         {/* <OrdersCalendar filter={filter} /> */}
         {(loading && !autoReload) ? (
           [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
         ) : (
           <>
             {filteredNewOrders.length > 0 && (
-              <Box p={3} border="1px solid green">
-                <Heading my={3}>急單</Heading>
+              <Box border="1px solid green">
+                <Heading size="lg" my={3}>急單</Heading>
                   <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
                     {(
                       filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={order.id} />)
@@ -207,8 +216,8 @@ function Overview() {
             )}
 
             {filteredExistingOrders.length > 0 && (
-              <Box p={3}>
-                <Heading my={3}>舊單</Heading>
+              <Box>
+                <Heading size="lg" my={3}>舊單</Heading>
                 <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
                   {(loading && !autoReload) ? (
                     [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
@@ -222,6 +231,11 @@ function Overview() {
         )}
       </Box>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
+      <Flex position="fixed" bottom={0} left={0} right={0} bg="white" css={css`
+        box-shadow: rgb(0 0 0 / 10%) 0px 0 40px;
+      `}>
+        <NavigationIcon icon={<CalendarIcon />} />
+      </Flex>
     </Flex>
   );
 }
