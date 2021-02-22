@@ -1,9 +1,11 @@
-import { CalendarIcon, DownloadIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
-import { Box, Button, Checkbox, css, Flex, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
+import { DownloadIcon, EditIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
+import { Box, Button, Checkbox, css, Flex, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, LinkProps, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
 import { IOrder } from '@marblez/graphql';
 import gql from 'graphql-tag';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from "react-apollo";
+import { Switch, Route, Link } from 'react-router-dom';
+import { Home as HomeIcon, Calendar as CalendarIcon } from 'react-feather';
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
 import DatePicker from '../../components/DatePicker';
 import Order from '../../components/Order';
@@ -11,9 +13,10 @@ import OrdersCalendar from '../../components/OrdersCalendar';
 import OrderStats from '../../components/OrderStats';
 import { useDebounce } from '../../hooks';
 import { downloadURI } from '../../util/dom';
+import InventoryPage from '../Inventory';
 
-const NavigationIcon = ({ icon }: { icon: React.ReactElement }) => (
-  <Flex flex={1} h={10} align="center" justify="center">
+const NavigationLink = ({ icon, ...props }: { icon: React.ReactElement } & LinkProps) => (
+  <Flex as={Link} flex={1} h={10} align="center" justify="center" {...props}>
     {icon}
   </Flex>
 )
@@ -183,53 +186,59 @@ function Overview() {
 
   return (
     <Flex flexDirection="column" maxH="100vh">
-      <Heading as="h1" size="xl" fontWeight="bold" mx={2} my={2}>訂單</Heading>
-      <Box flex={1} maxW="100%" maxH="100vh" overflowY="auto" px={[2, 5]}>
-        <InputGroup my={5}>
-          <InputLeftElement children={<PhoneIcon color="gray.300" />} />
-          <Input type="phone" placeholder="電話號碼" onChange={e => setKeyword(e.target.value)} />
-        </InputGroup>
-        <HStack spacing={[1, 5]} pb={5} flexWrap={['wrap']}>
-          <DatePicker flex={1} value={pickupDate} onValue={setPickupDate} />
-          <IconButton aria-label="Reload" icon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} />
-        </HStack>
-        <OrderStats date={pickupDate} />
-        {/* <HStack spacing={[1, 5]} py={2} flexWrap={['wrap']}>
-          <Button leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="正在下載...">下載訂單</Button>
-          <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">顯示未付款訂單?</Checkbox>
-        </HStack> */}
-        {/* <OrdersCalendar filter={filter} /> */}
-        {(loading && !autoReload) ? (
-          [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
-        ) : (
-          <>
-            {filteredNewOrders.length > 0 && (
-              <Box border="1px solid green">
-                <Heading size="lg" my={3}>急單</Heading>
-                  <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
-                    {(
-                      filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={order.id} />)
-                    )}
-                  </SimpleGrid>
-              </Box>
-            )}
+      <Switch>
+        <Route path="/inventory" component={InventoryPage} />
+        <Route path="/" exact>
+          <Heading as="h1" size="xl" fontWeight="bold" mx={2} my={2}>訂單</Heading>
+          <Box flex={1} maxW="100%" maxH="100vh" overflowY="auto" px={[2, 5]}>
+            <InputGroup my={5}>
+              <InputLeftElement children={<PhoneIcon color="gray.300" />} />
+              <Input type="phone" placeholder="電話號碼" onChange={e => setKeyword(e.target.value)} />
+            </InputGroup>
+            <HStack spacing={[1, 5]} pb={5} flexWrap={['wrap']}>
+              <DatePicker flex={1} value={pickupDate} onValue={setPickupDate} />
+              <IconButton aria-label="Reload" icon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} />
+            </HStack>
+            <OrderStats date={pickupDate} />
+            {/* <HStack spacing={[1, 5]} py={2} flexWrap={['wrap']}>
+              <Button leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="正在下載...">下載訂單</Button>
+              <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">顯示未付款訂單?</Checkbox>
+            </HStack> */}
+            {/* <OrdersCalendar filter={filter} /> */}
+            {(loading && !autoReload) ? (
+              [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
+            ) : (
+              <>
+                {filteredNewOrders.length > 0 && (
+                  <Box border="1px solid green">
+                    <Heading size="lg" my={3}>急單</Heading>
+                      <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
+                        {(
+                          filteredNewOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={order.id} />)
+                        )}
+                      </SimpleGrid>
+                  </Box>
+                )}
 
-            {filteredExistingOrders.length > 0 && (
-              <Box>
-                <Heading size="lg" my={3}>舊單</Heading>
-                <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
-                  {(loading && !autoReload) ? (
-                    [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
-                  ) : (
-                    filteredExistingOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={order.id} />)
-                  )}
-                </SimpleGrid>
-              </Box>
+                {filteredExistingOrders.length > 0 && (
+                  <Box>
+                    <Heading size="lg" my={3}>舊單</Heading>
+                    <SimpleGrid columns={[1, 2, 2, 3, 3]} spacing="40px">
+                      {(loading && !autoReload) ? (
+                        [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)
+                      ) : (
+                        filteredExistingOrders.map((order, index) => <Order onUpdate={() => refetchOrdersOfDay(filter)} order={order} key={order.id} />)
+                      )}
+                    </SimpleGrid>
+                  </Box>
+                )}
+              </>
             )}
-          </>
-        )}
-      </Box>
+          </Box>
+        </Route>
+      </Switch>
       {/* <NotificationStack maxW={300} notifications={notificationsOfDay} /> */}
+      <Box mt="40px" h={0} />
       <Flex position="fixed" bottom={0} left={0} right={0} bg="white" css={css`
         ;box-shadow: rgb(0 0 0 / 10%) 0px 0 40px;
         padding-top: constant(safe-area-inset-top);
@@ -237,7 +246,8 @@ function Overview() {
         padding-bottom: constant(safe-area-inset-bottom);
         padding-left: constant(safe-area-inset-left);
       `}>
-        <NavigationIcon icon={<CalendarIcon />} />
+        <NavigationLink to="/inventory" icon={<CalendarIcon size={18} />} />
+        <NavigationLink to="/" icon={<HomeIcon size={18} />} />
       </Flex>
     </Flex>
   );

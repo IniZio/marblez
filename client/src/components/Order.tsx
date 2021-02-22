@@ -410,7 +410,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         <SocialButtonGroup pos="absolute" right="5" top="5">
           <SocialButton.WhatsApp icon={<ExternalLinkIcon />} text={lines.join('\n')} />
         </SocialButtonGroup>
-        <SocialButtonGroup pos="absolute" right="5" bottom="5" bg="orange">
+        <SocialButtonGroup pos="absolute" right="5" bottom="5">
           <SocialButton.WhatsApp phone={order && order.phone} />
           {order?.order_from?.toLowerCase()?.includes('ig') && !order?.social_name?.trim()?.includes(' ') && <SocialButton.Instagram username={order?.social_name} />}
            <IconButton icon={<FaFileDownload />} aria-label="Download Order as PDF" onClick={downloadPDF} />
