@@ -1,5 +1,5 @@
 import {
-  Box, Flex, Heading, IconButton, Modal, ModalBody, ModalContent, ModalFooter,
+  Box, Flex, Heading, IconButton, Input, Modal, ModalBody, ModalContent, ModalFooter,
 
 
   ModalOverlay, NumberDecrementStepper, NumberIncrementStepper,
@@ -28,7 +28,7 @@ function InventoryPage() {
       <Flex flexWrap="wrap" p={1}>
         <IconButton m={1} aria-label="Create inventory" icon={<Plus />}  onClick={onOpen} />
         {inventories.map(inventory => (
-          <Box m={1} maxW={150} borderRadius={10} p={3} backgroundColor="orange"  shadow="md">
+          <Box m={1} width={150} h={100} maxW="50vw" borderRadius={10} p={3} backgroundColor="orange"  shadow="md">
             <Box color="white" fontWeight="bold">{inventory.name}</Box>
             <Box color="red">{inventory.quality}</Box>
           </Box>
@@ -36,14 +36,14 @@ function InventoryPage() {
       </Flex>
       <Modal motionPreset="slideInBottom" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent position="absolute" bottom={0} mb={0} >
-          <ModalBody lineHeight={10}>
+        <ModalContent position={["absolute", 'unset']} bottom={[0]} mb={[0]} >
+          <ModalBody lineHeight={10} fontWeight="extrabold" fontSize="xl">
             <span>總共</span>
             <NumberInput mx={2} display="inline">
               <NumberInputField width={100} />
             </NumberInput>
-             件
-            巧克力蛋糕 
+            件<br />
+            <Input my={2} fontWeight="extrabold" fontSize="xl" value="巧克力蛋糕" />
           </ModalBody>
 
           <ModalFooter>
