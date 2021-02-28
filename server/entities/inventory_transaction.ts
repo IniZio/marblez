@@ -3,6 +3,13 @@ import { Field, ObjectType } from "type-graphql";
 import { ObjectId } from 'mongodb';
 
 import { Material } from './material'
+import { Location } from './location'
+
+export enum InventoryTransactionReason {
+  Reconcile ='Reconcile',
+  Migrate = 'Migrate',
+  Adjust = 'Adjust',
+}
 
 @ObjectType()
 export class InventoryTransaction {
@@ -13,15 +20,21 @@ export class InventoryTransaction {
   @Property({ ref: Material, required: true })
   material: Ref<Material>;
 
-  @Field(type => Location)
-  @Property({ ref: Location, required: true })
+  @Field(type => Location, { nullable: true })
+  @Property({ ref: Location, required: false })
   location: Ref<Location>;
 
-  @Field()
-  delta: number;
+  @Field(type => Location, { nullable: true })
+  @Property({ ref: Location, required: false })
+  prevLocation: Ref<Location>;
 
   @Field()
-  result: number;
+  @Property({ enum: InventoryTransactionReason })
+  reason: InventoryTransactionReason;
+
+  @Field()
+  @Property()
+  quantity: number;
 }
 
 export const InventoryTransactionModel = getModelForClass(InventoryTransaction);

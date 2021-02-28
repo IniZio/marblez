@@ -1,53 +1,107 @@
 import {
-  Box, Flex, Heading, IconButton, Input, Modal, ModalBody, ModalContent, ModalFooter,
+  Box, css, Flex, Heading, IconButton, Input, Modal, ModalBody, ModalContent, ModalFooter,
 
 
   ModalOverlay, NumberDecrementStepper, NumberIncrementStepper,
   NumberInput, NumberInputField,
   NumberInputStepper,
-
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
+import CreatableSelect from 'react-select/creatable';
+import { gql } from 'apollo-boost';
 import * as React from 'react';
+import { useMutation, useQuery } from 'react-apollo';
 import { Check, Plus } from 'react-feather';
-
-const inventories = [
-  {
-    name: '巧克力蛋糕',
-    quality: 10,
-  }
-]
+import { useForm, Controller  } from 'react-hook-form'
 
 function InventoryPage() {
+  const { data: { materials = [] } = {}, refetch: refetchMaterials } = useQuery(gql`
+    query {
+      materials {
+        _id
+        name
+        quantity
+      }
+    }
+  `);
+
+const [saveMaterial] = useMutation(gql`
+  mutation($material: MaterialInput!) {
+    saveMaterial(material: $material) {
+      _id
+      name
+    }
+  }
+`, {
+  onCompleted: refetchMaterials
+});
+
+const [addInventoryTransaction] = useMutation(gql`
+  mutation($inventoryTransaction: InventoryTransactionInput!) {
+    addInventoryTransaction(inventoryTransaction: $inventoryTransaction) {
+      reason
+    }
+  }
+`)
+
+  const onSubmitInventoryTransaction = React.useCallback(async (values) => {
+    await addInventoryTransaction({
+      variables: {
+        inventoryTransaction: {
+          reason: 'Reconcile',
+          quantity: +values.quantity,
+          materialId: values.material._id
+        }
+      }
+    })
+    onClose();
+    refetchMaterials();
+  }, [addInventoryTransaction])
+  
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef<any>()
+
+  const inventoryTransactionForm = useForm();
   
   return (
     <>
       <Heading as="h1" size="xl" fontWeight="bold" mx={2} my={2}>現在庫存</Heading>
       <Flex flexWrap="wrap" p={1}>
         <IconButton m={1} aria-label="Create inventory" icon={<Plus />}  onClick={onOpen} />
-        {inventories.map(inventory => (
+        {materials.map(material => (
           <Box m={1} width={150} h={100} maxW="50vw" borderRadius={10} p={3} backgroundColor="orange"  shadow="md">
-            <Box color="white" fontWeight="bold">{inventory.name}</Box>
-            <Box color="red">{inventory.quality}</Box>
+            <Box color="white" fontWeight="bold">{material.name}</Box>
+            <Box color="red">{material.quantity}</Box>
           </Box>
         ))}
       </Flex>
       <Modal motionPreset="slideInBottom" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent position={["absolute", 'unset']} bottom={[0]} mb={[0]} >
+        <ModalContent as="form" onSubmit={inventoryTransactionForm.handleSubmit(onSubmitInventoryTransaction)} position={["absolute", 'unset']} bottom={[0]} mb={[0]} >
           <ModalBody lineHeight={10} fontWeight="extrabold" fontSize="xl">
             <span>總共</span>
             <NumberInput mx={2} display="inline">
-              <NumberInputField width={100} />
+              <NumberInputField name="quantity" ref={inventoryTransactionForm.register()} width={100} />
             </NumberInput>
             件<br />
-            <Input my={2} fontWeight="extrabold" fontSize="xl" value="巧克力蛋糕" />
+            <Controller as={CreatableSelect} name="material" control={inventoryTransactionForm.control}
+              isClearable
+              getOptionValue={option => option._id}
+              onCreateOption={name => {
+                saveMaterial({
+                  variables: {
+                    material: {
+                      name
+                    }
+                  }
+                })
+              }}
+              options={materials.map(material => ({ ...material, label: material.name }))}
+             />
           </ModalBody>
 
           <ModalFooter>
-            <IconButton colorScheme="blue" onClick={onClose} icon={<Check />} />
+            <IconButton colorScheme="blue"  icon={<Check />} type="submit" />
           </ModalFooter>
         </ModalContent>
       </Modal>

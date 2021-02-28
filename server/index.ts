@@ -17,6 +17,7 @@ import { OrderResolver } from './resolvers/order-resolver ';
 import { RateResolver } from "./resolvers/rate-resolver";
 import { RecipeResolver } from "./resolvers/recipe-resolver";
 import { OrderMetaResolver } from './resolvers/order-meta-resolver';
+import { MaterialResolver } from './resolvers/material-resolver';
 import { TypegooseMiddleware } from "./typegoose-middleware";
 
 
@@ -40,7 +41,7 @@ async function bootstrap() {
 
     // build TypeGraphQL executable schema
     const schema = await buildSchema({
-      resolvers: [RecipeResolver, RateResolver, OrderResolver, NotificationResolver, OrderMetaResolver],
+      resolvers: [RecipeResolver, RateResolver, OrderResolver, NotificationResolver, OrderMetaResolver, MaterialResolver],
       emitSchemaFile: path.resolve(__dirname, "schema.gql"),
       // use document converting middleware
       globalMiddlewares: [TypegooseMiddleware],

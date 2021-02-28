@@ -3,9 +3,10 @@ import { Field, ObjectType } from "type-graphql";
 import { ObjectId } from 'mongodb';
 
 import { Material } from './material'
+import { Location } from './location';
 
 @ObjectType()
-export class MaterialLocation {
+export class Inventory {
   @Field()
   readonly _id: ObjectId;
   
@@ -13,12 +14,13 @@ export class MaterialLocation {
   @Property({ ref: Material, required: true })
   material: Ref<Material>;
 
-  @Field(type => Location)
-  @Property({ ref: Location, required: true })
+  @Field(type => Location, { nullable: true })
+  @Property({ ref: Location, required: false })
   location: Ref<Location>;
 
   @Field()
+  @Property({ default: 0 })
   quantity: number;
 }
 
-export const MaterialLocationModel = getModelForClass(MaterialLocation);
+export const InventoryModel = getModelForClass(Inventory);
