@@ -8,7 +8,8 @@ import { Location } from './location'
 export enum InventoryTransactionReason {
   Reconcile ='Reconcile',
   Migrate = 'Migrate',
-  Adjust = 'Adjust',
+  Restock = 'Restock',
+  Spend = 'Spend',
 }
 
 @ObjectType()

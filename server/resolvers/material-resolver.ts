@@ -58,8 +58,11 @@ export class MaterialResolver {
       case InventoryTransactionReason.Reconcile:
         inventory.quantity = inventoryTransaction.quantity;
         break;
-      case InventoryTransactionReason.Adjust:
+      case InventoryTransactionReason.Restock:
         inventory.quantity += inventoryTransaction.quantity;
+        break;
+      case InventoryTransactionReason.Spend:
+        inventory.quantity -= inventoryTransaction.quantity;
         break;
       case InventoryTransactionReason.Migrate:
         inventory.quantity += inventoryTransaction.quantity
