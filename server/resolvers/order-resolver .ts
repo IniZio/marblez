@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Resolver, Query, FieldResolver, Arg, Root, Mutation, Ctx, PubSubEngine, PubSub } from "type-graphql";
-import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth, isBefore, addYears, startOfDay, endOfDay, startOfMonth, endOfMonth } from 'date-fns';
+import { parse, isValid, isSameDay, addHours, compareDesc, getDay, getDate, getMonth, format, isSameMonth, isBefore, addYears, startOfDay, endOfDay, startOfMonth, endOfMonth, addDays } from 'date-fns';
 import agent from 'superagent';
 import { get } from 'lodash';
 
@@ -76,9 +76,13 @@ export const rowToOrder = (row: any[], index: any): Order => {
         order[key] = parse(order[key], 'M/d', new Date(order.createdAt));
         if (!isValid(order[key])) {
           order[key] = undefined;
-        } else if(isBefore(order[key], order.createdAt)) {
+          break;
+        } 
+        
+        if(isBefore(order[key], order.createdAt)) {
           order[key] = addYears(order[key], 1);
         }
+        order[key] = addHours(order[key], 8);
         break;
       case 'otherAttributes.decorations':
       case 'otherAttributes.toppings':
