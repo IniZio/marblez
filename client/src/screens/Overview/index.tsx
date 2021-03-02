@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from "react-apollo";
 import { Switch, Route, Link } from 'react-router-dom';
-import { Home as HomeIcon, Calendar as CalendarIcon } from 'react-feather';
+import { Home as HomeIcon, Calendar as CalendarIcon, Database } from 'react-feather';
 import { FRAGMENT_ORDER } from '../../apollo/fragments';
 import DatePicker from '../../components/DatePicker';
 import Order from '../../components/Order';
@@ -14,6 +14,7 @@ import OrderStats from '../../components/OrderStats';
 import { useDebounce } from '../../hooks';
 import { downloadURI } from '../../util/dom';
 import InventoryPage from '../Inventory';
+import TimelinePage from '../Timeline';
 
 const NavigationLink = ({ icon, ...props }: { icon: React.ReactElement } & LinkProps) => (
   <Flex as={Link} flex={1} h={10} align="center" justify="center" {...props}>
@@ -188,6 +189,7 @@ function Overview() {
     <Flex flexDirection="column" maxH="100vh">
       <Switch>
         <Route path="/inventory" component={InventoryPage} />
+        <Route path="/timeline" component={TimelinePage} />
         <Route path="/" exact>
           <Heading as="h1" size="xl" fontWeight="bold" mx={2} my={2}>訂單</Heading>
           <Box flex={1} maxW="100%" maxH="100vh" overflowY="auto" px={[2, 5]}>
@@ -246,8 +248,9 @@ function Overview() {
         padding-bottom: constant(safe-area-inset-bottom);
         padding-left: constant(safe-area-inset-left);
       `}>
-        <NavigationLink to="/inventory" icon={<CalendarIcon size={18} />} />
+        <NavigationLink to="/inventory" icon={<Database size={18} />} />
         <NavigationLink to="/" icon={<HomeIcon size={18} />} />
+        <NavigationLink to="/timeline" icon={<CalendarIcon size={18} />} />
       </Flex>
     </Flex>
   );

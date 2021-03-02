@@ -17,6 +17,11 @@ export class MaterialResolver {
     return MaterialModel.find();
   }
 
+  @Query(returns => [InventoryTransaction], { nullable: true })
+  inventoryTransactions() {
+    return InventoryTransactionModel.find().populate('material');
+  }
+
   @Mutation(returns => Material)
   async saveMaterial(
     @Arg("material") materialInput: MaterialInput,

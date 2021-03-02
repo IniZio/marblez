@@ -15,7 +15,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import { Check, Plus } from 'react-feather';
 import { useForm, Controller  } from 'react-hook-form'
 
-const INVENTORY_TRANSACTION_REASON_OPTIONS = [
+export const INVENTORY_TRANSACTION_REASON_OPTIONS = [
   { label: '總共', value: 'Reconcile' },
   { label: '入貨', value: 'Restock' },
   { label: '消耗', value: 'Spend' }

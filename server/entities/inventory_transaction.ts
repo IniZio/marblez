@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 
 import { Material } from './material'
 import { Location } from './location'
+import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 export enum InventoryTransactionReason {
   Reconcile ='Reconcile',
@@ -13,7 +14,7 @@ export enum InventoryTransactionReason {
 }
 
 @ObjectType()
-export class InventoryTransaction {
+export class InventoryTransaction extends TimeStamps {
   @Field()
   readonly _id: ObjectId;
   
@@ -36,6 +37,9 @@ export class InventoryTransaction {
   @Field()
   @Property()
   quantity: number;
+
+  @Field()
+  createdAt: Date;
 }
 
 export const InventoryTransactionModel = getModelForClass(InventoryTransaction);
