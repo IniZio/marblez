@@ -86,7 +86,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
         break;
       case 'otherAttributes.decorations':
       case 'otherAttributes.toppings':
-        order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, ''));
+        order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, '').replace(/\*.[^\*]*$/, ''));
         break;
       case 'createdAt':
         order[key] = parse(order[key], 'M/d/y H:mm:ss', new Date());

@@ -143,7 +143,7 @@ export const order2Lines = (order: any) => [
   lineIf(order, ['otherAttributes.taste', 'otherAttributes.letter'], {prefix: '‎‎⠀⠀ '}),
   lineIf(order, ['otherAttributes.innerTaste', 'otherAttributes.bottomTaste'], {prefix: '‎‎⠀⠀ '}),
   lineIf(order, ['otherAttributes.sentence'], {prefix: '✍️️ '}),
-  lineIf(order, ['otherAttributes.paidSentence'], {prefix: '朱古力牌 ✍️️ '}),
+  lineIf(order, ['otherAttributes.paidSentence'], {prefix: '🍫️ '}),
   lineIf(order, ['customerSocialChannel', 'customerSocialName'], {prefix: '📲 '}),
   lineIf(order, ['deliveryMethod', 'deliveryAddress'], {prefix: '🚚 '}),
   lineIf(order, ['remarks']),
