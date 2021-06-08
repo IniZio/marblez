@@ -7,6 +7,7 @@ const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
 ];
 const spreadSheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
+// const spreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
 const testSpreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
 const snapshotSpreadSheetId = '1A8HAYl3OeEj_zetpD6HfGqUsW93nqXpn-f6oK3L45jI';
 
@@ -76,6 +77,27 @@ class GoogleSheetRespository {
       insertDataOption: 'INSERT_ROWS',
       requestBody: {
         values: values,
+      },
+    });
+  }
+
+  async updateCell(index: number, column: number, value: any) {
+    const range = `${resolveColumnIndex(column)}${index}:${resolveColumnIndex(column)}${index}`;
+    console.log('=== range', range);
+    const values = [
+      [value]
+    ];
+    const data = [{
+      range,
+      values,
+    }]
+    
+    
+    await this.googleSheet.spreadsheets.values.batchUpdate({
+      spreadsheetId: this.spreadSheetId,
+      requestBody: {
+        valueInputOption: 'raw',
+        data,
       },
     });
   }

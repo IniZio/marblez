@@ -5,11 +5,12 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist",
-    "dev": "node ./ngrok.js & tsc-watch --noClear --onSuccess \"node dist\"",
+    "dev": "node ./ngrok.js & tsc-watch --noClear --onSuccess \"doppler run -- node dist\"",
     "build": "tsc"
   },
   "dependencies": {
     "@marblez/graphql": "0.0.0",
+    "@react-pdf/renderer": "^2.0.8",
     "@typegoose/typegoose": "^6.4.0",
     "@types/dotenv": "^8.2.0",
     "@types/graphql": "^14.5.0",
@@ -31,6 +32,7 @@
     "ngrok": "^3.2.7",
     "node-cron": "^2.0.3",
     "randomcolor": "^0.6.2",
+    "react": "^17.0.2",
     "recursive-diff": "^1.0.8",
     "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.19",
@@ -43,6 +45,8 @@
     "@types/lodash": "^4.14.167",
     "@types/node-cron": "^2.0.3",
     "@types/randomcolor": "^0.5.5",
+    "@types/react": "^17.0.4",
+    "@types/source-map-support": "^0.5.3",
     "@types/superagent": "^4.1.7",
     "@types/tsc-watch": "^4.2.0",
     "tsc-watch": "^4.2.3",

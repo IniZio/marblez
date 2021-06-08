@@ -94,10 +94,16 @@ function lineIf<T extends IOrder>(o: any, fields: Paths<T,  3>[], opt: any = {})
     return null;
   }
   
-  const line = (
+  const lineArr = (
     fields
     .map(function(f, i) {
       if (!f) {
+        return null;
+      }
+
+      const value = get(o, f);
+
+      if (!value) {
         return null;
       }
       
@@ -108,17 +114,17 @@ function lineIf<T extends IOrder>(o: any, fields: Paths<T,  3>[], opt: any = {})
         return  format(parseISO(o[f] as string), 'MM/dd');
       }
 
-      if (['cake', 'shape', 'color', 'taste', 'letter'].includes(f)) {
-        return get(o, f).replace(/\([^(\))]*\)/g, '')
+      if (['otherAttributes.cake', 'otherAttributes.shape', 'otherAttributes.color', 'otherAttributes.taste', 'otherAttributes.letter'].includes(f)) {
+        return <b>{get(o, f)?.replace(/\([^(\))]*\)/g, '')}</b>
       }
 
       return get(o, f)
     })
     .filter(Boolean)
-    .join(' ')
   )
+
   return (
-      line.trim().length > 0 ? ((opt && opt.prefix) || '') + line.trim() : ''
+    lineArr.length > 0 ? <div>{(opt && opt.prefix) || ''} {lineArr}</div> : ''
   );
 }
 
@@ -312,54 +318,9 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
       }
     }
   `);
-  const [value, setValue] = useState<Node[]>([{
-    children: [
-      {
-        text: lines.join('\n'),
-      },
-    ],
-  }])
-  const editor = useMemo(() => withHistory(withReact(createEditor())), [])
-  const decorate = useCallback(
-    ([node, path]) => {
-      const ranges = []
-
-      if (orderLabels.length && Text.isText(node)) {
-        const conditionsWithLabel = [];
-        for (const label of orderLabels || []) {
-          conditionsWithLabel.push(...(label.conditions || []).map(condition => (
-            {
-              ...condition,
-              label,
-            }
-          )))
-        }
-        
-        const { text } = node
-        const regex = new RegExp(conditionsWithLabel.map(condition => condition.keyword).filter(Boolean).join('|'), 'g')
-
-        let match;
-
-        while ((match = regex.exec(text)) !== null) {
-          ranges.push({
-            anchor: { path, offset: match.index },
-            focus: { path, offset: match.index + match[0].length },
-            highlight: true,
-            highlightColor: conditionsWithLabel.find(conditionWithLabel => conditionWithLabel.keyword ===  match[0]).label.color,
-          })
-        }
-      }
-
-      return ranges
-    },
-    [order]
-  )
   
   const [updateOrder] = useMutation(UPDATE_ORDER);
-  const screenshotRef = useRef();
-  
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const firstField = React.useRef<HTMLInputElement>();
+  const screenshotRef = useRef(); 
   const downloadPDF = React.useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -380,7 +341,6 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         minHeight={353} 
         fontSize={16} 
         position="relative" 
-        onDoubleClick={onOpen}
       >
         {!order?.otherAttributes.printed && (
           <Badge ml="1" variantColor="blue">
@@ -394,17 +354,7 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
         )}
         <Box>
         <Box ref={screenshotRef}>
-          <Slate 
-            editor={editor} 
-            value={value} 
-            onChange={value => setValue(value)}
-          >
-            <HoveringToolbar order={order} orderLabels={orderLabels} onSaveOrderLabelsSuccess={() => refetchOrderLabels().then(onUpdate)} />
-            <Editable 
-              decorate={decorate} 
-              renderLeaf={props => <Leaf {...props} />} 
-            />
-          </Slate>
+          {lines}
         </Box>
         </Box>
         <SocialButtonGroup pos="absolute" right="5" top="5">

@@ -5,13 +5,12 @@
     "client",
     "server",
     "graphql",
-    "external",
-    "links"
+    "external"
   ],
   "scripts": {
     "dev": "NODE_ENV=development lerna exec  --ignore @marblez/external --parallel npm run dev",
     "build": "lerna exec --parallel npm run build",
-    "types": "lerna exec --parallel npx typesync && npm run bootstrap",
+    "types": "lerna exec --parallel npx typesync && yarn",
     "heroku-postbuild": "npm run build"
   },
   "devDependencies": {

@@ -29,6 +29,7 @@ export type IOrder = {
     decorations?: string[];
     toppings?: string[];
     printed?: string;
+    printedReceipt?: string;
   }  
 
   meta?: any

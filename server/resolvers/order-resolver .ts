@@ -53,6 +53,7 @@ const orderFields: Partial<{ [k in Paths<IOrder, 3>]: number | number[] }> = {
   'deliveryMethod': 30,
   'deliveryAddress': 31,
   remarks: 32,
+  'otherAttributes.printedReceipt': 89,
   'otherAttributes.printed': 90,
   id: 91,
 };
@@ -70,6 +71,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
     switch(key) {
       case 'paid':
       case 'otherAttributes.printed':
+      case 'otherAttributes.printedReceipt':
         order[key] = order[key] === 'TRUE'
         break;
       case 'deliveryDate':
@@ -203,6 +205,23 @@ export class OrderResolver {
       pickupDate,
       keyword,
     })
+  }
+
+  @Query(returns => [Order], { nullable: true })
+  async receiptsOfDay(
+    @Arg("pickupDate", type => Date, { nullable: true }) pickupDate?: Date,
+    @Arg("keyword", type => String, { nullable: true }) keyword?: string,
+  ) {
+    const orders = await this._orders({
+      pickupDate,
+      keyword,
+    })
+
+    const newReceipts = orders.filter(order => !order.otherAttributes.printedReceipt);
+
+    await Promise.all(newReceipts.map(receipt => googleSheet.updateCell(receipt.id, +orderFields['id'], 'TRUE')));
+
+    return newReceipts;
   }
   
   async _orders({

@@ -116,3 +116,4 @@ dist
 
 marble-service-account.json
 server/wtf.json
+worker/temp/
