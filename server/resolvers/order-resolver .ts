@@ -266,8 +266,8 @@ export class OrderResolver {
   async downloadOrdersOfDay(
     @Arg("date", type => Date, { nullable: true, defaultValue: new Date() }) date?: Date,
   ) {
-    const res = await agent.get(`${process.env.GOOGLE_SHEET_SCRIPT_URL}?date=${date.toISOString()}`);
-    return res.text
+    const res = await agent.get(`${process.env.GOOGLE_SHEET_SCRIPT_URL}?date=${date.toISOString()}&num_of_column=2`);
+    return JSON.parse(res.text)?.url;
   }
 
   @Mutation(returns => Order)

@@ -15,6 +15,7 @@ import { useDebounce } from '../../hooks';
 import { downloadURI } from '../../util/dom';
 import InventoryPage from '../Inventory';
 import TimelinePage from '../Timeline';
+import { format } from 'date-fns';
 
 const NavigationLink = ({ icon, ...props }: { icon: React.ReactElement } & LinkProps) => (
   <Flex as={Link} flex={1} h={10} align="center" justify="center" {...props}>
@@ -127,7 +128,7 @@ function Overview() {
 
   const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false);
   const {refetch: refetchDownloadOrdersOfDay} = useQuery(gql`
-    query ordersOfDay(
+    query downloadOrdersOfDay(
       $date: DateTime
     ) {
       downloadOrdersOfDay(
@@ -144,7 +145,7 @@ function Overview() {
     setLoadingDownloadOrdersOfDay(true);
     const res = await refetchDownloadOrdersOfDay();
     const linkToOrdersOfDay = res.data.downloadOrdersOfDay;
-    downloadURI(linkToOrdersOfDay, `Orders of ${pickupDate}.pdf`);
+    downloadURI(linkToOrdersOfDay, `Orders of ${format(pickupDate, 'M_d')} (Paid).pdf`);
     setLoadingDownloadOrdersOfDay(false);
   }, [pickupDate])
 
@@ -202,10 +203,10 @@ function Overview() {
               <IconButton aria-label="Reload" icon={<RepeatIcon />} onClick={() => { setAutoReload(false); refetchOrdersOfDay(filter)}} isLoading={loading} />
             </HStack>
             <OrderStats date={pickupDate} />
-            {/* <HStack spacing={[1, 5]} py={2} flexWrap={['wrap']}>
+            <HStack spacing={[1, 5]} py={2} flexWrap={['wrap']}>
               <Button leftIcon={<DownloadIcon />} onClick={downloadOrdersOfDay} isLoading={loadingDownloadOrdersOfDay} loadingText="正在下載...">下載訂單</Button>
-              <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">顯示未付款訂單?</Checkbox>
-            </HStack> */}
+              {/* <Checkbox isChecked={includeUnpaid} onChange={() => setIncludeUnpaid(!includeUnpaid)} verticalAlign="middle">顯示未付款訂單?</Checkbox> */}
+            </HStack>
             {/* <OrdersCalendar filter={filter} /> */}
             {(loading && !autoReload) ? (
               [1, 1, 1, 1, 1, 1, 1, 1].map((_, index) => <Skeleton key={index}><Order /></Skeleton>)

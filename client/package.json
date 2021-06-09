@@ -2,7 +2,6 @@
   "name": "@marblez/client",
   "version": "0.0.0",
   "scripts": {
-    "postinstall": "(curl -Ls --tlsv1.2 --proto \"=https\" --retry 3 https://cli.doppler.com/install.sh || wget -t 3 -qO- https://cli.doppler.com/install.sh) | sh",
     "start": "serve -s dist -p $PORT",
     "dev": "doppler run -- parcel ./src/index.html",
     "build": "parcel build ./src/index.html"
