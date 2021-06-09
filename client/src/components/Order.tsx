@@ -1,24 +1,16 @@
-import { AddIcon, DeleteIcon, ExternalLinkIcon } from '@chakra-ui/icons';
-import { Badge, Box, Button, Checkbox, css, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, FormControl, FormLabel, IconButton, Input, Portal, Stack, Textarea, useDisclosure } from '@chakra-ui/react';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
+import { Badge, Box, Button, css, IconButton, Portal } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import { FaFileDownload } from '@react-icons/all-files/fa/FaFileDownload';
 import { gql } from 'apollo-boost';
 import { format, parseISO } from 'date-fns';
-import { Field, FieldArray, Formik } from 'formik';
-import { capitalize, map } from 'lodash';
 import { omit } from 'lodash/fp';
-import React, { useCallback, useMemo, useRef, useState, useEffect, memo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
-import { FaFileDownload } from '@react-icons/all-files/fa/FaFileDownload';
-import { RemoveScroll } from 'react-remove-scroll';
+import { Editor, Range } from 'slate';
+import { ReactEditor, useSlate } from 'slate-react';
 import SocialButton from '../components/SocialButton';
-import { IOrder, IOrderLabel, NestedObjectType } from '@marblez/graphql';
-import { Slate, Editable, withReact, useSlate, ReactEditor } from 'slate-react'
-import { Text, Node, createEditor, Range, Editor } from 'slate'
-import { withHistory } from 'slate-history'
 import { theme } from '../theme';
-import DatePicker from './DatePicker';
-import OrderLabelsModal from './OrderLabelsModal'
-import { condition } from 'tripetto-runner-foundation';
 
 
 async function printPDF (domElement?: any) { 

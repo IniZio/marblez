@@ -1,10 +1,9 @@
 import { getModelForClass, index, prop as Property } from "@typegoose/typegoose";
 import { Field, ObjectType } from "type-graphql";
 import { ObjectId } from 'mongodb';
-import { IMaterial } from '@marblez/graphql';
 
 @ObjectType()
-export class Location implements IMaterial {
+export class Location {
   @Field()
   readonly _id: ObjectId;
   

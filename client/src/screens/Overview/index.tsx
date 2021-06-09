@@ -1,6 +1,5 @@
 import { DownloadIcon, EditIcon, PhoneIcon, RepeatIcon } from '@chakra-ui/icons';
 import { Box, Button, Checkbox, css, Flex, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, LinkProps, SimpleGrid, Skeleton, useToast } from '@chakra-ui/react';
-import { IOrder } from '@marblez/graphql';
 import gql from 'graphql-tag';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from "react-apollo";
@@ -16,6 +15,7 @@ import { downloadURI } from '../../util/dom';
 import InventoryPage from '../Inventory';
 import TimelinePage from '../Timeline';
 import { format } from 'date-fns';
+import { IOrder } from '../../models/IOrder';
 
 const NavigationLink = ({ icon, ...props }: { icon: React.ReactElement } & LinkProps) => (
   <Flex as={Link} flex={1} h={10} align="center" justify="center" {...props}>

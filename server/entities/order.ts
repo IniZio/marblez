@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Field, ObjectType } from "type-graphql";
 import { GraphQLJSON } from 'graphql-type-json';
-import { IOrder } from '@marblez/graphql';
+import { IOrder } from '../models/IOrder';
 
 @ObjectType()
 // @index({ phone: 1, date: 1, time: 1, cake: 1 }, { unique: true })

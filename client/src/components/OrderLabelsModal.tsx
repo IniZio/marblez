@@ -13,7 +13,7 @@ import {
   Circle,
   Input,
 } from "@chakra-ui/react"
-import { IOrder } from '@marblez/graphql';
+import { IOrder } from '../models/IOrder';
 
 export interface OrderLabelsModalProps extends ModalProps {
   order: IOrder

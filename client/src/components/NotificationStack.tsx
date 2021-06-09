@@ -1,6 +1,6 @@
 import { Box, BoxProps, Heading, Stack, StackProps, Text } from '@chakra-ui/react';
 import React from 'react';
-import { IOrder } from '@marblez/graphql';
+import { IOrder } from '../models/IOrder';
 
 function Notification({ title, desc, ...rest }: NotificationProps) {
   return (

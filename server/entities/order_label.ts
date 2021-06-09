@@ -4,12 +4,20 @@ import { GraphQLJSON } from 'graphql-type-json';
 import { ObjectId } from 'mongodb';
 
 import { Material } from './material'
-import { IMaterial, IOrderLabel, IOrderLabelCondition } from '@marblez/graphql';
 
+export interface IMaterial {
+  _id: any;
+  name?: string;
+}
+
+
+export interface IOrderLabelCondition {
+  keyword?: string,
+}
 
 
 @ObjectType()
-export class OrderLabel implements IOrderLabel {
+export class OrderLabel {
   @Field()
   readonly _id: ObjectId;
   

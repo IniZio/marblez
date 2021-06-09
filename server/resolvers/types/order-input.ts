@@ -1,6 +1,6 @@
-import { IOrder } from '@marblez/graphql';
 import { InputType, Field, Int } from "type-graphql";
 import GraphQLJSON from 'graphql-type-json';
+import { IOrder } from '../../models/IOrder';
 
 @InputType()
 export class OrderInput {
