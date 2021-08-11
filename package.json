@@ -3,16 +3,19 @@
   "private": true,
   "workspaces": [
     "client",
-    "server",
-    "external"
+    "server"
   ],
   "scripts": {
-    "dev": "NODE_ENV=development lerna exec  --ignore @marblez/external --parallel npm run dev",
+    "share-env": "cp .env.${TARGET} client/.env && cp .env.${TARGET} server/.env",
+    "predev": "TARGET=development npm run share-env",
+    "dev": "NODE_ENV=development env-cmd -f .env.development lerna exec --parallel npm run dev",
     "build": "lerna exec --parallel npm run build",
     "types": "lerna exec --parallel npx typesync && yarn",
     "heroku-postbuild": "npm run build"
   },
   "devDependencies": {
+    "dotenv": "^10.0.0",
+    "env-cmd": "^10.1.0",
     "lerna": "^3.22.1",
     "typescript": "^4.1.2"
   },

@@ -8,7 +8,7 @@ import { getMainDefinition } from 'apollo-utilities';
 import { buildTypeDefsAndResolvers } from "type-graphql";
 
 
-const API_URL = process.env.REACT_APP_API_URL || process.env.API_URL;
+const API_URL = import.meta.env.VITE_APP_API_URL;
 
 export async function createApolloClient() {
   const WS_URL = API_URL!.replace('http', 'ws');

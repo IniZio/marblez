@@ -7,7 +7,7 @@ import App from "./App";
 
 async function bootstrap() {
   const client = await createApolloClient();
-  ReactDOM.render(<App client={client} />, document.getElementById("root")!);
+  ReactDOM.render(<React.StrictMode><App client={client} /></React.StrictMode>, document.getElementById("root")!);
 }
 
 bootstrap();

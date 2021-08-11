@@ -24,9 +24,21 @@
 
 ### Backend
 
-- In heroku, set env variables `MONGO_HOST`, `NPM_CONFIG_PRODUCTION = false`, `SERVICE_ACCOUNT_KEY_FILE`
+- In heroku, set env variables `MONGO_URL`, `NPM_CONFIG_PRODUCTION = false`, `SERVICE_ACCOUNT_KEY_FILE`
 
 ### Frontend
 
 - In netlify, set env variables `API_URL`
 - Set build command to be `npm run build` and publish directory to `client/dist`
+
+### Github Secrets
+
+```sh
+# Secret key
+gpg -a --export-secret-keys deploy-marblez > deploy-marblez.private
+cat -e deploy-marblez.private | sed 's/\$/\\n/g'
+
+# Public key
+gpg -a --export deploy-marblez > deploy-marblez.public
+cat -e deploy-marblez.public | sed 's/\$/\\n/g'
+```

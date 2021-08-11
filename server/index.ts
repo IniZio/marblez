@@ -28,12 +28,12 @@ export interface Context {
 dotenv.config();
 
 // replace with your value if needed
-const { MONGO_HOST, PORT = '4000' } = process.env;
+const { MONGO_URL, PORT = '4000' } = process.env;
 
 async function bootstrap() {
   try {
     // create mongoose connection
-    const mongoose = await connect(MONGO_HOST);
+    const mongoose = await connect(MONGO_URL);
 
     // clean and seed database with some data
     // await mongoose.connection.db.dropDatabase();
@@ -54,13 +54,13 @@ async function bootstrap() {
     // const context: Context = { user: defaultUser };
 
     // Create GraphQL server
-    const server = new ApolloServer({ 
-      schema, 
+    const server = new ApolloServer({
+      schema,
       // context,
       cors: {
         origin: [
           'https://marblez.netlify.app', 'https://miss-marble.netlify.app/',
-          'http://localhost:1234', 'http://localhost:3000'
+          'http://localhost:1234', 'http://localhost:3000', 'https://marblez.fly.dev'
         ],
         credentials: true
       }

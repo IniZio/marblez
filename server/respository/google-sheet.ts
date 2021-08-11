@@ -11,7 +11,7 @@ const spreadSheetId = '1E5v8Ilbl1Vk8d_hIGIJSjnmp_bS5K-MtT6QD9vhAGfM';
 const testSpreadSheetId = '1s_PcdLtCjsHOWZNEbZffH5uWsgdKqv-iaZcfqwt5pUI';
 const snapshotSpreadSheetId = '1A8HAYl3OeEj_zetpD6HfGqUsW93nqXpn-f6oK3L45jI';
 
-const json = JSON.parse(process.env.SERVICE_ACCOUNT_KEY_FILE || fs.readFileSync(path.resolve(__dirname, '../../marble-service-account.json')) as unknown as string);
+const json = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../marble-service-account.json')) as unknown as string);
 
 const resolveColumnIndex = (n: number) : string => {const a=Math.floor(n/26); return a >= 0 ? resolveColumnIndex(a-1) + String.fromCharCode(65+(n%26)) : ''};
 
@@ -25,7 +25,7 @@ class GoogleSheetRespository {
   );
   spreadSheetId: string;
   snapshotSpreadSheetId?: string;
-  
+
   constructor({ spreadSheetId: _spreadSheetId = spreadSheetId, snapshotSpreadSheetId }: {spreadSheetId?: string, snapshotSpreadSheetId?: string} = {}) {
     this.googleSheet = google.sheets('v4');
     this.spreadSheetId = _spreadSheetId;
@@ -91,8 +91,8 @@ class GoogleSheetRespository {
       range,
       values,
     }]
-    
-    
+
+
     await this.googleSheet.spreadsheets.values.batchUpdate({
       spreadsheetId: this.spreadSheetId,
       requestBody: {
@@ -111,8 +111,8 @@ class GoogleSheetRespository {
       range,
       values,
     }]
-    
-    
+
+
     await this.googleSheet.spreadsheets.values.batchUpdate({
       spreadsheetId: this.spreadSheetId,
       requestBody: {
@@ -126,7 +126,7 @@ class GoogleSheetRespository {
     if (!this.snapshotSpreadSheetId) {
       return;
     }
-    
+
     const rse = await this.googleSheet.spreadsheets.get({
       spreadsheetId: this.snapshotSpreadSheetId
     });
