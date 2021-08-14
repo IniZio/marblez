@@ -4,7 +4,8 @@
   "scripts": {
     "start": "env-cmd site preview",
     "dev": "env-cmd vite",
-    "build": "env-cmd vite build"
+    "build": "env-cmd vite build",
+    "generate-logos": "npx pwa-asset-generator public/logo.svg public/logos"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.5",
@@ -71,7 +72,8 @@
     "parcel-plugin-bundle-visualiser": "^1.2.0",
     "parcel-plugin-pwa-manifest": "^3.0.6",
     "typescript": "^4.1.2",
-    "vite": "^2.4.4"
+    "vite": "^2.4.4",
+    "vite-plugin-pwa": "^0.10.0"
   },
   "alias": {
     "util": "./mocks/utils.js",
