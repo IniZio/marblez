@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "client",
-    "server"
+    "server",
+    "v2"
   ],
   "scripts": {
     "share-env": "cp .env.${TARGET} client/.env && cp .env.${TARGET} server/.env",

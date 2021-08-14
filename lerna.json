@@ -3,7 +3,8 @@
   "useWorkspaces": true,
   "packages": [
     "client",
-    "server"
+    "server",
+    "v2"
   ],
   "version": "0.0.0"
 }
