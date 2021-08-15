@@ -30,6 +30,7 @@ const UserInfo = () => {
           <br />
           User role: <code>{currentUser.role}</code>
         </div>
+        <Link href={Routes.HelloWorldPage()}>Hello world</Link>
       </>
     )
   } else {
@@ -129,7 +130,7 @@ const Home: BlitzPage = () => {
           Powered by Blitz.js
         </a>
       </footer>
-
+{/*
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;700&display=swap");
 
@@ -261,7 +262,7 @@ const Home: BlitzPage = () => {
             flex-direction: column;
           }
         }
-      `}</style>
+      `}</style> */}
     </div>
   )
 }
