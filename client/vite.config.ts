@@ -3,5 +3,8 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    port: 1234,
+  },
   plugins: [reactRefresh()]
 })
