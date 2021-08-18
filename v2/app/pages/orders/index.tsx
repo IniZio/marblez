@@ -68,7 +68,7 @@ const OrdersPage: BlitzPage = () => {
   );
 };
 
-OrdersPage.authenticate = true;
+OrdersPage.authenticate = false;
 OrdersPage.getLayout = (page) => <Layout>{page}</Layout>;
 
 export default OrdersPage;
