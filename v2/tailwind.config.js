@@ -2,9 +2,20 @@
 module.exports = {
   mode: "jit",
   purge: ["{pages,app}/**/*.{js,ts,jsx,tsx}"],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: "media", // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        'reverse-spin': 'reverse-spin 1s linear infinite'
+      },
+      keyframes: {
+        'reverse-spin': {
+          from: {
+            transform: 'rotate(360deg)'
+          },
+        }
+      }
+    }
   },
   variants: {
     extend: {},

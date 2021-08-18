@@ -8,6 +8,7 @@
     "start": "blitz start",
     "studio": "blitz prisma studio",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -24,20 +25,29 @@
     ]
   },
   "dependencies": {
+    "@heroicons/react": "1.0.3",
     "@hookform/resolvers": "2.7.1",
     "@prisma/client": "2.29.1",
     "autoprefixer": "10",
     "blitz": "0.39.0",
+    "classnames": "2.3.1",
+    "date-fns": "2.23.0",
+    "dayjs": "1.10.6",
+    "lodash": "4.17.21",
     "postcss": "8",
     "react": "alpha",
     "react-dom": "alpha",
+    "react-flatpickr": "3.10.7",
     "react-hook-form": "7.12.2",
+    "superagent": "6.1.0",
     "tailwindcss": "2.1.2",
     "zod": "3.7.2"
   },
   "devDependencies": {
+    "@types/lodash": "4.14.172",
     "@types/preview-email": "2.0.1",
     "@types/react": "17.0.17",
+    "@types/react-flatpickr": "3.8.4",
     "eslint": "7.32.0",
     "husky": "6.0.0",
     "lint-staged": "10.5.4",
