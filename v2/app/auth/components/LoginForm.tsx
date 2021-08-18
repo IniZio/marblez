@@ -22,15 +22,14 @@ export const LoginForm = (props: LoginFormProps) => {
         onSubmit={async (values) => {
           try {
             await loginMutation(values)
-            props.onSuccess?.()
+            return props.onSuccess?.()
           } catch (error) {
             if (error instanceof AuthenticationError) {
               return { [FORM_ERROR]: "Sorry, those credentials are invalid" }
-            } else {
-              return {
-                [FORM_ERROR]:
-                  "Sorry, we had an unexpected error. Please try again. - " + error.toString(),
-              }
+            }
+            return {
+              [FORM_ERROR]:
+                "Sorry, we had an unexpected error. Please try again. - " + error.toString(),
             }
           }
         }}

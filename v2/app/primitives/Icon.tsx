@@ -1,10 +1,11 @@
-import React, { memo } from "react";
-import cn from "classnames";
+// eslint-disable-next-line no-use-before-define
+import React, { memo } from "react"
+import cn from "classnames"
 
 interface IconProps {
-  src: string;
-  size?: string;
-  className?: string;
+  src: string
+  size?: string
+  className?: string
 }
 
 export const Icon: React.FC<IconProps> = ({ src, size, className }) => {
@@ -24,7 +25,7 @@ export const Icon: React.FC<IconProps> = ({ src, size, className }) => {
         height: size,
       }}
     />
-  );
-};
+  )
+}
 
-export default memo(Icon);
+export default memo(Icon)

@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import { Suspense } from "react"
 import { Image, Link, BlitzPage, useMutation, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
@@ -33,22 +34,21 @@ const UserInfo = () => {
         <Link href={Routes.HelloWorldPage()}>Hello world</Link>
       </>
     )
-  } else {
-    return (
-      <>
-        <Link href={Routes.SignupPage()}>
-          <a className="button small">
-            <strong>Sign Up</strong>
-          </a>
-        </Link>
-        <Link href={Routes.LoginPage()}>
-          <a className="button small">
-            <strong>Login</strong>
-          </a>
-        </Link>
-      </>
-    )
   }
+  return (
+    <>
+      <Link href={Routes.SignupPage()}>
+        <a className="button small">
+          <strong>Sign Up</strong>
+        </a>
+      </Link>
+      <Link href={Routes.LoginPage()}>
+        <a className="button small">
+          <strong>Login</strong>
+        </a>
+      </Link>
+    </>
+  )
 }
 
 const Home: BlitzPage = () => {
@@ -130,7 +130,7 @@ const Home: BlitzPage = () => {
           Powered by Blitz.js
         </a>
       </footer>
-{/*
+      {/*
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;700&display=swap");
 

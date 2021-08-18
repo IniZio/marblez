@@ -9,7 +9,7 @@ import {
 } from "blitz"
 import LoginForm from "app/auth/components/LoginForm"
 
-import "app/core/styles/index.css";
+import "app/core/styles/index.css"
 
 export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
@@ -34,9 +34,6 @@ function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
         title="Sorry, you are not authorized to access this"
       />
     )
-  } else {
-    return (
-      <ErrorComponent statusCode={error.statusCode || 400} title={error.message || error.name} />
-    )
   }
+  return <ErrorComponent statusCode={error.statusCode || 400} title={error.message || error.name} />
 }

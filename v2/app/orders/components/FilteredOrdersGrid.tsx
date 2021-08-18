@@ -1,43 +1,37 @@
-import getOrders from "app/orders/queries/getOrders";
-import {
-  Link, Routes, useInfiniteQuery, useMutation
-} from "blitz";
-import { noop } from 'lodash';
-import { useState, useMemo, useCallback } from 'react';
-import 'flatpickr/dist/themes/airbnb.css'
-import Flatpickr from "react-flatpickr";
-import { ArrowLeftIcon, ArrowRightIcon, RefreshIcon, DownloadIcon } from "@heroicons/react/solid";
-import cn from "classnames";
+import { ArrowLeftIcon, ArrowRightIcon, DownloadIcon, RefreshIcon } from "@heroicons/react/solid"
+import getOrders from "app/orders/queries/getOrders"
+import { useInfiniteQuery, useMutation } from "blitz"
+import cn from "classnames"
+import { addDays, endOfDay, format, startOfDay } from "date-fns"
+import "flatpickr/dist/themes/airbnb.css"
+import { useCallback, useMemo, useState } from "react"
+import Flatpickr from "react-flatpickr"
+import useDebouncedValue from "../../hooks/useDebouncedValue"
+import Loader from "../../primitives/Loader"
+import { downloadURI } from "../../util/dom"
+import downloadOrders from "../mutations/downloadOrders"
+import OrderCard from "./OrderCard"
 
-import OrderCard from './OrderCard'
-import { startOfDay, endOfDay, addDays, format } from "date-fns";
-import useDebouncedValue from '../../hooks/useDebouncedValue';
-import downloadOrders from "../mutations/downloadOrders";
-import { downloadURI } from '../../util/dom';
-import Loader from '../../primitives/Loader';
-
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 10
 
 const FilteredOrdersGrid = () => {
-  const [date, setDate] = useState(new Date());
-  const [keyword, setKeyword] = useState("");
-  const debouncedKeyword = useDebouncedValue(keyword, 500);
+  const [date, setDate] = useState(new Date())
+  const [keyword, setKeyword] = useState("")
+  const debouncedKeyword = useDebouncedValue(keyword, 500)
 
-  const where = useMemo(() => (
-    {
+  const where = useMemo(
+    () => ({
       deliveryDate: { gte: startOfDay(date), lt: endOfDay(date) },
       OR: [
-        { customerPhone: { contains: debouncedKeyword, mode: 'insensitive' } },
-        { customerName: { contains: debouncedKeyword, mode: 'insensitive' } },
-        { customerSocialName: { contains: debouncedKeyword, mode: 'insensitive' } },
-      ]
-    }
-  ), [debouncedKeyword, date])
+        { customerPhone: { contains: debouncedKeyword, mode: "insensitive" } },
+        { customerName: { contains: debouncedKeyword, mode: "insensitive" } },
+        { customerSocialName: { contains: debouncedKeyword, mode: "insensitive" } },
+      ],
+    }),
+    [debouncedKeyword, date]
+  )
 
-  const [
-    orderPages,
-    { fetchNextPage, hasNextPage, refetch, isFetching },
-  ] = useInfiniteQuery(
+  const [orderPages, { fetchNextPage, hasNextPage, refetch, isFetching }] = useInfiniteQuery(
     getOrders,
     (page = { take: ITEMS_PER_PAGE, skip: 0, where }) => page,
     {
@@ -46,40 +40,67 @@ const FilteredOrdersGrid = () => {
     }
   )
 
-  const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false);
-  const [downloadOrdersMutation] = useMutation(downloadOrders);
+  const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false)
+  const [downloadOrdersMutation] = useMutation(downloadOrders)
 
-  const downloadOrdersOfDay = useCallback(async (event) => {
-    event?.preventDefault();
+  const downloadOrdersOfDay = useCallback(
+    async (event) => {
+      event?.preventDefault()
 
-    setLoadingDownloadOrdersOfDay(true);
-    try {
-      const linkToOrdersOfDay = await downloadOrdersMutation({ date });
-      downloadURI(linkToOrdersOfDay, `Orders of ${format(date, 'M_d')}.pdf`);
-    } catch {}
-    setLoadingDownloadOrdersOfDay(false);
-  }, [date, downloadOrdersMutation])
+      setLoadingDownloadOrdersOfDay(true)
+      try {
+        const linkToOrdersOfDay = await downloadOrdersMutation({ date })
+        downloadURI(linkToOrdersOfDay, `Orders of ${format(date, "M_d")}.pdf`)
+      } catch {}
+      setLoadingDownloadOrdersOfDay(false)
+    },
+    [date, downloadOrdersMutation]
+  )
 
   return (
     <div className="m-3">
-      <input className="mb-3 w-full p-2 border rounded" type="text" placeholder="搜尋電話" value={keyword} onChange={event => setKeyword(event.target.value)} />
+      <input
+        className="p-2 mb-3 w-full rounded border"
+        type="text"
+        placeholder="搜尋電話"
+        value={keyword}
+        onChange={(event) => setKeyword(event.target.value)}
+      />
 
       <div className="flex gap-2">
-        <div className="flex-1 flex items-center gap-2 mb-3 min-w-0">
-          <ArrowLeftIcon className="cursor-pointer w-5 h-5" onClick={() => setDate(addDays(date, -1))} />
-          {/* @ts-expect-error */}
-          <Flatpickr options={{ position: "auto center" }} className="cursor-pointer min-w-0 flex-1 leading-5 font-bold text-center" value={date} onChange={([date]) => {
+        <div className="flex flex-1 gap-2 items-center mb-3 min-w-0">
+          <ArrowLeftIcon
+            className="w-5 h-5 cursor-pointer"
+            onClick={() => setDate(addDays(date, -1))}
+          />
+          <Flatpickr
+            // @ts-expect-error
+            options={{ position: "auto center" }}
+            className="flex-1 min-w-0 font-bold leading-5 text-center cursor-pointer"
+            value={date}
+            onChange={([date]) => {
               if (!date) {
-                return;
+                return
               }
-              setDate(date);
-            }} />
-          <ArrowRightIcon className="cursor-pointer w-5 h-5" onClick={() => setDate(addDays(date, 1))} />
+              setDate(date)
+            }}
+          />
+          <ArrowRightIcon
+            className="w-5 h-5 cursor-pointer"
+            onClick={() => setDate(addDays(date, 1))}
+          />
           <button onClick={downloadOrdersOfDay} disabled={loadingDownloadOrdersOfDay}>
-            {loadingDownloadOrdersOfDay ? <Loader className="w-5 h-5 bg-black" /> : <DownloadIcon className="cursor-pointer w-5 h-5" />}
+            {loadingDownloadOrdersOfDay ? (
+              <Loader className="w-5 h-5 bg-black" />
+            ) : (
+              <DownloadIcon className="w-5 h-5 cursor-pointer" />
+            )}
           </button>
         </div>
-        <RefreshIcon className={cn("h-5 w-5 cursor-pointer", isFetching && "animate-reverse-spin")} onClick={() => refetch()} />
+        <RefreshIcon
+          className={cn("w-5 h-5 cursor-pointer", isFetching && "animate-reverse-spin")}
+          onClick={() => refetch()}
+        />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -98,7 +119,7 @@ const FilteredOrdersGrid = () => {
         </button>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default FilteredOrdersGrid;
+export default FilteredOrdersGrid

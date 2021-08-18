@@ -1,4 +1,4 @@
-import {Document, Html, DocumentHead, Main, BlitzScript /*DocumentContext*/} from 'blitz'
+import { Document, Html, DocumentHead, Main, BlitzScript /*DocumentContext*/ } from "blitz"
 
 class MyDocument extends Document {
   // Only uncomment if you need to customize this behaviour
@@ -7,6 +7,7 @@ class MyDocument extends Document {
   //   return {...initialProps}
   // }
 
+  // eslint-disable-next-line class-methods-use-this
   render() {
     return (
       <Html lang="en">

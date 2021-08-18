@@ -23,7 +23,6 @@ jobs:
 
         - name: share-env
           run: |
-            yarn
             TARGET=production yarn share-env
 
         - uses: superfly/flyctl-actions@1.1
