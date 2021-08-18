@@ -1,4 +1,10 @@
 {
+  "eslint.workingDirectories": [
+    {
+        "directory": "v2",
+        "changeProcessCWD": true
+    }
+  ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "scss.validate": false,
   "editor.quickSuggestions": true,

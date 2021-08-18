@@ -1,18 +1,14 @@
-import { resolver } from "blitz";
-import db from "db";
-import { z } from "zod";
+import { resolver } from "blitz"
+import db from "db"
+import { z } from "zod"
 
 const CreateOrder = z.object({
   customerPhone: z.string(),
-});
+})
 
-export default resolver.pipe(
-  resolver.zod(CreateOrder),
-  resolver.authorize(),
-  async (input) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const order = await db.order.create({ data: input });
+export default resolver.pipe(resolver.zod(CreateOrder), resolver.authorize(), async (input) => {
+  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  const order = await db.order.create({ data: input })
 
-    return order;
-  }
-);
+  return order
+})

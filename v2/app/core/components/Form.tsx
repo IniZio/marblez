@@ -3,6 +3,11 @@ import { FormProvider, useForm, UseFormProps } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
+interface OnSubmitResult {
+  FORM_ERROR?: string
+  [prop: string]: any
+}
+
 export interface FormProps<S extends z.ZodType<any, any>>
   extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
   /** All your form fields */
@@ -10,13 +15,9 @@ export interface FormProps<S extends z.ZodType<any, any>>
   /** Text to display in the submit button */
   submitText?: string
   schema?: S
+  // eslint-disable-next-line no-unused-vars
   onSubmit: (values: z.infer<S>) => Promise<void | OnSubmitResult>
   initialValues?: UseFormProps<z.infer<S>>["defaultValues"]
-}
-
-interface OnSubmitResult {
-  FORM_ERROR?: string
-  [prop: string]: any
 }
 
 export const FORM_ERROR = "FORM_ERROR"
@@ -52,6 +53,7 @@ export function Form<S extends z.ZodType<any, any>>({
             }
           }
         })}
+        // eslint-disable-next-line tailwindcss/no-custom-classname
         className="form"
         {...props}
       >

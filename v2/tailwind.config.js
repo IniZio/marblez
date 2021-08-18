@@ -6,16 +6,16 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        'reverse-spin': 'reverse-spin 1s linear infinite'
+        "reverse-spin": "reverse-spin 1s linear infinite",
       },
       keyframes: {
-        'reverse-spin': {
+        "reverse-spin": {
           from: {
-            transform: 'rotate(360deg)'
+            transform: "rotate(360deg)",
           },
-        }
-      }
-    }
+        },
+      },
+    },
   },
   variants: {
     extend: {},
