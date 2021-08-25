@@ -14,6 +14,7 @@ import PubSubEvent from '../pubsub';
 import { OrderInput } from './types/order-input';
 import { FilterQuery } from 'mongoose';
 import { IOrder } from '../models/IOrder';
+import { syncGoogleFormsIfStale } from '../jobs/sync-google-forms';
 
 type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
   11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...0[]]
@@ -63,7 +64,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
   Object.entries(orderFields).forEach(([key, columns]) => {
     // +2 to compenstate column header and start with 1 index
     order.id = index + 2;
-    
+
     for (const column of [].concat(columns)) {
       order[key] = [row[column], order[key]].filter(Boolean).join(', ');
     }
@@ -79,8 +80,8 @@ export const rowToOrder = (row: any[], index: any): Order => {
         if (!isValid(order[key])) {
           order[key] = undefined;
           break;
-        } 
-        
+        }
+
         if(isBefore(order[key], order.createdAt)) {
           order[key] = addYears(order[key], 1);
         }
@@ -223,7 +224,7 @@ export class OrderResolver {
 
     return newReceipts;
   }
-  
+
   async _orders({
     pickupDate,
     pickupMonth,
@@ -233,6 +234,8 @@ export class OrderResolver {
     pickupMonth?: number;
     keyword?: string;
   }) {
+    await syncGoogleFormsIfStale();
+
     const keyword = _keyword?.replace(' ', '');
 
     const findFilter: FilterQuery<Order> = {};

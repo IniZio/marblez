@@ -76,5 +76,5 @@ async function bootstrap() {
 
 bootstrap();
 
-// cron.schedule('*/5 * * * *', syncGoogleForms)
+cron.schedule('*/5 * * * *', syncGoogleForms)
 syncGoogleForms()
