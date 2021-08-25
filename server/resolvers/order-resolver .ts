@@ -234,7 +234,7 @@ export class OrderResolver {
     pickupMonth?: number;
     keyword?: string;
   }) {
-    await syncGoogleFormsIfStale();
+    // await syncGoogleFormsIfStale();
 
     const keyword = _keyword?.replace(' ', '');
 
