@@ -1,8 +1,8 @@
 export type IOrder = {
   id?: string;
-  createdAt?: Date;
+  receivedAt?: Date;
   paid: boolean;
-  
+
   customerName?: string;
   customerPhone?: string;
   customerSocialName?: string;
@@ -30,7 +30,7 @@ export type IOrder = {
     toppings?: string[];
     printed?: string;
     printedReceipt?: string;
-  }  
+  }
 
   meta?: any
 }

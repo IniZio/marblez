@@ -23,7 +23,7 @@ function TimelinePage() {
           name
         }
         quantity
-        createdAt
+        receivedAt
       }
     }
   `, {
@@ -38,11 +38,11 @@ function TimelinePage() {
       </Box>
       {inventoryTransactionsData?.inventoryTransactions.map((inventoryTransaction, index) => (
         <Flex mx={2}>
-          {(!inventoryTransactionsData?.inventoryTransactions[index - 1] 
+          {(!inventoryTransactionsData?.inventoryTransactions[index - 1]
             || !isSameDay(
-              parseISO(inventoryTransactionsData?.inventoryTransactions[index - 1].createdAt), 
-              parseISO(inventoryTransaction.createdAt)
-            )) ? (<Box w={50} as="span">{format(parseISO(inventoryTransaction.createdAt), 'MMM d')}</Box> ) : <Box w={50} />}
+              parseISO(inventoryTransactionsData?.inventoryTransactions[index - 1].receivedAt),
+              parseISO(inventoryTransaction.receivedAt)
+            )) ? (<Box w={50} as="span">{format(parseISO(inventoryTransaction.receivedAt), 'MMM d')}</Box> ) : <Box w={50} />}
           <Box position="relative" m={1} width={150} h={100} maxW="50vw" borderRadius={10} p={3} backgroundColor="orange"  shadow="md">
             <Box color="white" fontWeight="bold">{inventoryTransaction.material.name}</Box>
             {INVENTORY_TRANSACTION_REASON_OPTIONS.find(option => option.value === inventoryTransaction.reason)?.label}

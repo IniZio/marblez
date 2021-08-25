@@ -9,7 +9,7 @@ export const FRAGMENT_ORDER = gql`
       customerSocialChannel
       customerSocialName
       deliveryDate
-      createdAt
+      receivedAt
       deliveryTime
       otherAttributes
       deliveryMethod

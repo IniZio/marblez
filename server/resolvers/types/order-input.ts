@@ -6,13 +6,13 @@ import { IOrder } from '../../models/IOrder';
 export class OrderInput {
   @Field({ nullable: true })
   id?: string;
-  
+
   @Field({ nullable: true })
   paid: boolean;
 
   @Field({ nullable: true })
   customerName?: string;
-  
+
   @Field({ nullable: true })
   customerPhone?: string;
 
@@ -26,7 +26,7 @@ export class OrderInput {
   deliveryDate?: Date;
 
   @Field({ nullable: true })
-  createdAt?: Date;
+  receivedAt?: Date;
 
   @Field({ nullable: true })
   deliveryTime?: string;
@@ -41,7 +41,7 @@ export class OrderInput {
   deliveryAddress?: string;
 
   @Field({ nullable: true })
-  remarks?: string; 
+  remarks?: string;
 }
 
 @InputType()
@@ -69,7 +69,7 @@ export class OrderLabelInput {
 export class OrderMetaInput {
   @Field({ nullable: true })
   orderId?: string;
-  
+
   @Field(type => [OrderLabelInput], { nullable: true })
   labels?: OrderLabelInput[];
 }

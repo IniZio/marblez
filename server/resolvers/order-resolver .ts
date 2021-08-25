@@ -32,7 +32,7 @@ type Paths<T, D extends number = 10> = T extends Array<any> ? never : [D] extend
 
 const orderFields: Partial<{ [k in Paths<IOrder, 3>]: number | number[] }> = {
   paid: 0,
-  createdAt: 1,
+  receivedAt: 1,
   customerName: 2,
   customerPhone: 3,
   deliveryDate: 4,
@@ -76,13 +76,13 @@ export const rowToOrder = (row: any[], index: any): Order => {
         order[key] = order[key] === 'TRUE'
         break;
       case 'deliveryDate':
-        order[key] = parse(order[key], 'M/d', new Date(order.createdAt));
+        order[key] = parse(order[key], 'M/d', new Date(order.receivedAt));
         if (!isValid(order[key])) {
           order[key] = undefined;
           break;
         }
 
-        if(isBefore(order[key], order.createdAt)) {
+        if(isBefore(order[key], order.receivedAt)) {
           order[key] = addYears(order[key], 1);
         }
         order[key] = addHours(order[key], 8);
@@ -91,7 +91,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
       case 'otherAttributes.toppings':
         order[key] = (order[key] || '').split(', ').filter(Boolean).map((v: any) => v.replace(/\([^(\))]*\)/g, '').replace(/\*.[^\*]*$/, ''));
         break;
-      case 'createdAt':
+      case 'receivedAt':
         order[key] = parse(order[key], 'M/d/y H:mm:ss', new Date());
         if (!isValid(order[key])) {
           order[key] = undefined;
@@ -131,7 +131,7 @@ const orderToRow = (orderInput: OrderInput, prevRow: any[] = []) => {
       case 'deliveryDate':
         value = format(value as any, 'M/d')
         break;
-      case 'createdAt':
+      case 'receivedAt':
         value = format(value as any, 'M/d/y H:mm:ss')
         break;
       case 'otherAttributes.decorations':

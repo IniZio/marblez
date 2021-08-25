@@ -4,14 +4,15 @@ import { ObjectId } from 'mongodb';
 import { Field, ObjectType } from "type-graphql";
 import { GraphQLJSON } from 'graphql-type-json';
 import { IOrder } from '../models/IOrder';
+import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 @ObjectType()
 // @index({ phone: 1, date: 1, time: 1, cake: 1 }, { unique: true })
-export class Order implements IOrder {
+export class Order extends TimeStamps implements IOrder  {
   @Field({ nullable: true })
   @Property({ unique: true })
   id?: string;
-  
+
   @Field({ nullable: true })
   @Property()
   paid: boolean;
@@ -19,7 +20,7 @@ export class Order implements IOrder {
   @Field({ nullable: true })
   @Property()
   customerName?: string;
-  
+
   @Field({ nullable: true })
   @Property()
   customerPhone?: string;
@@ -38,7 +39,7 @@ export class Order implements IOrder {
 
   @Field({ nullable: true })
   @Property()
-  createdAt?: Date;
+  receivedAt?: Date;
 
   @Field({ nullable: true })
   @Property()
