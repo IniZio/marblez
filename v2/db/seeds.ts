@@ -1,4 +1,4 @@
-// import db from "./index"
+import db from "./index"
 
 /*
  * This seed function is executed when you run `blitz db seed`.
@@ -8,9 +8,28 @@
  * realistic data.
  */
 const seed = async () => {
-  // for (let i = 0; i < 5; i++) {
-  //   await db.project.create({ data: { name: "Project " + i } })
-  // }
+  const material = await db.material.create({
+    data: {
+      name: "Candle",
+    },
+  })
+
+  const order = await db.order.findFirst()
+
+  if (order) {
+    await db.orderMeta.create({
+      data: {
+        orderIndex: order.index,
+        materialIds: [material.id],
+        ingredients: [
+          {
+            materialId: material.id,
+            amount: 3,
+          },
+        ],
+      },
+    })
+  }
 }
 
 export default seed

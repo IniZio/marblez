@@ -8,7 +8,6 @@ import { Order, OrderModel } from "../entities/order";
 import * as GoogleSheetEvent from './types/google-sheet-event-input';
 import googleSheet, { testGoogleSheetRepository } from '../respository/google-sheet';
 import { NotificationModel, Notification } from '../entities/notification';
-import { OrderMeta, OrderMetaModel } from '../entities/order_meta';
 import PubSubEvent from '../pubsub';
 
 import { OrderInput } from './types/order-input';
@@ -56,14 +55,13 @@ const orderFields: Partial<{ [k in Paths<IOrder, 3>]: number | number[] }> = {
   remarks: 32,
   'otherAttributes.printedReceipt': 89,
   'otherAttributes.printed': 90,
-  id: 91,
 };
 
 export const rowToOrder = (row: any[], index: any): Order => {
   const order: any = { otherAttributes: {} };
   Object.entries(orderFields).forEach(([key, columns]) => {
     // +2 to compenstate column header and start with 1 index
-    order.id = index + 2;
+    order.row = index + 2;
 
     for (const column of [].concat(columns)) {
       order[key] = [row[column], order[key]].filter(Boolean).join(', ');
@@ -220,7 +218,7 @@ export class OrderResolver {
 
     const newReceipts = orders.filter(order => !order.otherAttributes.printedReceipt);
 
-    await Promise.all(newReceipts.map(receipt => googleSheet.updateCell(receipt.id, +orderFields['id'], 'TRUE')));
+    await Promise.all(newReceipts.map(receipt => googleSheet.updateCell(receipt.id, +orderFields['row'], 'TRUE')));
 
     return newReceipts;
   }
@@ -290,10 +288,5 @@ export class OrderResolver {
     const row = orderToRow(orderInput);
     await (await testGoogleSheetRepository.init()).insertRow(row)
     return orderInput;
-  }
-
-  @FieldResolver(returns => OrderMeta, { nullable: true })
-  async meta(@Root() order: Order): Promise<OrderMeta> {
-    return OrderMetaModel.findOne({ orderId: order.id });
   }
 }

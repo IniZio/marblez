@@ -2,9 +2,7 @@ import { paginate, resolver } from "blitz"
 import db, { Prisma } from "db"
 
 interface GetOrdersInput
-  extends Pick<Prisma.OrderFindManyArgs, "where" | "orderBy" | "skip" | "take"> {
-  date: Date
-}
+  extends Pick<Prisma.OrderFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
 
 export default resolver.pipe(async ({ where, orderBy, skip = 0, take = 100 }: GetOrdersInput) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant

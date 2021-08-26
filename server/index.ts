@@ -8,22 +8,12 @@ import cron from 'node-cron';
 import * as path from "path";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
-import { User } from "./entities/user";
 import { seedDatabase } from "./helpers";
 import { syncGoogleForms } from './jobs/sync-google-forms';
 import { ObjectIdScalar } from "./object-id.scalar";
 import { NotificationResolver } from './resolvers/notification-resolver';
 import { OrderResolver } from './resolvers/order-resolver ';
-import { RateResolver } from "./resolvers/rate-resolver";
-import { RecipeResolver } from "./resolvers/recipe-resolver";
-import { OrderMetaResolver } from './resolvers/order-meta-resolver';
-import { MaterialResolver } from './resolvers/material-resolver';
 import { TypegooseMiddleware } from "./typegoose-middleware";
-
-
-export interface Context {
-  user: User;
-}
 
 dotenv.config();
 
@@ -41,7 +31,7 @@ async function bootstrap() {
 
     // build TypeGraphQL executable schema
     const schema = await buildSchema({
-      resolvers: [RecipeResolver, RateResolver, OrderResolver, NotificationResolver, OrderMetaResolver, MaterialResolver],
+      resolvers: [OrderResolver, NotificationResolver],
       emitSchemaFile: path.resolve(__dirname, "schema.gql"),
       // use document converting middleware
       globalMiddlewares: [TypegooseMiddleware],

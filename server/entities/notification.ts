@@ -1,7 +1,6 @@
 import { prop as Property, arrayProp, getModelForClass } from "@typegoose/typegoose";
 import { ObjectType, Field } from "type-graphql";
 
-import { User } from "./user";
 import { Ref } from "../types";
 import { Order } from './order';
 
