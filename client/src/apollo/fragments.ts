@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const FRAGMENT_ORDER = gql`
     fragment OrderAllFields on Order {
-      id
+      row
       paid
       customerName
       customerPhone
@@ -15,14 +15,5 @@ export const FRAGMENT_ORDER = gql`
       deliveryMethod
       deliveryAddress
       remarks
-      meta {
-        orderId
-        labels {
-          _id
-          name
-          color
-          conditions
-        }
-      }
     }
 `;

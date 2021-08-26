@@ -13,16 +13,16 @@ import SocialButton from '../components/SocialButton';
 import { theme } from '../theme';
 
 
-async function printPDF (domElement?: any) { 
+async function printPDF (domElement?: any) {
   domElement.ownerDocument.defaultView.innerHeight = 10000000;
   // domElement.ownerDocument.defaultView.innerWidth = domElement.clientWidth;
   window.scroll(0, 0)
 
   const html2canvas = (await import('html2canvas'));
   const jsPdf = (await import('jspdf'));
-  
-  return html2canvas(domElement, { 
-    width: domElement.clientWidth, 
+
+  return html2canvas(domElement, {
+    width: domElement.clientWidth,
     height: domElement.clientHeight,
     useCORS: true,
   })
@@ -79,13 +79,13 @@ function get<T>(obj: T, path: Paths<T, 3>, defValue: any = undefined) {
     pathArray.reduce((prevObj: any, key: string) => prevObj && prevObj[key], obj) || defValue
   )
 }
-    
+
 
 function lineIf<T extends IOrder>(o: any, fields: Paths<T,  3>[], opt: any = {}) {
   if (!o || !fields) {
     return null;
   }
-  
+
   const lineArr = (
     fields
     .map(function(f, i) {
@@ -98,7 +98,7 @@ function lineIf<T extends IOrder>(o: any, fields: Paths<T,  3>[], opt: any = {})
       if (!value) {
         return null;
       }
-      
+
       if (opt && opt.overrides && opt.overrides[i]) {
         return opt.overrides[i](get(o, f))
       }
@@ -149,7 +149,7 @@ export const order2Lines = (order: any) => [
 
 function downloadPDFFromGoogle(index: any) {
   const urlPopup = window.open('', '_blank', 'width=200,height=100')
-  
+
   fetch(`https://script.google.com/macros/s/AKfycbwg0O8hDydyA_qU8W1M91Wa5J_YeclQY9ZNZfmmdIu2Mfj820I/exec?index=${index}`)
     .then(urlResponse => urlResponse.json().then(json => {
       if (urlPopup) {
@@ -171,148 +171,11 @@ const Leaf = memo(({ otherAttributes, children, leaf }) => {
   )
 })
 
-const HoveringToolbar = ({
-  order,
-  orderLabels,
-  onSaveOrderLabelsSuccess
-}: {
-  order: IOrder,
-  orderLabels: IOrderLabel[],
-  onSaveOrderLabelsSuccess: () => any;
-}) => {
-  const [saveOrderLabels] = useMutation(gql`
-    mutation($orderLabelsInput: OrderLabelsInput!) {
-      saveOrderLabels(orderLabelsInput: $orderLabelsInput) {
-        name
-        color
-      }
-    }
-  `, {
-    onCompleted: onSaveOrderLabelsSuccess
-  });
-
-  const [deleteOrderLabels] = useMutation(gql`
-    mutation($orderLabelsInput: OrderLabelsInput!) {
-      deleteOrderLabels(orderLabelsInput: $orderLabelsInput)
-    }
-  `, {
-    onCompleted: onSaveOrderLabelsSuccess
-  });
-  
-  const ref = useRef<any>()
-  const editor = useSlate()
-
-  const keyword = useMemo(() => 
-    editor.selection ? Editor.string(editor, editor.selection) : '',
-    [editor.selection]
-  );
-  const matchedOrderLabel = useMemo(() => 
-    orderLabels.find(label => label.conditions.find(condition => condition.keyword === keyword)),
-    [orderLabels, keyword]
-  );
-
-  useEffect(() => {
-    const el = ref.current
-    const { selection } = editor
-
-    if (!el) {
-      return
-    }
-
-    if (
-      !selection ||
-      !ReactEditor.isFocused(editor) ||
-      Range.isCollapsed(selection) ||
-      Editor.string(editor, selection) === ''
-    ) {
-      el.removeAttribute('style')
-      return
-    }
-
-    const domSelection = window.getSelection()
-    const domRange = domSelection.getRangeAt(0)
-    const rect = domRange.getBoundingClientRect()
-    el.style.opacity = '1'
-    el.style.top = `${rect.top + window.pageYOffset - el.offsetHeight}px`
-    el.style.left = `${rect.left +
-      window.pageXOffset -
-      el.offsetWidth / 2 +
-      rect.width / 2}px`
-  });
-
-  const deleteSelectedOrderLabel = useCallback(
-    async () => {
-      await deleteOrderLabels({
-        variables: {
-          orderLabelsInput: {
-            labels: omit('__typename')(matchedOrderLabel)
-          }
-        },
-      })
-    },
-    [order, editor, deleteOrderLabels, matchedOrderLabel]
-  )
-
-  const addSelectedOrderLabel = useCallback(
-    async () => {
-      if (!editor.selection) {
-        return;
-      }
-      await saveOrderLabels({
-        variables: {
-          orderLabelsInput: {
-            // orderId: order.id,
-            labels: [
-              // ...map((order.meta || {}).labels || [], omit('__typename')),
-              { name: keyword, conditions: [{ keyword  }] }
-            ]
-          }
-        },
-      })
-    },
-    [order, editor, saveOrderLabels]
-  )
-
-  return (
-    <Portal>
-      <Box
-        ref={ref}
-        css={css`
-          padding: 8px 7px 6px;
-          position: absolute;
-          z-index: 1;
-          top: -10000px;
-          left: -10000px;
-          margin-top: -6px;
-          opacity: 0;
-          background-color: #222;
-          border-radius: 4px;
-          transition: opacity 0.75s;
-        `}
-      >
-        {matchedOrderLabel ? <Button onClick={deleteSelectedOrderLabel}>刪除標記</Button> : <Button onClick={addSelectedOrderLabel}>標記</Button>}
-      </Box>
-    </Portal>
-  )
-}
-
-
 function Order({ order, onUpdate = () => {} }: OrderProps) {
   const lines = useMemo(() => order2Lines(order), [order]);
 
-  const { data: { orderLabels = [] } = {}, refetch: refetchOrderLabels } = useQuery(gql`
-    query {
-      orderLabels {
-        _id
-        name
-        color
-        conditions
-      }
-    }
-  `);
-  
   const [updateOrder] = useMutation(UPDATE_ORDER);
-  const screenshotRef = useRef(); 
+  const screenshotRef = useRef();
   const downloadPDF = React.useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -322,17 +185,17 @@ function Order({ order, onUpdate = () => {} }: OrderProps) {
 
   return (
     <>
-      <StyledBox 
-        w="100%" 
+      <StyledBox
+        w="100%"
         overflow="hidden"
         rounded="sm"
-        p={5}
+        p={15}
         sx={{
           boxShadow: 'rgb(0 0 0 / 8%) 0px 0 20px'
         }}
-        minHeight={353} 
-        fontSize={16} 
-        position="relative" 
+        minHeight={353}
+        fontSize={16}
+        position="relative"
       >
         {!order?.otherAttributes.printed && (
           <Badge ml="1" variantColor="blue">

@@ -9,9 +9,12 @@ import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 @ObjectType()
 // @index({ phone: 1, date: 1, time: 1, cake: 1 }, { unique: true })
 export class Order extends TimeStamps implements IOrder  {
+  @Field()
+  readonly _id: ObjectId;
+
   @Field({ nullable: true })
   @Property({ unique: true })
-  id?: string;
+  row?: number;
 
   @Field({ nullable: true })
   @Property()

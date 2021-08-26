@@ -1,9 +1,6 @@
-import { Recipe, RecipeModel } from "./entities/recipe";
-import { User, UserModel } from "./entities/user";
-
 export async function seedDatabase() {
   // const defaultUser = (
-  //   (await UserModel.findOne({ email: "test@github.com" })) || 
+  //   (await UserModel.findOne({ email: "test@github.com" })) ||
   //   (await new UserModel({
   //     email: "test@github.com",
   //     nickname: "MichalLytek",

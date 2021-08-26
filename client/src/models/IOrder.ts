@@ -1,5 +1,5 @@
 export type IOrder = {
-  id?: string;
+  row: number;
   receivedAt?: Date;
   paid: boolean;
 
@@ -31,6 +31,4 @@ export type IOrder = {
     printed?: string;
     printedReceipt?: string;
   }
-
-  meta?: any
 }

@@ -67,6 +67,7 @@ model Token {
 
 model Order {
   id                    String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  row                   Int
   paid                  Boolean   @default(false)
   customerName          String?
   customerPhone         String
@@ -80,5 +81,28 @@ model Order {
   deliveryAddress       String?
   remarks               String?
 
+  // orderMeta OrderMeta?
+
   @@map(name: "orders")
+}
+
+model OrderMeta {
+  id String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+
+  // order   Order  @relation(fields: [orderIndex], references: [id])
+  // orderIndex String @db.ObjectId
+  orderIndex     String
+
+  ingredients Json[]
+
+  materialIds String[]   @db.Array(ObjectId)
+  materials   Material[] @relation(fields: [materialIds])
+}
+
+model Material {
+  id   String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  name String
+
+  orderMetaIds String[]      @db.Array(ObjectId)
+  orderMetas   OrderMeta[] @relation(fields: [orderMetaIds])
 }

@@ -1,9 +1,12 @@
+import { CollectionIcon } from "@heroicons/react/outline"
 import { Order } from "@prisma/client"
 import { format } from "date-fns"
-import { useMemo } from "react"
+import { Suspense, useMemo, useState } from "react"
+import OrderMetaList from "../../order-metas/components/OrderMetaList"
+import Dialog from "../../primitives/Dialog"
 
 export interface OrderProps {
-  order?: Order
+  order: Order
   onUpdate?: () => any
 }
 
@@ -62,6 +65,7 @@ function lineIf(o: any, fields: any, opt: any = {}) {
       return get(o, f)
     })
     .filter(Boolean)
+    .map((line) => <>{line} </>)
 
   return lineArr.length > 0 ? (
     <div>
@@ -92,11 +96,25 @@ export const order2Lines = (order: any) =>
 
 function OrderCard({ order }: OrderProps) {
   const lines = useMemo(() => order2Lines(order), [order])
+  const [orderMetasIsOpen, setOrderMetasIsOpen] = useState(false)
 
   return (
-    <div className="overflow-hidden p-3 w-full text-gray-700 rounded border">
-      <div>{lines}</div>
-    </div>
+    <>
+      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm leading-6 rounded border">
+        <p className="whitespace-pre-wrap">{lines}</p>
+        <div className="absolute right-3 bottom-3">
+          <CollectionIcon
+            className="w-5 h-5 cursor-pointer"
+            onClick={() => setOrderMetasIsOpen(true)}
+          />
+        </div>
+      </div>
+      <Dialog open={orderMetasIsOpen} onClose={() => setOrderMetasIsOpen(false)}>
+        <Suspense fallback="Loading...">
+          <OrderMetaList orderIndex={order?.id} />
+        </Suspense>
+      </Dialog>
+    </>
   )
 }
 
