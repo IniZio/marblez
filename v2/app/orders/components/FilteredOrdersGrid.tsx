@@ -107,7 +107,7 @@ const FilteredOrdersGrid = () => {
         {orderPages?.map(({ orders }) => (
           <>
             {orders.map((order) => (
-              <OrderCard key={order.index} order={order} />
+              <OrderCard key={order.id} order={order} />
             ))}
           </>
         ))}

@@ -14,4 +14,5 @@ jobs:
           working-directory: v2
           run: |
             yarn
+            yarn typecheck
             yarn lint
