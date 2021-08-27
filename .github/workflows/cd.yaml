@@ -2,7 +2,7 @@ name: CD
 on:
   push:
     branches:
-      - stable
+      - master
 defaults:
   run:
     shell: bash
