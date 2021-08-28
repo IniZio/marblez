@@ -1,9 +1,11 @@
-import { CollectionIcon } from "@heroicons/react/outline"
+import { ClipboardCopyIcon } from "@heroicons/react/outline"
 import { Order } from "@prisma/client"
 import { format } from "date-fns"
 import { Suspense, useMemo, useState } from "react"
+import CopyToClipboard from "react-copy-to-clipboard"
 import OrderMetaList from "../../order-metas/components/OrderMetaList"
 import Dialog from "../../primitives/Dialog"
+import { isMobile } from "../../util/device"
 
 export interface OrderProps {
   order: Order
@@ -59,21 +61,18 @@ function lineIf(o: any, fields: any, opt: any = {}) {
           "otherAttributes.letter",
         ].includes(f)
       ) {
-        return <b>{get(o, f)?.replace(/\([^())]*\)/g, "")}</b>
+        return get(o, f)?.replace(/\([^())]*\)/g, "")
       }
 
       return get(o, f)
     })
     .filter(Boolean)
-    .map((line) => <>{line} </>)
 
-  return lineArr.length > 0 ? (
-    <div>
-      {(opt && opt.prefix) || ""} {lineArr}
-    </div>
-  ) : (
-    ""
-  )
+  if (!lineArr.join("")) {
+    return null
+  }
+
+  return ((opt && opt.prefix) || "") + lineArr.join(" ")
 }
 
 export const order2Lines = (order: any) =>
@@ -98,15 +97,36 @@ function OrderCard({ order }: OrderProps) {
   const lines = useMemo(() => order2Lines(order), [order])
   const [orderMetasIsOpen, setOrderMetasIsOpen] = useState(false)
 
+  const href = useMemo(() => {
+    const encodedLines = encodeURIComponent(lines.join("\n"))
+    let href: string
+    if (isMobile.any) {
+      href = `whatsapp://send?text=${encodedLines}`
+    } else {
+      href = `https://web.whatsapp.com/send?text=${encodedLines}`
+    }
+
+    return href
+  }, [lines])
+
   return (
     <>
       <div className="overflow-hidden relative p-3 pb-8 w-full text-sm leading-6 rounded border">
-        <p className="whitespace-pre-wrap">{lines}</p>
-        <div className="absolute right-3 bottom-3">
-          <CollectionIcon
+        <p className="whitespace-pre-wrap">
+          {lines.map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
+        </p>
+        <div className="flex absolute right-3 bottom-3 gap-2">
+          {/* <CollectionIcon
             className="w-5 h-5 cursor-pointer"
             onClick={() => setOrderMetasIsOpen(true)}
-          />
+          /> */}
+          <CopyToClipboard text={lines.join("\n")}>
+            <a href={href} target="_blank" rel="noreferrer">
+              <ClipboardCopyIcon className="w-5 h-5 cursor-pointer" />
+            </a>
+          </CopyToClipboard>
         </div>
       </div>
       <Dialog open={orderMetasIsOpen} onClose={() => setOrderMetasIsOpen(false)}>
