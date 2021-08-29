@@ -11,6 +11,7 @@ import Loader from "../../primitives/Loader"
 import { downloadURI } from "../../util/dom"
 import downloadOrders from "../mutations/downloadOrders"
 import OrderCard from "./OrderCard"
+import OrderStats from "./OrderStats"
 
 const ITEMS_PER_PAGE = 10
 
@@ -102,6 +103,8 @@ const FilteredOrdersGrid = () => {
           onClick={() => refetch()}
         />
       </div>
+
+      <OrderStats date={date} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {orderPages?.map(({ orders }) => (

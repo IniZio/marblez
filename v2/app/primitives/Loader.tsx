@@ -7,7 +7,7 @@ export default function Loader({ className }: { className?: string }) {
     <Icon
       src={spinnerSrc.src}
       className={cn(
-        "max-w-full max-h-full bg-opacity-50 animate-spin focus:outline-none",
+        "max-w-full max-h-full bg-black bg-opacity-50 animate-spin focus:outline-none",
         className
       )}
     />
