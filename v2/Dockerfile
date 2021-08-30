@@ -9,12 +9,6 @@ RUN yarn install --pure-lockfile
 COPY . .
 RUN yarn build
 
-# Install node_modules for production
-FROM mhart/alpine-node:12.22.3 as production
-WORKDIR /app
-
-COPY package.json yarn.lock ./
-RUN apk add --no-cache make gcc g++ python3 libtool autoconf automake
 RUN yarn install --pure-lockfile --production
 
 # Copy the above into a slim container
@@ -22,7 +16,7 @@ FROM mhart/alpine-node:slim-12.22.3
 WORKDIR /app
 
 COPY . .
-COPY --from=production /app/node_modules ./node_modules
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/.blitz ./.blitz
