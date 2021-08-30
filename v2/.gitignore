@@ -16,6 +16,10 @@ web_modules/
 .blitz**
 blitz-log.log
 
+# PWA
+sw.js*
+workbox-*js*
+
 # misc
 .DS_Store
 
