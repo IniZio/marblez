@@ -61,7 +61,7 @@ const FilteredOrdersGrid = () => {
   return (
     <div className="m-3">
       <input
-        className="p-2 mb-3 w-full rounded border"
+        className="p-2 mb-3 w-full rounded border-gray-300"
         type="text"
         placeholder="搜尋電話"
         value={keyword}
@@ -77,7 +77,7 @@ const FilteredOrdersGrid = () => {
           <Flatpickr
             // @ts-expect-error
             options={{ position: "auto center" }}
-            className="flex-1 min-w-0 font-bold leading-5 text-center cursor-pointer"
+            className="flex-1 min-w-0 font-bold leading-5 text-center border-none cursor-pointer"
             value={date}
             onChange={([date]) => {
               if (!date) {
@@ -97,11 +97,11 @@ const FilteredOrdersGrid = () => {
               <DownloadIcon className="w-5 h-5 cursor-pointer" />
             )}
           </button>
+          <RefreshIcon
+            className={cn("w-5 h-5 cursor-pointer", isFetching && "animate-reverse-spin")}
+            onClick={() => refetch()}
+          />
         </div>
-        <RefreshIcon
-          className={cn("w-5 h-5 cursor-pointer", isFetching && "animate-reverse-spin")}
-          onClick={() => refetch()}
-        />
       </div>
 
       <OrderStats date={date} />

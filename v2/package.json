@@ -30,6 +30,7 @@
     "@heroicons/react": "1.0.3",
     "@hookform/resolvers": "2.7.1",
     "@prisma/client": "2.29.1",
+    "@tailwindcss/forms": "0.3.3",
     "@types/react-copy-to-clipboard": "5.0.1",
     "autoprefixer": "10",
     "blitz": "0.39.0",

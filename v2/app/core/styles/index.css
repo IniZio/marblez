@@ -7,3 +7,7 @@
 html {
   font-family: 'Noto Sans TC', sans-serif;
 }
+
+input {
+  @apply transition-colors focus:ring-0 focus:shadow;
+}
