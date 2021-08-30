@@ -1,7 +1,6 @@
 import { BlitzConfig, sessionMiddleware, simpleRolesIsAuthorized } from "blitz"
-import withPWA from "next-pwa"
 
-const config: BlitzConfig = withPWA({
+const config: BlitzConfig = {
   middleware: [
     sessionMiddleware({
       cookiePrefix: "marblez",
@@ -10,6 +9,7 @@ const config: BlitzConfig = withPWA({
   ],
   pwa: {
     dest: "../../public",
+    runtimeCaching: [],
   },
   /* Uncomment this to customize the webpack config
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
@@ -19,6 +19,6 @@ const config: BlitzConfig = withPWA({
     return config
   },
   */
-})
+}
 
 module.exports = config
