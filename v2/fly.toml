@@ -1,6 +1,6 @@
 # fly.toml file generated for v2-marblez on 2021-08-15T10:06:04+08:00
 
-app = "v2-marblez"
+app = "marblez"
 
 kill_signal = "SIGINT"
 kill_timeout = 5
