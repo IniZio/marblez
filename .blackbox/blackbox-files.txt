@@ -1,3 +1,4 @@
 .env.development
 .env.production
+async/marble-service-account.json
 server/marble-service-account.json

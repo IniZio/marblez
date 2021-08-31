@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "postinstall": "lerna exec --parallel yarn",
-    "share-env": "cp .env.${TARGET} server/.env && cp .env.${TARGET} v2/.env",
+    "share-env": "cp .env.${TARGET} server/.env && cp .env.${TARGET} async/v2 && cp .env.${TARGET} v2/.env",
     "predev": "TARGET=development npm run share-env",
     "dev": "NODE_ENV=development env-cmd -f .env.development lerna exec --parallel npm run dev",
     "build": "lerna exec --parallel npm run build",
