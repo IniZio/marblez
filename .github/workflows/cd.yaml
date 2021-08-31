@@ -29,7 +29,7 @@ jobs:
           env:
             FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           with:
-            args: deploy server
+            args: deploy async
 
         - uses: superfly/flyctl-actions@1.1
           env:

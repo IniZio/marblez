@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "env-cmd node dist",
-    "dev": "node ngrok.js & env-cmd tsc-watch --noClear --onSuccess 'node dist'",
+    "dev": "env-cmd tsc-watch --noClear --onSuccess 'node dist'",
     "build": "tsc"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "date-fns": "^2.13.0",
     "diff-arrays-of-objects": "^1.1.7",
     "dotenv": "^8.2.0",
+    "fastify": "^3.20.2",
     "google-spreadsheet": "^3.0.11",
     "googleapis": "^51.0.0",
     "graphql": "^14.6.0",
