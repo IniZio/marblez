@@ -127,3 +127,4 @@ deploy-marblez.public
 /server/marble-service-account.json
 /.env.production
 v2/public/sw.js
+/async/marble-service-account.json
