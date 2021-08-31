@@ -1,7 +1,7 @@
-.PHONY: deploy-v2
-deploy-v2:
+.PHONY: deploy
+deploy:
 	TARGET=production yarn share-env
-	fly deploy server
+	fly deploy async
 	fly deploy v2
 
 .PHONY: generate-secret
