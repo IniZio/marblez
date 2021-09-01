@@ -128,3 +128,4 @@ deploy-marblez.public
 /.env.production
 v2/public/sw.js
 /async/marble-service-account.json
+/async/whatsapp_auth_info.json

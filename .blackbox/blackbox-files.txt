@@ -1,3 +1,4 @@
 .env.development
 .env.production
 async/marble-service-account.json
+async/whatsapp_auth_info.json
