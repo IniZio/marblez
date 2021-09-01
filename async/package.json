@@ -9,7 +9,9 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@adiwajshing/baileys": "^3.5.2",
     "@react-pdf/renderer": "^2.0.8",
+    "@supabase/supabase-js": "^1.22.4",
     "@typegoose/typegoose": "^6.4.0",
     "@types/dotenv": "^8.2.0",
     "@types/graphql": "^14.5.0",
@@ -27,6 +29,7 @@
     "graphql-type-json": "^0.3.2",
     "lodash": "^4.17.20",
     "messagebird": "^3.5.0",
+    "mime-types": "^2.1.32",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.6",
     "ngrok": "^3.2.7",
@@ -44,6 +47,7 @@
   "devDependencies": {
     "@types/graphql-iso-date": "^3.3.3",
     "@types/lodash": "^4.14.167",
+    "@types/mime-types": "^2.1.1",
     "@types/node-cron": "^2.0.3",
     "@types/randomcolor": "^0.5.5",
     "@types/react": "^17.0.4",
