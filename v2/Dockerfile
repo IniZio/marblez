@@ -1,6 +1,5 @@
 # Install all node_modules and build the project
-FROM node:12.22.3-alpine
-
+FROM mhart/alpine-node:12.22.3 as builder
 WORKDIR /app
 
 COPY package.json yarn.lock ./
@@ -10,6 +9,24 @@ RUN yarn install --pure-lockfile
 COPY . .
 RUN yarn build
 
+RUN yarn install --pure-lockfile --production
+
+# Copy the above into a slim container
+FROM mhart/alpine-node:slim-12.22.3
+WORKDIR /app
+
+COPY . .
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/.blitz ./.blitz
+
 EXPOSE 3000
+#
+# If possible, run your container using `docker run --init`
+# Otherwise, you can use `tini`:
+# RUN apk add --no-cache tini
+
+# ENTRYPOINT ["/sbin/tini", "--"]
 
 CMD ["./node_modules/.bin/blitz", "start"]
