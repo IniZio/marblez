@@ -67,30 +67,45 @@ export async function connectToWhatsApp () {
     }
 })
 
-  // conn.on("message-new", async (m) => {
-  //   if (!m.message) {
-  //     return;
-  //   }
+  conn.on("message-new", async (m) => {
+    if (!m.message) {
+      return;
+    }
 
-  //   const [messageType] = Object.keys(m.message)
+    const [messageType] = Object.keys(m.message)
 
-  //   if (messageType === MessageType.image) {
-  //     // const buffer = await conn.downloadMediaMessage(m)
-  //     // @ts-expect-error
-  //     const savedFilename = await conn.downloadAndSaveMediaMessage(m)
-  //     console.log(m.key.remoteJid + " sent media, saved at: " + savedFilename)
-  //   }
-  // })
+    if (messageType === MessageType.image) {
+      // const buffer = await conn.downloadMediaMessage(m)
+      // @ts-expect-error
+      const savedFilename = await conn.downloadAndSaveMediaMessage(m)
+      console.log(m.key.remoteJid + " sent media, saved at: " + savedFilename)
+    }
+  })
 
-  conn.on ('open', () => {
+  conn.on ('open', async () => {
     // save credentials whenever updated
     console.log (`credentials updated!`)
     const authInfo = conn.base64EncodedAuthInfo() // get all the auth info we need to restore this session
-    fs.writeFileSync('./whatsapp_auth_info.json', JSON.stringify(authInfo, null, '\t')) // save this info to a file
+    const stringifiedAuthInfo = JSON.stringify(authInfo, null, '\t');
+
+    await supabase.storage.createBucket("whatsapp-auth-nfo");
+
+    // TODO: encrypt auth_info before upload
+    await supabase.storage.from("whatsapp-auth-nfo").upload("whatsapp_auth_info.json", stringifiedAuthInfo)
+
+    fs.writeFileSync('./whatsapp_auth_info.json', stringifiedAuthInfo) // save this info to a file
   })
 
   try {
-    conn.loadAuthInfo ('./whatsapp_auth_info.json')
+    const { data } = await supabase.storage.from("whatsapp-auth-nfo").download("whatsapp_auth_info.json")
+    console.log("=== whatsapp", await data.text())
+    fs.writeFileSync('./whatsapp_auth_info.json', await data.text())
   } catch {}
+
+  try {
+    conn.loadAuthInfo ('./whatsapp_auth_info.json')
+  } catch (error) {
+    console.log("=== error", error)
+  }
   await conn.connect ()
 }
