@@ -1,12 +1,5 @@
 # Marblez
 
-- [Marblez](#marblez)
-  - [Status](#status)
-  - [Setup](#setup)
-  - [Staging / Production](#staging--production)
-    - [Backend](#backend)
-    - [Frontend](#frontend)
-
 ## Status
 
 |Server|URL|Status|
