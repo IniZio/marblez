@@ -4,8 +4,9 @@ import mime from "mime-types"
 import supabase from "./services/supabase"
 import googleDriveRepository from "./respository/google-drive"
 
+// FIXME: seems group names are irregular, ignore name filter for now
 function chatIsMissMarble(chat: WAChat | WAChatUpdate) {
-  return chat.name?.includes("@marble") && chat.jid.includes("-");
+  return chat.jid.includes("-");
 }
 
 export async function connectToWhatsApp () {
