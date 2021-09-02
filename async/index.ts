@@ -9,7 +9,7 @@ import { connectToWhatsApp } from './whatsapp';
 
 dotenv.config();
 
-const { MONGO_URL, PORT = 4000 } = process.env;
+const { MONGO_URL, PORT = 3000 } = process.env;
 
 const fastify = createFastify({ logger: true });
 

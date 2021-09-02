@@ -13,7 +13,7 @@ kill_timeout = 5
 
 [[services]]
   http_checks = []
-  internal_port = 4000
+  internal_port = 3000
   protocol = "tcp"
   script_checks = []
 
