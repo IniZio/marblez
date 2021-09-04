@@ -12,7 +12,7 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <DocumentHead />
-        <body className="overflow-y-scroll max-h-screen text-gray-500">
+        <body className="overflow-y-scroll max-h-screen text-gray-600">
           <Main />
           <BlitzScript />
         </body>

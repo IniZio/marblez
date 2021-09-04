@@ -111,10 +111,12 @@ function OrderCard({ order }: OrderProps) {
 
   return (
     <>
-      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm leading-6 rounded border">
+      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm font-medium leading-6 rounded border">
         <p className="whitespace-pre-wrap">
           {lines.map((line, index) => (
-            <div key={index}>{line}</div>
+            <div key={index} className="my-0.5">
+              {line}
+            </div>
           ))}
         </p>
         <div className="flex absolute right-3 bottom-3 gap-2">
