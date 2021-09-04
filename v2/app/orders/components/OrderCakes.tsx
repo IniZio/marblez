@@ -28,12 +28,17 @@ const OrderCakes: FC<OrderCakesProps> = ({ className, dateRange }: OrderCakesPro
   )
 
   const ordersGroupByCake = useMemo(
-    () => groupBy(ordersPage?.orders, "otherAttributes.cake"),
+    () =>
+      groupBy(
+        ordersPage?.orders,
+        ({ otherAttributes }) =>
+          `${(otherAttributes as any).cake}|||${(otherAttributes as any).size}`
+      ),
     [ordersPage]
   )
 
   return (
-    <div className={classNames("p-4 rounded border sm:max-w-[250px]", className)}>
+    <div className={classNames("p-4 rounded border sm:w-[300px] sm:max-w-[300px]", className)}>
       <h3 className="font-bold">蛋糕數</h3>
       {isLoading ? (
         <Loader className="w-5 h-5" />
@@ -41,7 +46,9 @@ const OrderCakes: FC<OrderCakesProps> = ({ className, dateRange }: OrderCakesPro
         <ul>
           {Object.entries(ordersGroupByCake).map(([cake, orders]) => (
             <li key={cake} className="flex">
-              <span>{cake}</span> <div className="flex-1 flex-shrink-0 min-w-[4px]" />{" "}
+              <label>{cake.split("|||")[0]}</label>
+              <div className="flex-1 flex-shrink-0 min-w-[4px]" />{" "}
+              <label className="mr-2">{cake.split("|||")[1]}</label>
               <span className="flex-shrink-0 min-w-[20px]"> x {orders.length}</span>
             </li>
           ))}

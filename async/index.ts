@@ -21,6 +21,7 @@ const start = async () => {
   try {
     await connect(MONGO_URL)
     cron.schedule('*/10 * * * *', syncGoogleForms)
+    syncGoogleForms()
     // connectToWhatsApp();
     await fastify.listen(PORT, "0.0.0.0")
   } catch (err) {

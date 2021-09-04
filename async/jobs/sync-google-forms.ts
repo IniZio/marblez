@@ -89,7 +89,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
       case 'otherAttributes.color':
       case 'otherAttributes.taste':
       case 'otherAttributes.letter':
-        order[key] = (order[key] as string)?.replace(/\([^(\))]*\)/g, '').trim();
+        order[key] = (order[key] as string)?.replace(/\([^(\))]*\)/g, '').replace(/\*.*/g, '').trim();
         break;
     }
 
