@@ -4,7 +4,7 @@ import db, { Prisma } from "db"
 interface GetOrdersInput
   extends Pick<Prisma.OrderFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
 
-export default resolver.pipe(async ({ where, orderBy, skip = 0, take = 100 }: GetOrdersInput) => {
+export default resolver.pipe(async ({ where, skip = 0, take = 249 }: GetOrdersInput) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const {
     items: orders,
@@ -15,7 +15,19 @@ export default resolver.pipe(async ({ where, orderBy, skip = 0, take = 100 }: Ge
     skip,
     take,
     count: () => db.order.count({ where }),
-    query: (paginateArgs) => db.order.findMany({ ...paginateArgs, where, orderBy }),
+    query: (paginateArgs) =>
+      db.order.findMany({
+        ...paginateArgs,
+        where,
+        orderBy: [
+          {
+            deliveryDate: "asc",
+          },
+          {
+            deliveryTime: "asc",
+          },
+        ],
+      }),
   })
 
   return {

@@ -1,5 +1,5 @@
 {
-  "name": "@marblez/server",
+  "name": "@marblez/async",
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",

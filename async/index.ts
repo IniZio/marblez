@@ -9,7 +9,7 @@ import { connectToWhatsApp } from './whatsapp';
 
 dotenv.config();
 
-const { MONGO_URL, PORT = 3000 } = process.env;
+const { MONGO_URL, PORT = 5000 } = process.env;
 
 const fastify = createFastify({ logger: true });
 
@@ -20,8 +20,8 @@ fastify.get('/', async () => {
 const start = async () => {
   try {
     await connect(MONGO_URL)
-    cron.schedule('*/5 * * * *', syncGoogleForms)
-    connectToWhatsApp();
+    cron.schedule('*/10 * * * *', syncGoogleForms)
+    // connectToWhatsApp();
     await fastify.listen(PORT, "0.0.0.0")
   } catch (err) {
     fastify.log.error(err)
