@@ -23,6 +23,8 @@ jobs:
 
         - name: share-env
           run: |
+            yarn
+            yarn share-prisma
             TARGET=production yarn share-env
 
         - uses: superfly/flyctl-actions@1.1

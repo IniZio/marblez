@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "postinstall": "lerna exec --parallel yarn",
-    "share-env": "cp .env.${TARGET} async/.env && cp .env.${TARGET} v2/.env",
+    "prisma": "prisma",
+    "share-prisma": "lerna exec --parallel 'cp ../schema.prisma ./db && yarn prisma-generate'",
+    "share-env": "lerna exec --parallel cp ../.env.${TARGET} ./.env",
     "predev": "TARGET=development npm run share-env",
     "dev": "NODE_ENV=development env-cmd -f .env.development lerna exec --parallel npm run dev",
     "build": "lerna exec --parallel npm run build",
@@ -14,6 +16,7 @@
     "dotenv": "^10.0.0",
     "env-cmd": "^10.1.0",
     "lerna": "^3.22.1",
+    "prisma": "^2.30.3",
     "typescript": "^4.1.2"
   },
   "dependencies": {
