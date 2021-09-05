@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import { MessageType, ReconnectMode, WAChat, WAChatUpdate, WAConnection } from '@adiwajshing/baileys'
 import mime from "mime-types"
+import db from "./db"
 import supabase from "./services/supabase"
 import googleDriveRepository from "./respository/google-drive"
 
@@ -22,20 +23,34 @@ export async function connectToWhatsApp () {
 
   //     const missMarbleChats = conn.chats.all().filter(chatIsMissMarble);
 
-  //     const messagesPage = await conn.loadMessages(missMarbleChats[0].jid, 10);
+  //     const messagesPage = await conn.loadMessages(missMarbleChats[0].jid, 100);
 
   //     for (const m of messagesPage.messages) {
+  //       if (!m.message) {
+  //         continue
+  //       }
+
   //       const [messageType] = Object.keys(m.message)
 
   //       if (messageType === MessageType.image) {
-  //         const buffer = await conn.downloadMediaMessage(m)
+  //         try {
+  //           const buffer = await conn.downloadMediaMessage(m)
 
-  //         const { mimetype } = m.message.imageMessage;
-  //         await supabase.storage.from("order-assets").upload(
-  //           `${m.key.id}.${mime.extension(mimetype)}`,
-  //           buffer,
-  //           { contentType: mimetype }
-  //         );
+  //           const { mimetype } = m.message.imageMessage;
+  //           const content = await supabase.storage.from("order-assets").upload(
+  //             `${m.key.id}.${mime.extension(mimetype)}`,
+  //             buffer,
+  //             { contentType: mimetype }
+  //           );
+  //           await db.asset.create({
+  //             data: {
+  //               bucketName: "order-assets",
+  //               bucketKey: content.data.Key,
+  //             }
+  //           })
+  //         } catch (error) {
+  //           console.error(error)
+  //         }
   //       }
   //     }
   // })
@@ -61,11 +76,17 @@ export async function connectToWhatsApp () {
           const buffer = await conn.downloadMediaMessage(m)
 
           const { mimetype } = m.message.imageMessage;
-          await supabase.storage.from("order-assets").upload(
+          const content = await supabase.storage.from("order-assets").upload(
             `${m.key.id}.${mime.extension(mimetype)}`,
             buffer,
             { contentType: mimetype }
           );
+          await db.asset.create({
+            data: {
+              bucketName: "order-assets",
+              bucketKey: content.data.Key,
+            }
+          })
         }
       }
     }
