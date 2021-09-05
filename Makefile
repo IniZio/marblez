@@ -1,8 +1,7 @@
 .PHONY: deploy
 deploy:
 	TARGET=production yarn share-env
-	fly deploy async
-	fly deploy v2
+	./node_modules/.bin/lerna exec fly deploy
 
 .PHONY: generate-secret
 generate-secret:

@@ -6,6 +6,7 @@ import { addDays, endOfDay, format, startOfDay } from "date-fns"
 import "flatpickr/dist/themes/airbnb.css"
 import { useCallback, useMemo, useState } from "react"
 import Flatpickr from "react-flatpickr"
+import OrderAssetsSlide from "../../assets/components/OrderAssetsSlide"
 import useDebouncedValue from "../../hooks/useDebouncedValue"
 // import Button from "../../primitives/Button"
 import Loader from "../../primitives/Loader"
@@ -114,6 +115,7 @@ const FilteredOrdersGrid = () => {
       </div>
 
       <div className="flex flex-col gap-2 my-2">
+        <OrderAssetsSlide />
         <OrderStats dateRange={dateRange} />
         <OrderCakes className="sm:hidden" dateRange={dateRange} />
       </div>

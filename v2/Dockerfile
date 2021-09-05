@@ -9,18 +9,6 @@ RUN yarn install --pure-lockfile
 COPY . .
 RUN yarn build
 
-RUN yarn install --pure-lockfile --production
-
-# Copy the above into a slim container
-FROM mhart/alpine-node:slim-12.22.3
-WORKDIR /app
-
-COPY . .
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/.blitz ./.blitz
-COPY --from=builder /app/.next ./.next
-
 EXPOSE 3000
 #
 # If possible, run your container using `docker run --init`

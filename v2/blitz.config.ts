@@ -11,6 +11,12 @@ const config: BlitzConfig = {
     dest: "../../public",
     runtimeCaching: [],
   },
+  env: {
+    ORDER_ASSETS_CDN_URL: process.env.ORDER_ASSETS_CDN_URL,
+  },
+  images: {
+    domains: [new URL(process.env.ORDER_ASSETS_CDN_URL!).host],
+  },
   /* Uncomment this to customize the webpack config
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Note: we provide webpack above so you should not `require` it

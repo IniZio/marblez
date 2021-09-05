@@ -19,6 +19,7 @@ model Asset {
   bucketKey  String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  meta       Json?
 }
 
 model User {

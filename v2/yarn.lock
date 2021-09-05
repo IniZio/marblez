@@ -8599,6 +8599,11 @@ react-hook-form@7.12.2:
   resolved "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.12.2.tgz"
   integrity sha512-cpxocjrgpMAJCMJQR51BQhMoEx80/EQqePNihMTgoTYTqCRbd2GExi+N4GJIr+cFqrmbwNj9wxk5oLWYQsUefg==
 
+react-horizontal-infinite-scroll@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-horizontal-infinite-scroll/-/react-horizontal-infinite-scroll-1.0.2.tgz#9a339de2bd38e4b3a316bc265122819a239532b3"
+  integrity sha512-6TcTwIHkvkWHgLd5FNQLEpIUu7xoWFBRdCXunhf6/r3zZ+Ct0+jvkKQnPz7lZC8oDIOSOYFP4iUBfHBD1FHIdQ==
+
 react-is@17.0.2, react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"

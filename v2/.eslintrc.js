@@ -22,4 +22,5 @@ module.exports = {
   globals: {
     JSX: true,
   },
+  rules: { "@next/next/no-img-element": "off" },
 }
