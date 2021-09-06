@@ -8,6 +8,10 @@ html {
   font-family: 'Noto Sans TC', sans-serif;
 }
 
+body {
+  background-color: white;
+}
+
 input {
   @apply transition-colors focus:ring-0 focus:shadow;
 }
