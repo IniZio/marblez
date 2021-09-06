@@ -26,7 +26,7 @@ const OrderAssetsSlide: FC = () => {
 
   return (
     <HorizontalInfiniteScroll
-      mainWrapper={<div className="max-w-full" />}
+      mainWrapper={<div className="overflow-x-auto max-w-full" />}
       loader={<div />}
       dipatchScroll={hasNextPage && fetchNextPage}
     >
@@ -39,7 +39,7 @@ const OrderAssetsSlide: FC = () => {
                 key={asset.id}
                 width="45"
                 height="45"
-                className="w-[45px] h-[45px] rounded-full"
+                className="flex-shrink-0 w-[45px] h-[45px] rounded-full"
                 src={`${process.env.ORDER_ASSETS_CDN_URL}/${asset.bucketKey}`}
               />
             ))}
