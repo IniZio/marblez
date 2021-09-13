@@ -6,6 +6,12 @@ interface GetOrdersInput
 
 export default resolver.pipe(async ({ where, skip = 0, take = 249 }: GetOrdersInput) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  if (!where) {
+    where = {}
+  }
+
+  where.paid = { equals: true }
+
   const {
     items: orders,
     hasMore,
