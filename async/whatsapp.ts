@@ -1,6 +1,8 @@
 import * as fs from 'fs'
+import * as path from 'path'
 import { MessageType, proto, ReconnectMode, WAChat, WAChatUpdate, WAConnection } from '@adiwajshing/baileys'
 import mime from "mime-types"
+import qrcode from "qrcode";
 import db, { Asset } from "./db"
 import supabase from "./services/supabase"
 import googleDriveRepository from "./respository/google-drive"
@@ -134,6 +136,10 @@ export async function connectToWhatsApp () {
     await supabase.storage.from("whatsapp-auth-info").upload("whatsapp_auth_info.json", stringifiedAuthInfo)
 
     fs.writeFileSync('./whatsapp_auth_info.json', stringifiedAuthInfo) // save this info to a file
+  })
+
+  conn.on('qr', qr => {
+    qrcode.toFile(path.resolve(__dirname, '..', 'qr.png'), qr)
   })
 
   try {
