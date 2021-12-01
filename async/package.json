@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "^3.5.2",
+    "@adiwajshing/baileys": "^3.5.3",
     "@prisma/client": "^2.30.3",
     "@react-pdf/renderer": "^2.0.8",
     "@supabase/supabase-js": "^1.22.4",
@@ -38,6 +38,7 @@
     "mongoose": "^5.9.6",
     "ngrok": "^3.2.7",
     "node-cron": "^2.0.3",
+    "qrcode": "^1.5.0",
     "randomcolor": "^0.6.2",
     "react": "^17.0.2",
     "recursive-diff": "^1.0.8",
@@ -53,6 +54,7 @@
     "@types/lodash": "^4.14.167",
     "@types/mime-types": "^2.1.1",
     "@types/node-cron": "^2.0.3",
+    "@types/qrcode": "^1.4.1",
     "@types/randomcolor": "^0.5.5",
     "@types/react": "^17.0.4",
     "@types/source-map-support": "^0.5.3",
