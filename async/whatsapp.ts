@@ -1,15 +1,24 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import fetch from 'node-fetch'
 import { MessageType, proto, ReconnectMode, WAChat, WAChatUpdate, WAConnection } from '@adiwajshing/baileys'
 import mime from "mime-types"
 import qrcode from "qrcode";
+import agent from "superagent"
 import db, { Asset } from "./db"
 import supabase from "./services/supabase"
 import googleDriveRepository from "./respository/google-drive"
 import dayjs from 'dayjs'
 
+export enum MissMarbleChatJids {
+  OrderReports = "85298115672-1594034860@g.us"
+  // OrderReports = "85265530162@s.whatsapp.net"
+}
+
 function chatIsMissMarble(chat: WAChat | WAChatUpdate) {
-  return chat.jid.includes("-") && (
+  const isGroupChat = chat.jid.includes("-");
+
+  return isGroupChat && (
     chat.name?.includes("order")
     || chat.name?.includes("牌")
     || chat.name?.includes("複雜單")
@@ -92,7 +101,7 @@ export async function connectToWhatsApp () {
             await saveOrderAssetFromMessage(conn, m)
 
             // Fetch up to start of today
-            console.log(`Last fetched message sent at ${dayjs(+m.messageTimestamp.toString() * 1000).toISOString()}`)
+            // console.log(`Last fetched message sent at ${dayjs(+m.messageTimestamp.toString() * 1000).toISOString()}`)
             if (dayjs(+m.messageTimestamp.toString() * 1000).isBefore(dayjs().startOf("day"))) {
               fetchedTilYesterday = true;
               break;
@@ -153,4 +162,28 @@ export async function connectToWhatsApp () {
     console.log("Failed to load whatsapp authinfo", error)
   }
   await conn.connect ()
+
+  return conn;
+}
+
+async function downloadOrderReport(date: Date) {
+  const res = await agent.get(
+    `${process.env.GOOGLE_SHEET_SCRIPT_URL}?date=${date.toISOString()}&num_of_column=2`
+  )
+  const downloadUrl = JSON.parse(res.text)?.url;
+  return fetch(downloadUrl)
+    .then(res => res.buffer())
+}
+
+export async function sendOrderReportsToWhatsApp(conn: WAConnection) {
+  const dates = [dayjs().add(1, 'day').toDate(), dayjs().add(2, 'days').toDate()];
+
+  for (const date of dates) {
+    await conn.sendMessage(
+      MissMarbleChatJids.OrderReports,
+      await downloadOrderReport(date),
+      MessageType.document,
+      { filename: `Orders for ${date.getMonth() + 1}_${date.getDate()} (Paid).pdf`, mimetype: 'application/pdf' }
+    );
+  }
 }
