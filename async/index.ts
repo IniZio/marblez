@@ -5,7 +5,7 @@ import cron from 'node-cron';
 import "reflect-metadata";
 import 'source-map-support/register';
 import { syncGoogleForms } from './jobs/sync-google-forms';
-import { connectToWhatsApp } from './whatsapp';
+import { connectToWhatsApp, sendOrderReportsToWhatsApp } from './whatsapp';
 
 dotenv.config();
 
@@ -22,7 +22,9 @@ const start = async () => {
     await connect(MONGO_URL)
     cron.schedule('*/10 * * * *', syncGoogleForms)
     syncGoogleForms()
-    connectToWhatsApp();
+    const whatsappConn = await connectToWhatsApp();
+    // cron.schedule('00 18 * * *', () => sendOrderReportsToWhatsApp(whatsappConn))
+    sendOrderReportsToWhatsApp(whatsappConn)
     await fastify.listen(PORT, "0.0.0.0")
   } catch (err) {
     fastify.log.error(err)
