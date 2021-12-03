@@ -23,7 +23,7 @@ const start = async () => {
     cron.schedule('*/10 * * * *', syncGoogleForms)
     syncGoogleForms()
     const whatsappConn = await connectToWhatsApp();
-    cron.schedule('00 18 * * *', () => sendOrderReportsToWhatsApp(whatsappConn), { timezone: 'Asia/Hong_Kong' })
+    cron.schedule('00 21 * * *', () => sendOrderReportsToWhatsApp(whatsappConn), { timezone: 'Asia/Hong_Kong' })
     await fastify.listen(PORT, "0.0.0.0")
   } catch (err) {
     fastify.log.error(err)
