@@ -168,7 +168,7 @@ export async function connectToWhatsApp () {
 
 async function downloadOrderReport(date: Date) {
   const res = await agent.get(
-    `${process.env.GOOGLE_SHEET_SCRIPT_URL}?date=${date.toISOString()}&num_of_column=2`
+    `${process.env.GOOGLE_SHEET_SCRIPT_URL}?date=${dayjs(date).toISOString()}&num_of_column=2`
   )
   const downloadUrl = JSON.parse(res.text)?.url;
   return fetch(downloadUrl)
@@ -176,7 +176,10 @@ async function downloadOrderReport(date: Date) {
 }
 
 export async function sendOrderReportsToWhatsApp(conn: WAConnection) {
-  const dates = [dayjs().add(1, 'day').toDate(), dayjs().add(2, 'days').toDate()];
+  const dates = [
+    dayjs().add(1, 'day').toDate(),
+    dayjs().add(2, 'days').toDate()
+  ];
 
   for (const date of dates) {
     await conn.sendMessage(
