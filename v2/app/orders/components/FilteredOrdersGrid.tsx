@@ -115,13 +115,13 @@ const FilteredOrdersGrid = () => {
       </div>
 
       <div className="flex flex-col gap-2 my-2">
-        <OrderAssetsSlide />
+        {/* <OrderAssetsSlide /> */}
         <OrderStats dateRange={dateRange} />
-        <OrderCakes className="sm:hidden" dateRange={dateRange} />
+        {/* <OrderCakes className="sm:hidden" dateRange={dateRange} /> */}
       </div>
 
       <div className="flex gap-2">
-        <OrderCakes className="max-sm:hidden" dateRange={dateRange} />
+        {/* <OrderCakes className="max-sm:hidden" dateRange={dateRange} /> */}
         <div className="grid flex-1 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {orderPages?.map(({ orders }) => (
             <>

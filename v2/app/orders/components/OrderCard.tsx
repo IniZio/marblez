@@ -1,8 +1,8 @@
-import { ClipboardCopyIcon } from "@heroicons/react/outline"
+import { ShareIcon } from "@heroicons/react/outline"
 import { Order } from "@prisma/client"
 import { format } from "date-fns"
-import { Suspense, useMemo, useState } from "react"
-import CopyToClipboard from "react-copy-to-clipboard"
+import { Suspense, useCallback, useMemo, useState } from "react"
+// import CopyToClipboard from "react-copy-to-clipboard"
 import OrderMetaList from "../../order-metas/components/OrderMetaList"
 import Dialog from "../../primitives/Dialog"
 import { isMobile } from "../../util/device"
@@ -97,7 +97,7 @@ function OrderCard({ order }: OrderProps) {
   const lines = useMemo(() => order2Lines(order), [order])
   const [orderMetasIsOpen, setOrderMetasIsOpen] = useState(false)
 
-  const href = useMemo(() => {
+  const whatsappHref = useMemo(() => {
     const encodedLines = encodeURIComponent(lines.join("\n"))
     let href: string
     if (isMobile.any) {
@@ -108,6 +108,21 @@ function OrderCard({ order }: OrderProps) {
 
     return href
   }, [lines])
+
+  const handleShareOrder = useCallback(() => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `Order for ${order.customerPhone}`,
+          text: lines.join("\n"),
+          url: location.href,
+        })
+        .then(() => console.log("Successful share"))
+        .catch((error) => console.log("Error sharing", error))
+    } else {
+      window.open(whatsappHref, "_blank")
+    }
+  }, [whatsappHref, lines, order.customerPhone])
 
   return (
     <>
@@ -124,11 +139,15 @@ function OrderCard({ order }: OrderProps) {
             className="w-5 h-5 cursor-pointer"
             onClick={() => setOrderMetasIsOpen(true)}
           /> */}
-          <CopyToClipboard text={lines.join("\n")}>
-            <a href={href} target="_blank" rel="noreferrer">
+          {/* <CopyToClipboard text={lines.join("\n")}>
+            <a href={whatsappHref} target="_blank" rel="noreferrer">
               <ClipboardCopyIcon className="w-5 h-5 cursor-pointer" />
             </a>
-          </CopyToClipboard>
+          </CopyToClipboard> */}
+          <div className="flex gap-4">
+            <ShareIcon className="w-5 h-5 cursor-pointer" onClick={handleShareOrder} />
+            {/* <UploadIcon className="w-5 h-5 cursor-pointer" /> */}
+          </div>
         </div>
       </div>
       <Dialog open={orderMetasIsOpen} onClose={() => setOrderMetasIsOpen(false)}>
