@@ -10,6 +10,9 @@ html {
 
 body {
   background-color: white;
+
+  @apply dark:bg-slate-800;
+  @apply dark:!text-white;
 }
 
 input {

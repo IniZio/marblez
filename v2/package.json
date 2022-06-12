@@ -31,7 +31,7 @@
     "@heroicons/react": "1.0.3",
     "@hookform/resolvers": "2.7.1",
     "@prisma/client": "2.29.1",
-    "@tailwindcss/forms": "0.3.3",
+    "@tailwindcss/forms": "0.5.2",
     "@types/react-copy-to-clipboard": "5.0.1",
     "autoprefixer": "10",
     "blitz": "0.39.0",
@@ -51,7 +51,7 @@
     "react-hook-form": "7.12.2",
     "react-horizontal-infinite-scroll": "1.0.2",
     "superagent": "6.1.0",
-    "tailwindcss": "2.1.2",
+    "tailwindcss": "3.1.2",
     "use-immer": "0.6.0",
     "use-onclickoutside": "0.4.0",
     "zod": "3.7.2"

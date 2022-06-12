@@ -67,7 +67,7 @@ const FilteredOrdersGrid = () => {
   return (
     <div className="m-3">
       <input
-        className="p-2 mb-3 w-full rounded border-gray-300"
+        className="p-2 mb-3 w-full dark:text-white dark:bg-transparent rounded border-gray-300"
         type="text"
         placeholder="搜尋電話"
         value={keyword}
@@ -87,7 +87,7 @@ const FilteredOrdersGrid = () => {
               mode: "range",
               maxDate: addDays(dateRange[0], 6),
             }}
-            className="flex-1 min-w-0 font-bold leading-5 text-center border-none cursor-pointer"
+            className="flex-1 min-w-0 font-bold leading-5 text-center dark:!bg-transparent border-none cursor-pointer"
             value={dateRange}
             onChange={(dateRange) => {
               if (!dateRange[0]) {
