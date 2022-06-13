@@ -31,6 +31,7 @@
     "@heroicons/react": "1.0.3",
     "@hookform/resolvers": "2.7.1",
     "@prisma/client": "2.29.1",
+    "@supabase/supabase-js": "1.35.3",
     "@tailwindcss/forms": "0.5.2",
     "@types/react-copy-to-clipboard": "5.0.1",
     "autoprefixer": "10",

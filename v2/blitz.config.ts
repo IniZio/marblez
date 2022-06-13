@@ -12,6 +12,8 @@ const config: BlitzConfig = {
     runtimeCaching: [],
   },
   env: {
+    SUPABASE_ENDPOINT: process.env.SUPABASE_ENDPOINT,
+    SUPABASE_API_KEY: process.env.SUPABASE_API_KEY,
     ORDER_ASSETS_CDN_URL: process.env.ORDER_ASSETS_CDN_URL,
   },
   images: {

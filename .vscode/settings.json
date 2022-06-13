@@ -7,7 +7,11 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "scss.validate": false,
-  "editor.quickSuggestions": true,
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on",
+    "other": "on"
+  },
   "tailwindCSS.experimental.classRegex": [
       "tw`([^`]*)", // tw`...`
       "tw=\"([^\"]*)", // <div tw="..." />

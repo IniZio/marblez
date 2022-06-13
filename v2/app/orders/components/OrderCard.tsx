@@ -1,11 +1,12 @@
-import { ShareIcon } from "@heroicons/react/outline"
+import { ShareIcon, UploadIcon } from "@heroicons/react/outline"
 import { Order } from "@prisma/client"
 import { format } from "date-fns"
-import { Suspense, useCallback, useMemo, useState } from "react"
+import { Suspense, useCallback, useMemo, useRef, useState } from "react"
 // import CopyToClipboard from "react-copy-to-clipboard"
 import OrderMetaList from "../../order-metas/components/OrderMetaList"
 import Dialog from "../../primitives/Dialog"
 import { isMobile } from "../../util/device"
+import supabaseClient from "../../services/supabase"
 
 export interface OrderProps {
   order: Order
@@ -124,9 +125,40 @@ function OrderCard({ order }: OrderProps) {
     }
   }, [whatsappHref, lines, order.customerPhone])
 
+  const [imageUrl, setImageUrl] = useState(
+    () => `${process.env.ORDER_ASSETS_CDN_URL}/order-assets/${order.receivedAt?.toISOString()}`
+  )
+  const fileUploadRef = useRef<HTMLInputElement>(null)
+  const handleUploadFile = useCallback(
+    async (event) => {
+      const uploadedfile = event.target.files[0]
+      const paths = [
+        `${order.receivedAt?.toISOString()}.${uploadedfile.name.split(".")[1]}`,
+        `${order.receivedAt?.toISOString()}`,
+      ]
+
+      return Promise.all(
+        paths.map((path) =>
+          supabaseClient.storage.from("order-assets").upload(path, uploadedfile, {
+            cacheControl: "3600",
+            upsert: true,
+          })
+        )
+      ).then(() => {
+        setImageUrl(
+          `${
+            process.env.ORDER_ASSETS_CDN_URL
+          }/order-assets/${order.receivedAt?.toISOString()}?${new Date().getTime()}`
+        )
+      })
+    },
+    [order.receivedAt]
+  )
+  const [loaded, setLoaded] = useState(false)
+
   return (
     <>
-      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm font-medium leading-6 rounded border">
+      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm font-medium leading-6 bg-white rounded-lg shadow-sm dark:bg-slate-800">
         <p className="whitespace-pre-wrap">
           {lines.map((line, index) => (
             <div key={index} className="my-0.5">
@@ -134,6 +166,17 @@ function OrderCard({ order }: OrderProps) {
             </div>
           ))}
         </p>
+        <a href={imageUrl} target="_blank" rel="noreferrer">
+          <img
+            src={imageUrl}
+            alt=""
+            style={loaded ? {} : { display: "none" }}
+            className="absolute top-5 right-5"
+            width="50"
+            height="50"
+            onLoad={() => setLoaded(true)}
+          />
+        </a>
         <div className="flex absolute right-3 bottom-3 gap-2">
           {/* <CollectionIcon
             className="w-5 h-5 cursor-pointer"
@@ -146,7 +189,11 @@ function OrderCard({ order }: OrderProps) {
           </CopyToClipboard> */}
           <div className="flex gap-4">
             <ShareIcon className="w-5 h-5 cursor-pointer" onClick={handleShareOrder} />
-            {/* <UploadIcon className="w-5 h-5 cursor-pointer" /> */}
+            <UploadIcon
+              className="w-5 h-5 cursor-pointer"
+              onClick={() => fileUploadRef.current?.click()}
+            />
+            <input className="hidden" ref={fileUploadRef} type="file" onChange={handleUploadFile} />
           </div>
         </div>
       </div>

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +9,7 @@ html {
 body {
   background-color: white;
 
-  @apply dark:bg-slate-800;
+  @apply bg-gray-50 dark:bg-slate-900;
   @apply dark:!text-white;
 }
 

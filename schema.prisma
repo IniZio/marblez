@@ -82,6 +82,7 @@ model Order {
   customerPhone         String
   customerSocialChannel String?
   customerSocialName    String?
+  receivedAt            DateTime?
   deliveryDate          DateTime?
   createdAt             DateTime?
   deliveryTime          String?

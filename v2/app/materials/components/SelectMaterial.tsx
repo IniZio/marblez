@@ -67,7 +67,7 @@ function SelectMaterial(props: SelectMaterialProps) {
         <div className="relative mt-1 mb-3" ref={selectRef}>
           <div className="relative">
             <input
-              className="py-1 px-2 w-full rounded border"
+              className="py-1 px-2 w-full rounded-lg border"
               type="text"
               placeholder="搜尋材料"
               value={keyword}
@@ -135,7 +135,7 @@ function SelectMaterial(props: SelectMaterialProps) {
             {...saveMaterialForm.register("name")}
             placeholder="物料名稱"
             type="text"
-            className="py-1 px-2 w-full rounded border"
+            className="py-1 px-2 w-full rounded-lgborder"
           />
 
           <button

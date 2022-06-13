@@ -38,7 +38,12 @@ const OrderCakes: FC<OrderCakesProps> = ({ className, dateRange }: OrderCakesPro
   )
 
   return (
-    <div className={classNames("p-4 rounded border sm:w-[300px] sm:max-w-[300px]", className)}>
+    <div
+      className={classNames(
+        "p-4 rounded-lg dark:bg-slate-800 sm:w-[300px] sm:max-w-[300px]",
+        className
+      )}
+    >
       <h3 className="font-bold">蛋糕數</h3>
       {isLoading ? (
         <Loader className="w-5 h-5" />
