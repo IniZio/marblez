@@ -4,8 +4,9 @@ import { useInfiniteQuery, useMutation } from "blitz"
 import cn from "classnames"
 import { addDays, endOfDay, format, startOfDay } from "date-fns"
 import "flatpickr/dist/themes/airbnb.css"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import Flatpickr from "react-flatpickr"
+import supabaseClient from "../../services/supabase"
 import OrderAssetsSlide from "../../assets/components/OrderAssetsSlide"
 import useDebouncedValue from "../../hooks/useDebouncedValue"
 // import Button from "../../primitives/Button"
@@ -42,10 +43,21 @@ const FilteredOrdersGrid = () => {
     getOrders,
     (page = { take: ITEMS_PER_PAGE, skip: 0, where }) => page,
     {
-      getNextPageParam: (lastPage) => ({ ...lastPage.nextPage, where }),
       suspense: false,
     }
   )
+  const [orderAssets, setOrderAssets] = useState<string[]>([])
+  const refreshOrderAssets = useCallback(() => {
+    supabaseClient.storage
+      .from("order-assets")
+      .list(undefined, {
+        limit: 200,
+        offset: 0,
+        sortBy: { column: "updated_at", order: "desc" },
+      })
+      .then(({ data }) => data && setOrderAssets(data.map((i) => i.name)))
+  }, [])
+  useEffect(refreshOrderAssets, [refreshOrderAssets])
 
   const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false)
   const [downloadOrdersMutation] = useMutation(downloadOrders)
@@ -126,7 +138,17 @@ const FilteredOrdersGrid = () => {
           {orderPages?.map(({ orders }) => (
             <>
               {orders.map((order) => (
-                <OrderCard key={order.id} order={order} />
+                <OrderCard
+                  key={order.id}
+                  order={order}
+                  orderAssets={orderAssets.filter(
+                    (asset) =>
+                      order.receivedAt?.toISOString() &&
+                      (asset === order.receivedAt?.toISOString() ||
+                        asset.startsWith(`${order.receivedAt?.toISOString()}-`))
+                  )}
+                  onUpdate={refreshOrderAssets}
+                />
               ))}
             </>
           ))}
