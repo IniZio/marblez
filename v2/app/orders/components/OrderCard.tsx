@@ -162,7 +162,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
 
   return (
     <>
-      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm font-medium leading-6 bg-white rounded-lg shadow-sm dark:bg-slate-800">
+      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm font-medium leading-6 bg-white rounded-lg shadow-md dark:bg-slate-800">
         <p className={"whitespace-pre-wrap" + (orderAssets.length ? " mr-12" : "")}>
           {lines.map((line, index) => (
             <div key={index} className="my-0.5">

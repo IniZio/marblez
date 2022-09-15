@@ -7,20 +7,11 @@ type LayoutProps = {
 }
 
 const Layout = ({ title, children }: LayoutProps) => {
-  let darkMode = false
-
-  if (typeof window !== "undefined") {
-    darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
-  }
-
   return (
     <>
       <Head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta
-          name="apple-mobile-web-app-status-bar-style"
-          content={darkMode ? "black" : "default"}
-        />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <link rel="manifest" href="/manifest.json" />
 
         <link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />

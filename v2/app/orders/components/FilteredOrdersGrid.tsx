@@ -90,14 +90,13 @@ const FilteredOrdersGrid = () => {
         <div className="flex flex-1 gap-2 items-center mb-3 min-w-0">
           <ArrowLeftIcon
             className="w-5 h-5 cursor-pointer"
-            onClick={() => setDateRange([addDays(dateRange[0], -1), addDays(dateRange[1], -1)])}
+            onClick={() => setDateRange([addDays(dateRange[0], -1), addDays(dateRange[0], -1)])}
           />
           <Flatpickr
             options={{
               // @ts-expect-error
               position: "auto center",
               mode: "range",
-              maxDate: addDays(dateRange[0], 6),
             }}
             className="flex-1 min-w-0 font-bold leading-5 text-center bg-transparent border-none cursor-pointer"
             value={dateRange}
@@ -110,7 +109,7 @@ const FilteredOrdersGrid = () => {
           />
           <ArrowRightIcon
             className="w-5 h-5 cursor-pointer"
-            onClick={() => setDateRange([addDays(dateRange[0], 1), addDays(dateRange[1], 1)])}
+            onClick={() => setDateRange([addDays(dateRange[0], 1), addDays(dateRange[0], 1)])}
           />
           <button onClick={downloadOrdersOfDay} disabled={loadingDownloadOrdersOfDay}>
             {loadingDownloadOrdersOfDay ? (
