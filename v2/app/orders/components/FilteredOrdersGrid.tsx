@@ -6,6 +6,7 @@ import { addDays, endOfDay, format, startOfDay } from "date-fns"
 import "flatpickr/dist/themes/airbnb.css"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import Flatpickr from "react-flatpickr"
+import { MandarinTraditional } from "flatpickr/dist/l10n/zh-tw"
 import supabaseClient from "../../services/supabase"
 import OrderAssetsSlide from "../../assets/components/OrderAssetsSlide"
 import useDebouncedValue from "../../hooks/useDebouncedValue"
@@ -97,6 +98,7 @@ const FilteredOrdersGrid = () => {
               // @ts-expect-error
               position: "auto center",
               mode: "range",
+              locale: MandarinTraditional,
             }}
             className="flex-1 min-w-0 font-bold leading-5 text-center bg-transparent border-none cursor-pointer"
             value={dateRange}
