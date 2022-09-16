@@ -10,7 +10,6 @@ import { Order } from "@prisma/client"
 import { format } from "date-fns"
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react"
 // import CopyToClipboard from "react-copy-to-clipboard"
-import OrderMetaList from "../../order-metas/components/OrderMetaList"
 import Dialog from "../../primitives/Dialog"
 import { isMobile } from "../../util/device"
 import supabaseClient from "../../services/supabase"
@@ -104,7 +103,6 @@ export const order2Lines = (order: any) =>
 
 function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
   const lines = useMemo(() => order2Lines(order), [order])
-  const [orderMetasIsOpen, setOrderMetasIsOpen] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const toggleEditMode = useCallback(() => setEditMode(!editMode), [editMode])
 
@@ -214,15 +212,6 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
           )}
         </div>
         <div className="flex absolute right-3 bottom-3 gap-2">
-          {/* <CollectionIcon
-            className="w-5 h-5 cursor-pointer"
-            onClick={() => setOrderMetasIsOpen(true)}
-          /> */}
-          {/* <CopyToClipboard text={lines.join("\n")}>
-            <a href={whatsappHref} target="_blank" rel="noreferrer">
-              <ClipboardCopyIcon className="w-5 h-5 cursor-pointer" />
-            </a>
-          </CopyToClipboard> */}
           <div className="flex gap-4">
             <ShareIcon className="w-5 h-5 cursor-pointer" onClick={handleShareOrder} />
             {editMode ? (
@@ -233,11 +222,6 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
           </div>
         </div>
       </div>
-      <Dialog open={orderMetasIsOpen} onClose={() => setOrderMetasIsOpen(false)}>
-        <Suspense fallback="Loading...">
-          <OrderMetaList orderIndex={order?.id} />
-        </Suspense>
-      </Dialog>
     </>
   )
 }

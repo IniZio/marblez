@@ -8,7 +8,7 @@ export interface OrderStatsProps {
 }
 
 function OrderStats({ dateRange }: OrderStatsProps) {
-  const [ordersPage, { isLoading }] = useQuery(
+  const [orders, { isLoading }] = useQuery(
     getOrders,
     {
       where: {
@@ -26,7 +26,7 @@ function OrderStats({ dateRange }: OrderStatsProps) {
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm dark:bg-slate-800">
       <h3 className="font-bold">訂單數</h3>
-      <div>{isLoading ? <Loader className="w-5 h-5" /> : ordersPage?.count}</div>
+      <div>{isLoading ? <Loader className="w-5 h-5" /> : orders?.length}</div>
     </div>
   )
 }

@@ -1,24 +1,20 @@
 import { ArrowLeftIcon, ArrowRightIcon, DownloadIcon, RefreshIcon } from "@heroicons/react/solid"
 import getOrders from "app/orders/queries/getOrders"
-import { useInfiniteQuery, useMutation } from "blitz"
+import { useMutation, useQuery } from "blitz"
 import cn from "classnames"
 import { addDays, endOfDay, format, startOfDay } from "date-fns"
+import { MandarinTraditional } from "flatpickr/dist/l10n/zh-tw"
 import "flatpickr/dist/themes/airbnb.css"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import Flatpickr from "react-flatpickr"
-import { MandarinTraditional } from "flatpickr/dist/l10n/zh-tw"
-import supabaseClient from "../../services/supabase"
-import OrderAssetsSlide from "../../assets/components/OrderAssetsSlide"
 import useDebouncedValue from "../../hooks/useDebouncedValue"
+import supabaseClient from "../../services/supabase"
 // import Button from "../../primitives/Button"
 import Loader from "../../primitives/Loader"
 import { downloadURI } from "../../util/dom"
 import downloadOrders from "../mutations/downloadOrders"
-import OrderCakes from "./OrderCakes"
 import OrderCard from "./OrderCard"
 import OrderStats from "./OrderStats"
-
-const ITEMS_PER_PAGE = 249
 
 const FilteredOrdersGrid = () => {
   const [dateRange, setDateRange] = useState<[Date, Date]>([new Date(), new Date()])
@@ -26,23 +22,24 @@ const FilteredOrdersGrid = () => {
   const debouncedKeyword = useDebouncedValue(keyword, 500)
 
   const where = useMemo(
-    () => ({
-      deliveryDate: {
-        gte: startOfDay(dateRange[0] || dateRange[1]),
-        lt: endOfDay(dateRange[1] || dateRange[0]),
-      },
-      OR: [
-        { customerPhone: { contains: debouncedKeyword, mode: "insensitive" } },
-        { customerName: { contains: debouncedKeyword, mode: "insensitive" } },
-        { customerSocialName: { contains: debouncedKeyword, mode: "insensitive" } },
-      ],
-    }),
+    () =>
+      ({
+        deliveryDate: {
+          gte: startOfDay(dateRange[0] || dateRange[1]),
+          lt: endOfDay(dateRange[1] || dateRange[0]),
+        },
+        OR: [
+          { customerPhone: { contains: debouncedKeyword, mode: "insensitive" } },
+          { customerName: { contains: debouncedKeyword, mode: "insensitive" } },
+          { customerSocialName: { contains: debouncedKeyword, mode: "insensitive" } },
+        ],
+      } as any),
     [debouncedKeyword, dateRange]
   )
 
-  const [orderPages, { refetch, isFetching }] = useInfiniteQuery(
+  const [orders, { refetch, isFetching }] = useQuery(
     getOrders,
-    (page = { take: ITEMS_PER_PAGE, skip: 0, where }) => page,
+    { where },
     {
       suspense: false,
     }
@@ -136,22 +133,18 @@ const FilteredOrdersGrid = () => {
       <div className="flex gap-2">
         {/* <OrderCakes className="max-sm:hidden" dateRange={dateRange} /> */}
         <div className="grid flex-1 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {orderPages?.map(({ orders }) => (
-            <>
-              {orders.map((order) => (
-                <OrderCard
-                  key={order.id}
-                  order={order}
-                  orderAssets={orderAssets.filter(
-                    (asset) =>
-                      order.receivedAt?.toISOString() &&
-                      (asset === order.receivedAt?.toISOString() ||
-                        asset.startsWith(`${order.receivedAt?.toISOString()}-`))
-                  )}
-                  onUpdate={refreshOrderAssets}
-                />
-              ))}
-            </>
+          {orders?.map((order) => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              orderAssets={orderAssets.filter(
+                (asset) =>
+                  order.receivedAt?.toISOString() &&
+                  (asset === order.receivedAt?.toISOString() ||
+                    asset.startsWith(`${order.receivedAt?.toISOString()}-`))
+              )}
+              onUpdate={refreshOrderAssets}
+            />
           ))}
         </div>
       </div>

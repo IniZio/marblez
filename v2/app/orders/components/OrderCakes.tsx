@@ -12,7 +12,7 @@ export interface OrderCakesProps {
 }
 
 const OrderCakes: FC<OrderCakesProps> = ({ className, dateRange }: OrderCakesProps) => {
-  const [ordersPage, { isLoading }] = useQuery(
+  const [orders, { isLoading }] = useQuery(
     getOrders,
     {
       where: {
@@ -30,11 +30,11 @@ const OrderCakes: FC<OrderCakesProps> = ({ className, dateRange }: OrderCakesPro
   const ordersGroupByCake = useMemo(
     () =>
       groupBy(
-        ordersPage?.orders,
+        orders,
         ({ otherAttributes }) =>
           `${(otherAttributes as any).cake}|||${(otherAttributes as any).size}`
       ),
-    [ordersPage]
+    [orders]
   )
 
   return (
