@@ -1,6 +1,6 @@
+import cn from "clsx"
 // eslint-disable-next-line no-use-before-define
 import React, { memo } from "react"
-import cn from "classnames"
 
 interface IconProps {
   src: string

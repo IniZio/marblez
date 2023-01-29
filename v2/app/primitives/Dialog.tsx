@@ -16,10 +16,10 @@ export default function Dialog(props: DialogProps) {
       <BaseDialog
         initialFocus={defaultInitialFocusRef}
         as="div"
-        className="overflow-y-auto fixed inset-0 z-10"
+        className="fixed inset-0 z-10 overflow-y-auto"
         onClose={() => props.onClose?.()}
       >
-        <div ref={defaultInitialFocusRef} className="px-4 min-h-screen text-center">
+        <div ref={defaultInitialFocusRef} className="min-h-screen px-4 text-center">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -29,7 +29,7 @@ export default function Dialog(props: DialogProps) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <BaseDialog.Overlay className="fixed inset-0 bg-gray-700 bg-opacity-30" />
+            <BaseDialog.Overlay className="fixed inset-0 bg-gray-700/30" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -45,7 +45,7 @@ export default function Dialog(props: DialogProps) {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            <div className="inline-block p-6 my-8 w-full max-w-md text-left align-middle bg-white rounded-2xl shadow-xl transition-all transform">
+            <div className="my-8 inline-block w-full max-w-md rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
               {props.children}
             </div>
           </Transition.Child>

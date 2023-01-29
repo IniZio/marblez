@@ -24,9 +24,9 @@ function OrderStats({ dateRange }: OrderStatsProps) {
   )
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-sm dark:bg-slate-800">
+    <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-slate-800">
       <h3 className="font-bold">訂單數</h3>
-      <div>{isLoading ? <Loader className="w-5 h-5" /> : orders?.length}</div>
+      <div>{isLoading ? <Loader className="h-5 w-5" /> : orders?.length}</div>
     </div>
   )
 }

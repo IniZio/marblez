@@ -7,7 +7,6 @@
  * or https://github.com/Marak/Faker.js to easily generate
  * realistic data.
  */
-const seed = async () => {
-}
+const seed = async () => {}
 
 export default seed

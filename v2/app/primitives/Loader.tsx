@@ -1,4 +1,4 @@
-import cn from "classnames"
+import cn from "clsx"
 import spinnerSrc from "../assets/spinner.svg"
 import Icon from "./Icon"
 
@@ -6,10 +6,7 @@ export default function Loader({ className }: { className?: string }) {
   return (
     <Icon
       src={spinnerSrc.src}
-      className={cn(
-        "max-w-full max-h-full bg-black bg-opacity-50 animate-spin focus:outline-none",
-        className
-      )}
+      className={cn("max-h-full max-w-full animate-spin bg-black/50 focus:outline-none", className)}
     />
   )
 }
