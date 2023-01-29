@@ -1,5 +1,5 @@
 # Install all node_modules and build the project
-FROM mhart/alpine-node:12.22.3 as builder
+FROM mhart/alpine-node:19.5.0 as builder
 WORKDIR /app
 
 COPY package.json yarn.lock ./

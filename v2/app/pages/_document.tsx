@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
-import { Document, Html, DocumentHead, Main, BlitzScript /*DocumentContext*/ } from "blitz"
+import { BlitzScript, /*DocumentContext*/ Document, DocumentHead, Html, Main } from "blitz"
 
 class MyDocument extends Document {
   // Only uncomment if you need to customize this behaviour
@@ -20,7 +20,7 @@ class MyDocument extends Document {
             rel="stylesheet"
           />
         </DocumentHead>
-        <body className="overflow-y-scroll max-h-screen text-gray-600">
+        <body className="max-h-screen overflow-y-scroll text-gray-600">
           <Main />
           <BlitzScript />
         </body>

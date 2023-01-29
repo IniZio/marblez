@@ -1,5 +1,5 @@
 import { useQuery } from "blitz"
-import classNames from "classnames"
+import classNames from "clsx"
 import { endOfDay, startOfDay } from "date-fns"
 import { groupBy } from "lodash"
 import { FC, useMemo } from "react"
@@ -46,15 +46,15 @@ const OrderCakes: FC<OrderCakesProps> = ({ className, dateRange }: OrderCakesPro
     >
       <h3 className="font-bold">蛋糕數</h3>
       {isLoading ? (
-        <Loader className="w-5 h-5" />
+        <Loader className="h-5 w-5" />
       ) : (
         <ul>
           {Object.entries(ordersGroupByCake).map(([cake, orders]) => (
             <li key={cake} className="flex">
               <label>{cake.split("|||")[0]}</label>
-              <div className="flex-1 flex-shrink-0 min-w-[4px]" />{" "}
+              <div className="min-w-[4px] flex-1 shrink-0" />{" "}
               <label className="mr-2">{cake.split("|||")[1]}</label>
-              <span className="flex-shrink-0 min-w-[20px]"> x {orders.length}</span>
+              <span className="min-w-[20px] shrink-0"> x {orders.length}</span>
             </li>
           ))}
         </ul>

@@ -1,5 +1,5 @@
+import cn from "clsx"
 import { ButtonHTMLAttributes, DetailedHTMLProps, forwardRef } from "react"
-import cn from "classnames"
 
 export type ButtonVariant = "primary" | "primary-dark" | "secondary"
 
@@ -17,9 +17,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ variant, ...
       className={cn(
         props.className,
         "relative",
-        variant === "primary" && "p-2 min-h-[42px] font-bold text-white rounded-md hover:shadow-sm",
+        variant === "primary" && "min-h-[42px] rounded-md p-2 font-bold text-white hover:shadow-sm",
         variant === "secondary" &&
-          "py-[9px] px-[13px] text-sm active:bg-gray-100 disabled:bg-gray-50 rounded-md border shadow-sm disabled:shadow-none transition-colors disabled:cursor-default"
+          "rounded-md border py-[9px] px-[13px] text-sm shadow-sm transition-colors active:bg-gray-100 disabled:cursor-default disabled:bg-gray-50 disabled:shadow-none"
       )}
     />
   )

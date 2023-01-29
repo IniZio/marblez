@@ -1,18 +1,9 @@
-import {
-  ShareIcon,
-  UploadIcon,
-  XIcon,
-  PencilIcon,
-  TrashIcon,
-  EyeIcon,
-} from "@heroicons/react/outline"
+import { EyeIcon, PencilIcon, ShareIcon, UploadIcon, XIcon } from "@heroicons/react/outline"
 import { Order } from "@prisma/client"
 import { format } from "date-fns"
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react"
-// import CopyToClipboard from "react-copy-to-clipboard"
-import Dialog from "../../primitives/Dialog"
-import { isMobile } from "../../util/device"
+import { useCallback, useMemo, useRef, useState } from "react"
 import supabaseClient from "../../services/supabase"
+import { isMobile } from "../../util/device"
 
 export interface OrderProps {
   order: Order
@@ -160,7 +151,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
 
   return (
     <>
-      <div className="overflow-hidden relative p-3 pb-8 w-full text-sm font-medium leading-6 bg-white rounded-lg shadow-md dark:bg-slate-800">
+      <div className="relative w-full overflow-hidden rounded-lg bg-white p-3 pb-8 text-sm font-medium leading-6 shadow-md dark:bg-slate-800">
         <p className={"whitespace-pre-wrap" + (orderAssets.length ? " mr-12" : "")}>
           {lines.map((line, index) => (
             <div key={index} className="my-0.5">
@@ -168,14 +159,14 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
             </div>
           ))}
         </p>
-        <div className="flex absolute top-5 right-5 flex-col gap-2">
+        <div className="absolute top-5 right-5 flex flex-col gap-2">
           {orderAssets.map((imageName) => (
             <div key={imageName} className="relative">
               <a
                 href={`${process.env.ORDER_ASSETS_CDN_URL}/order-assets/${imageName}`}
                 target="_blank"
                 rel="noreferrer"
-                className="block overflow-hidden relative h-[40px]"
+                className="relative block h-[40px] overflow-hidden"
                 onClick={(e) => editMode && e.preventDefault()}
               >
                 <img
@@ -193,7 +184,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
               </a>
               {editMode && (
                 <XIcon
-                  className="absolute -top-2.5 -right-2.5 p-0.5 w-5 h-5 text-red-500 bg-white rounded-full shadow-inner cursor-pointer"
+                  className="absolute -top-2.5 -right-2.5 h-5 w-5 cursor-pointer rounded-full bg-white p-0.5 text-red-500 shadow-inner"
                   onClick={makeHandleDeleteFile(imageName)}
                 />
               )}
@@ -201,7 +192,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
           ))}
           {editMode && (
             <div className="cursor-pointer" onClick={() => fileUploadRef.current?.click()}>
-              <UploadIcon className="mx-auto w-5 h-5 cursor-pointer" />
+              <UploadIcon className="mx-auto h-5 w-5 cursor-pointer" />
               <input
                 className="hidden"
                 ref={fileUploadRef}
@@ -211,13 +202,13 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
             </div>
           )}
         </div>
-        <div className="flex absolute right-3 bottom-3 gap-2">
+        <div className="absolute right-3 bottom-3 flex gap-2">
           <div className="flex gap-4">
-            <ShareIcon className="w-5 h-5 cursor-pointer" onClick={handleShareOrder} />
+            <ShareIcon className="h-5 w-5 cursor-pointer" onClick={handleShareOrder} />
             {editMode ? (
-              <EyeIcon className="w-5 h-5 cursor-pointer" onClick={toggleEditMode} />
+              <EyeIcon className="h-5 w-5 cursor-pointer" onClick={toggleEditMode} />
             ) : (
-              <PencilIcon className="w-5 h-5 cursor-pointer" onClick={toggleEditMode} />
+              <PencilIcon className="h-5 w-5 cursor-pointer" onClick={toggleEditMode} />
             )}
           </div>
         </div>

@@ -1,9 +1,9 @@
 /* eslint-disable tailwindcss/no-custom-classname */
-import { Suspense } from "react"
-import { Link, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import Layout from "app/core/layouts/Layout"
+import { BlitzPage, Link, Routes, useMutation } from "blitz"
+import { Suspense } from "react"
 // import logo from "public/logo.png"
 
 /*

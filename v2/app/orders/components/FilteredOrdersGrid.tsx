@@ -1,16 +1,16 @@
 import { ArrowLeftIcon, ArrowRightIcon, DownloadIcon, RefreshIcon } from "@heroicons/react/solid"
 import getOrders from "app/orders/queries/getOrders"
 import { useMutation, useQuery } from "blitz"
-import cn from "classnames"
+import cn from "clsx"
 import { addDays, endOfDay, format, startOfDay } from "date-fns"
 import { MandarinTraditional } from "flatpickr/dist/l10n/zh-tw"
 import "flatpickr/dist/themes/airbnb.css"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import Flatpickr from "react-flatpickr"
 import useDebouncedValue from "../../hooks/useDebouncedValue"
-import supabaseClient from "../../services/supabase"
 // import Button from "../../primitives/Button"
 import Loader from "../../primitives/Loader"
+import supabaseClient from "../../services/supabase"
 import { downloadURI } from "../../util/dom"
 import downloadOrders from "../mutations/downloadOrders"
 import OrderCard from "./OrderCard"
@@ -77,7 +77,7 @@ const FilteredOrdersGrid = () => {
   return (
     <div className="m-3">
       <input
-        className="p-2 mb-3 w-full dark:text-white dark:bg-transparent rounded-lg border-none shadow-sm dark:bg-slate-800"
+        className="mb-3 w-full rounded-lg border-none p-2 shadow-sm dark:bg-slate-800 dark:text-white"
         type="text"
         placeholder="搜尋電話"
         value={keyword}
@@ -85,9 +85,9 @@ const FilteredOrdersGrid = () => {
       />
 
       <div className="flex gap-2">
-        <div className="flex flex-1 gap-2 items-center mb-3 min-w-0">
+        <div className="mb-3 flex min-w-0 flex-1 items-center gap-2">
           <ArrowLeftIcon
-            className="w-5 h-5 cursor-pointer"
+            className="h-5 w-5 cursor-pointer"
             onClick={() => setDateRange([addDays(dateRange[0], -1), addDays(dateRange[0], -1)])}
           />
           <Flatpickr
@@ -97,7 +97,7 @@ const FilteredOrdersGrid = () => {
               mode: "range",
               locale: MandarinTraditional,
             }}
-            className="flex-1 min-w-0 font-bold leading-5 text-center bg-transparent border-none cursor-pointer"
+            className="min-w-0 flex-1 cursor-pointer border-none bg-transparent text-center font-bold leading-5"
             value={dateRange}
             onChange={(dateRange) => {
               if (!dateRange[0]) {
@@ -107,24 +107,24 @@ const FilteredOrdersGrid = () => {
             }}
           />
           <ArrowRightIcon
-            className="w-5 h-5 cursor-pointer"
+            className="h-5 w-5 cursor-pointer"
             onClick={() => setDateRange([addDays(dateRange[0], 1), addDays(dateRange[0], 1)])}
           />
           <button onClick={downloadOrdersOfDay} disabled={loadingDownloadOrdersOfDay}>
             {loadingDownloadOrdersOfDay ? (
-              <Loader className="w-5 h-5 bg-black" />
+              <Loader className="h-5 w-5 bg-black" />
             ) : (
-              <DownloadIcon className="w-5 h-5 cursor-pointer" />
+              <DownloadIcon className="h-5 w-5 cursor-pointer" />
             )}
           </button>
           <RefreshIcon
-            className={cn("w-5 h-5 cursor-pointer", isFetching && "animate-reverse-spin")}
+            className={cn("h-5 w-5 cursor-pointer", isFetching && "animate-reverse-spin")}
             onClick={() => refetch()}
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 my-2">
+      <div className="my-2 flex flex-col gap-2">
         {/* <OrderAssetsSlide /> */}
         <OrderStats dateRange={dateRange} />
         {/* <OrderCakes className="sm:hidden" dateRange={dateRange} /> */}
@@ -132,7 +132,7 @@ const FilteredOrdersGrid = () => {
 
       <div className="flex gap-2">
         {/* <OrderCakes className="max-sm:hidden" dateRange={dateRange} /> */}
-        <div className="grid flex-1 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {orders?.map((order) => (
             <OrderCard
               key={order.id}

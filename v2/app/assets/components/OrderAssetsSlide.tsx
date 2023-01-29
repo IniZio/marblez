@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from "@blitzjs/core"
-import Image from "next/image"
 import { FC, useMemo } from "react"
 import HorizontalInfiniteScroll from "../../primitives/HorizontalInfiniteScroll"
 import Loader from "../../primitives/Loader"
@@ -26,7 +25,7 @@ const OrderAssetsSlide: FC = () => {
 
   return (
     <HorizontalInfiniteScroll
-      mainWrapper={<div className="overflow-x-auto max-w-full" />}
+      mainWrapper={<div className="max-w-full overflow-x-auto" />}
       loader={<div />}
       dipatchScroll={hasNextPage && fetchNextPage}
     >
@@ -39,13 +38,13 @@ const OrderAssetsSlide: FC = () => {
                 key={asset.id}
                 width="45"
                 height="45"
-                className="flex-shrink-0 w-[45px] h-[45px] rounded-full"
+                className="h-[45px] w-[45px] shrink-0 rounded-full"
                 src={`${process.env.ORDER_ASSETS_CDN_URL}/${asset.bucketKey}`}
               />
             ))}
           </>
         ))}
-        {isFetching && <Loader className="w-[45px] h-[45px] bg-black" />}
+        {isFetching && <Loader className="h-[45px] w-[45px] bg-black" />}
       </div>
     </HorizontalInfiniteScroll>
   )
