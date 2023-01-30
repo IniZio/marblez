@@ -1,0 +1,25 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "postinstall": "lerna exec --parallel yarn",
+    "prisma": "prisma",
+    "share-prisma": "lerna exec --parallel 'cp ../schema.prisma ./db && yarn prisma-generate'",
+    "share-env": "lerna exec --parallel cp ../.env.${TARGET} ./.env",
+    "predev": "TARGET=development npm run share-env",
+    "dev": "NODE_ENV=development env-cmd -f .env.development lerna exec --parallel npm run dev",
+    "build": "lerna exec --parallel npm run build",
+    "types": "lerna exec --parallel npx typesync && yarn",
+    "heroku-postbuild": "npm run build"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "env-cmd": "^10.1.0",
+    "lerna": "^3.22.1",
+    "prisma": "^3",
+    "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "typesync": "^0.6.1"
+  }
+}

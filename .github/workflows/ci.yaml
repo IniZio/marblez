@@ -1,0 +1,18 @@
+name: CI
+on: [pull_request]
+defaults:
+  run:
+    shell: bash
+jobs:
+  lint:
+      name: Lint
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+
+        - name: lint
+          working-directory: v2
+          run: |
+            yarn
+            yarn typecheck
+            yarn lint

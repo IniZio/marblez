@@ -1,0 +1,12 @@
+diff --git a/node_modules/next-pwa/index.js b/node_modules/next-pwa/index.js
+index 8cb8849..9a1e075 100644
+--- a/node_modules/next-pwa/index.js
++++ b/node_modules/next-pwa/index.js
+@@ -117,6 +117,7 @@ module.exports = (nextConfig = {}) => ({
+ 
+       config.plugins.push(
+         new CleanWebpackPlugin({
++          dangerouslyAllowCleanPatternsOutsideProject: true,
+           cleanOnceBeforeBuildPatterns: [
+             path.join(_dest, 'workbox-*.js'),
+             path.join(_dest, 'workbox-*.js.map'),
