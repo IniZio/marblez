@@ -2,7 +2,7 @@
   "npmClient": "yarn",
   "packages": [
     "async",
-    "v2"
+    "server"
   ],
   "version": "0.0.0"
 }
