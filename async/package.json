@@ -13,7 +13,7 @@
   "dependencies": {
     "@adiwajshing/baileys": "^3.5.3",
     "@prisma/client": "^3",
-    "@react-pdf/renderer": "^2.0.8",
+    "@react-pdf/renderer": "^3.1.1",
     "@supabase/supabase-js": "^1.22.4",
     "@typegoose/typegoose": "^6.4.0",
     "@types/dotenv": "^8.2.0",
