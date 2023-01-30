@@ -1,4 +1,10 @@
-import { EyeIcon, PencilIcon, ShareIcon, UploadIcon, XIcon } from "@heroicons/react/outline"
+import {
+  ArrowUpTrayIcon,
+  EyeIcon,
+  PencilIcon,
+  ShareIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline"
 import { Order } from "@prisma/client"
 import { format } from "date-fns"
 import { useCallback, useMemo, useRef, useState } from "react"
@@ -183,7 +189,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
                 />
               </a>
               {editMode && (
-                <XIcon
+                <XMarkIcon
                   className="absolute -top-2.5 -right-2.5 h-5 w-5 cursor-pointer rounded-full bg-white p-0.5 text-red-500 shadow-inner"
                   onClick={makeHandleDeleteFile(imageName)}
                 />
@@ -192,7 +198,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
           ))}
           {editMode && (
             <div className="cursor-pointer" onClick={() => fileUploadRef.current?.click()}>
-              <UploadIcon className="mx-auto h-5 w-5 cursor-pointer" />
+              <ArrowUpTrayIcon className="mx-auto h-5 w-5 cursor-pointer" />
               <input
                 className="hidden"
                 ref={fileUploadRef}

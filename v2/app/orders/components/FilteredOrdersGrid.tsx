@@ -1,4 +1,9 @@
-import { ArrowLeftIcon, ArrowRightIcon, DownloadIcon, RefreshIcon } from "@heroicons/react/solid"
+import {
+  ArrowDownTrayIcon,
+  ArrowLeftIcon,
+  ArrowPathIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/20/solid"
 import getOrders from "app/orders/queries/getOrders"
 import { useMutation, useQuery } from "blitz"
 import cn from "clsx"
@@ -114,10 +119,10 @@ const FilteredOrdersGrid = () => {
             {loadingDownloadOrdersOfDay ? (
               <Loader className="h-5 w-5 bg-black" />
             ) : (
-              <DownloadIcon className="h-5 w-5 cursor-pointer" />
+              <ArrowDownTrayIcon className="h-5 w-5 cursor-pointer" />
             )}
           </button>
-          <RefreshIcon
+          <ArrowPathIcon
             className={cn("h-5 w-5 cursor-pointer", isFetching && "animate-reverse-spin")}
             onClick={() => refetch()}
           />
