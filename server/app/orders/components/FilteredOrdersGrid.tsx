@@ -135,7 +135,7 @@ const FilteredOrdersGrid = () => {
         {/* <OrderCakes className="sm:hidden" dateRange={dateRange} /> */}
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 pb-3">
         {/* <OrderCakes className="max-sm:hidden" dateRange={dateRange} /> */}
         <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {orders?.map((order) => (

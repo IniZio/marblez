@@ -153,6 +153,11 @@ const Layout = ({ title, children }: LayoutProps) => {
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
         />
 
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+        />
+
         <title>{title || "Miss Marble"}</title>
       </Head>
 
