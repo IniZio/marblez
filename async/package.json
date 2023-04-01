@@ -22,7 +22,7 @@
     "dotenv": "^8.2.0",
     "fastify": "^3.20.2",
     "google-spreadsheet": "^3.0.11",
-    "googleapis": "^51.0.0",
+    "googleapis": "^114.0.0",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
     "graphql-type-json": "^0.3.2",
