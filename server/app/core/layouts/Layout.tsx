@@ -159,6 +159,8 @@ const Layout = ({ title, children }: LayoutProps) => {
         />
 
         <title>{title || "Miss Marble"}</title>
+
+        <script data-domain="marblez.fly.dev" src="https://plausible.io/js/script.js" defer />
       </Head>
 
       {children}
