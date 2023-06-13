@@ -63,7 +63,7 @@ export const rowToOrder = (row: any[], index: any): Order => {
         order[key] = order[key] === 'TRUE'
         break;
       case 'deliveryDate':
-        order[key] = parse(order[key], 'M/d', new Date(order.receivedAt));
+        order[key] = parse(order[key], 'M/d', order.receivedAt ? new Date(order.receivedAt) : new Date());
         if (!isValid(order[key])) {
           order[key] = undefined;
           break;
