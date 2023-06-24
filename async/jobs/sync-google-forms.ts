@@ -40,8 +40,8 @@ const orderFields: Partial<{ [k in Paths<IOrder, 3>]: number | number[] }> = {
   'customerSocialName': 28,
   'customerSocialChannel': 29,
   'deliveryMethod': 30,
-  'deliveryAddress': 31,
-  remarks: 32,
+  'deliveryAddress': [31, 32],
+  remarks: 33,
   'otherAttributes.printedReceipt': 89,
   'otherAttributes.printed': 90,
 };

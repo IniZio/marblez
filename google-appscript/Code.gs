@@ -20,11 +20,11 @@ const fields = {
   social_name: 28,
   order_from: 29,
   delivery_method: 30,
-  delivery_address: 31,
-  remarks: 32,
+  delivery_address: [31, 32],
+  remarks: [33],
   printed_at: 89,
   printed: 90,
-  index: 91,
+  // index: 91,
 };
 
 function lineIf(o, fields, opt) {
@@ -95,9 +95,9 @@ function order2Str(order) {
   if (!order) return '';
   return (
     ((order['printed'] === true || order['printed'] === 'TRUE') ? '' : 'NEW\n') +
-    lineIf(order, ['index'], {
-      prefix: '#'
-    }) +
+    // lineIf(order, ['index'], {
+    //   prefix: '#'
+    // }) +
     //    lineIf(order, ['paid'], {overrides: [function(val) {return ((val === true || val === 'TRUE') ? 'Paid' : 'NOT Paid')}]}) +
     lineIf(order, ['name', 'phone'], {
       prefix: '👨 '
@@ -154,12 +154,9 @@ function exportAllOrdersOfTmwTmw() {
   const date = new Date()
   date.setDate(date.getDate() + 2)
 
-  GmailApp.sendEmail('yuenslim@gmail.com', `Orders of ${date.getMonth() + 1}/${date.getDate()}`, 'Please see the attached file.', {
-    attachments: [exportOrders({
-      date: date
-    })],
-    name: 'Automatic Emailer Script'
-  });
+  exportOrders({
+    date: date
+  })
 }
 
 function exportUnprintedOrdersOfTmwTmw() {
@@ -181,21 +178,17 @@ function exportUnprintedOrdersOfTmw() {
   const date = new Date()
   date.setDate(date.getDate() + 1)
 
-  const pdfFile = exportOrders({
+  exportOrders({
     unprintedOnly: true,
     date: date
   })
-  GmailApp.sendEmail('yuenslim@gmail.com', `Orders of ${date.getMonth() + 1}/${date.getDate()}`, 'Please see the attached file.', {
-    attachments: [pdfFile],
-    name: 'Automatic Emailer Script'
-  });
 }
 
 function exportUnprintedOrdersOfTmwSingleCol() {
   const date = new Date()
   date.setDate(date.getDate() + 1)
 
-  const pdfFile = exportOrders({
+  exportOrders({
     unprintedOnly: true,
     date: date,
   }, {
@@ -275,8 +268,6 @@ function exportOrders(filter, {
 
   const orders = []
 
-  //Logger.clear();
-  let this_day_has_printed_before = false;
   data.forEach(function (row) {
     const order = {}
     order.id = row.id
@@ -304,7 +295,6 @@ function exportOrders(filter, {
     orders.push(order)
   })
 
-  //  if (!this_day_has_printed_before || true) {
   if (!unrecorded) {
     orders.forEach((order, index) => {
       if (order.paid) {
@@ -340,14 +330,11 @@ function exportOrders(filter, {
 
   const paperSize = paper[numOfColumnsToPaper[numOfColumns]]
 
-
-
-
   var body = doc.getBody()
   if (paperSize) {
     body.setPageHeight(paperSize[1]).setPageWidth(paperSize[0])
   }
-  body.editAsText().setFontSize(21)
+  body.editAsText().setFontSize(16)
   body.setMarginBottom(0);
   body.setMarginTop(0);
   body.setMarginLeft(0);
@@ -395,8 +382,11 @@ function exportOrders(filter, {
   doc.saveAndClose()
 
   var docRef = DriveApp.getFileById(doc.getId())
-  DriveApp.createFolder('Daily')
   var dailyFolder = DriveApp.getFoldersByName('Daily').next()
+  if (!dailyFolder) {
+      DriveApp.createFolder('Daily')
+      dailyFolder = DriveApp.getFoldersByName('Daily').next()
+  }
   dailyFolder.addFile(docRef)
   DriveApp.removeFile(docRef)
 
@@ -427,66 +417,28 @@ function exportOrders(filter, {
 
 function onOpen() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  const tmw = new Date()
-  tmw.setDate(tmw.getDate() + 1)
-  var tmwTmw = new Date(new Date().setDate(new Date().getDate() + 2));
-  //  const tmwTmw = new Date()
-  //  tmwTmw.setDate(tmwTmw.getDate() + 2)
+  const tmw = new Date(new Date().setDate(new Date().getDate() + 1))
+  const tmwTmw = new Date(new Date().setDate(new Date().getDate() + 2));
 
   const [month, day] = [tmw.getMonth() + 1, tmw.getDate()] // tomorrow
   const [month1, day1] = [tmwTmw.getMonth() + 1, tmwTmw.getDate()] // tomorrow
   var marbleMenuEntries = [
-    //    {name: "Export " + month + '/' + (day) + " orders (All)", functionName: "exportAllOrdersOfTmw"},
+    // {name: "Export " + month + '/' + (day) + " orders (All)", functionName: "exportAllOrdersOfTmw"},
     {
-      name: "Export " + month + '/' + (day) + " orders (Unprinted)",
-      functionName: "exportUnprintedOrdersOfTmw"
-    },
-    {
-      name: "Export " + month + '/' + (day) + " orders (Unprinted) (Single Col)",
+      name: "Export " + month + '/' + (day) + " orders",
       functionName: "exportUnprintedOrdersOfTmwSingleCol"
     },
     {
-      name: "Export " + month1 + '/' + (day1) + " orders (All)",
+      name: "Export " + month1 + '/' + (day1) + " orders",
       functionName: "exportAllOrdersOfTmwTmw"
     },
     {
       name: "Export Custom orders",
       functionName: "exportCustomOrders"
-    },
-    {
-      name: "Increment field",
-      functionName: "autoIncrement"
-    },
+    }
   ];
   ss.addMenu("Marble", marbleMenuEntries);
 };
-
-function installableOnEdit(event) {
-  autoIncrement();
-  //    mutateOnEditEvent(event);
-}
-
-function makeAPICall(key, query, variables) {
-  //var urls = ["https://64619deb.ngrok.io/", "https://api-marblez.herokuapp.com/"];
-  var urls = ["https://efc10c8e.ngrok.io/"];
-  var options = {
-    "method": "post",
-    "headers": {
-      "Authorization": key,
-    },
-    "payload": JSON.stringify({
-      "query": query,
-      "variables": variables
-    }),
-    "contentType": "application/json"
-  };
-  const requests = urls.map(url => ({
-    url,
-    ...options
-  }));
-  var response = UrlFetchApp.fetchAll(requests);
-  return response;
-}
 
 function doGet({
   parameter = {}
@@ -495,32 +447,7 @@ function doGet({
     date: parameter.date ? new Date(parameter.date) : new Date(),
   }, {
     output: 'json',
-    numOfColumns: parameter.num_of_columns || 2,
+    numOfColumns: 1,
     unrecorded: !parameter.update_status,
   })
-}
-
-
-function autoIncrement() {
-  var AUTOINC_COLUMN = fields.index; // After printed column
-  var HEADER_ROW_COUNT = 1;
-
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var worksheet = spreadsheet.getActiveSheet();
-  var rows = worksheet.getDataRange().getNumRows();
-  var vals = worksheet.getSheetValues(1, 1, rows + 1, 2);
-
-  worksheet.getRange(HEADER_ROW_COUNT, AUTOINC_COLUMN + 1).setValue('Index')
-
-  for (var row = HEADER_ROW_COUNT; row < vals.length; row++) {
-    try {
-      var id = vals[row][AUTOINC_COLUMN];
-      if (id === undefined) {
-        // Here the columns & rows are 1-indexed
-        worksheet.getRange(row + 1, AUTOINC_COLUMN + 1).setValue(row + 1);
-      }
-    } catch (ex) {
-      // Keep calm and carry on
-    }
-  }
 }
