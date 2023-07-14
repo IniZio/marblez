@@ -1,5 +1,6 @@
 import {
   ArrowUpTrayIcon,
+  DocumentIcon,
   EyeIcon,
   PencilIcon,
   ShareIcon,
@@ -7,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline"
 import { Order } from "@prisma/client"
 import { format } from "date-fns"
+import isImage from "is-image"
 import { useCallback, useMemo, useRef, useState } from "react"
 import supabaseClient from "../../services/supabase"
 import { isMobile } from "../../util/device"
@@ -133,17 +135,23 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
   const fileUploadRef = useRef<HTMLInputElement>(null)
   const handleUploadFile = useCallback(
     async (event) => {
-      const uploadedfile = event.target.files[0]
+      const uploadedfile: File = event.target.files[0]
       if (!order.receivedAt?.toISOString()) {
         return Promise.resolve()
       }
 
       return supabaseClient.storage
         .from("order-assets")
-        .upload(`${order.receivedAt?.toISOString()}-${new Date().toISOString()}`, uploadedfile, {
-          cacheControl: "3600",
-          upsert: true,
-        })
+        .upload(
+          `${order.receivedAt?.toISOString()}-${new Date().toISOString()}.${uploadedfile.name
+            .split(".")
+            .pop()}`,
+          uploadedfile,
+          {
+            cacheControl: "3600",
+            upsert: true,
+          }
+        )
         .then(onUpdate)
     },
     [onUpdate, order.receivedAt]
@@ -166,32 +174,36 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
           ))}
         </p>
         <div className="absolute top-5 right-5 flex flex-col gap-2">
-          {orderAssets.map((imageName) => (
-            <div key={imageName} className="relative">
+          {orderAssets.map((assetName) => (
+            <div key={assetName} className="relative">
               <a
-                href={`${process.env.ORDER_ASSETS_CDN_URL}/order-assets/${imageName}`}
+                href={`${process.env.ORDER_ASSETS_CDN_URL}/order-assets/${assetName}`}
                 target="_blank"
                 rel="noreferrer"
                 className="relative block h-[40px] overflow-hidden"
                 onClick={(e) => editMode && e.preventDefault()}
               >
-                <img
-                  src={`${process.env.ORDER_ASSETS_CDN_URL}/order-assets/${imageName}`}
-                  alt=""
-                  width="40"
-                  height="40"
-                  onError={(e) =>
-                    (e.currentTarget.src = e.currentTarget.src.replace(
-                      /\?(.*)$/,
-                      new Date().toISOString()
-                    ))
-                  }
-                />
+                {isImage(assetName) || !assetName.includes(".") ? (
+                  <img
+                    src={`${process.env.ORDER_ASSETS_CDN_URL}/order-assets/${assetName}`}
+                    alt=""
+                    width="40"
+                    height="40"
+                    onError={(e) =>
+                      (e.currentTarget.src = e.currentTarget.src.replace(
+                        /\?(.*)$/,
+                        new Date().toISOString()
+                      ))
+                    }
+                  />
+                ) : (
+                  <DocumentIcon width={25} height={25} />
+                )}
               </a>
               {editMode && (
                 <XMarkIcon
                   className="absolute -top-2.5 -right-2.5 h-5 w-5 cursor-pointer rounded-full bg-white p-0.5 text-red-500 shadow-inner"
-                  onClick={makeHandleDeleteFile(imageName)}
+                  onClick={makeHandleDeleteFile(assetName)}
                 />
               )}
             </div>
