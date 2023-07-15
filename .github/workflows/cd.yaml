@@ -37,7 +37,7 @@ jobs:
           env:
             FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           with:
-            args: deploy server
+            args: deploy server --wait-timeout 240
 
         - name: shred
           uses: jrmcdonald/blackbox-github-actions@v0.2.0
