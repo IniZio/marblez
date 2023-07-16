@@ -51,7 +51,7 @@ const FilteredOrdersGrid = () => {
   )
   const [orderAssets, setOrderAssets] = useState<string[]>([])
   const refreshOrderAssets = useCallback(() => {
-    supabaseClient.storage
+    return supabaseClient.storage
       .from("order-assets")
       .list(undefined, {
         limit: 200,
@@ -60,7 +60,12 @@ const FilteredOrdersGrid = () => {
       })
       .then(({ data }) => data && setOrderAssets(data.map((i) => i.name)))
   }, [])
-  useEffect(refreshOrderAssets, [refreshOrderAssets])
+  useEffect(() => {
+    const refreshAssets = async () => {
+      await refreshOrderAssets()
+    }
+    refreshAssets()
+  }, [refreshOrderAssets])
 
   const [loadingDownloadOrdersOfDay, setLoadingDownloadOrdersOfDay] = useState(false)
   const [downloadOrdersMutation] = useMutation(downloadOrders)

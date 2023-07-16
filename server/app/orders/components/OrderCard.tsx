@@ -7,6 +7,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline"
 import { Order } from "@prisma/client"
+import Loader from "app/primitives/Loader"
 import { format } from "date-fns"
 import isImage from "is-image"
 import { useCallback, useMemo, useRef, useState } from "react"
@@ -133,6 +134,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
   }, [whatsappHref, lines, order.customerPhone])
 
   const fileUploadRef = useRef<HTMLInputElement>(null)
+  const [isUploading, setIsUploading] = useState(false)
   const handleUploadFile = useCallback(
     async (event) => {
       const uploadedfile: File = event.target.files[0]
@@ -140,6 +142,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
         return Promise.resolve()
       }
 
+      setIsUploading(true)
       return supabaseClient.storage
         .from("order-assets")
         .upload(
@@ -153,6 +156,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
           }
         )
         .then(onUpdate)
+        .finally(() => setIsUploading(false))
     },
     [onUpdate, order.receivedAt]
   )
@@ -180,8 +184,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
                 href={`${process.env.ORDER_ASSETS_CDN_URL}/order-assets/${assetName}`}
                 target="_blank"
                 rel="noreferrer"
-                className="relative block h-[40px] overflow-hidden"
-                onClick={(e) => editMode && e.preventDefault()}
+                className="relative flex h-[40px] items-center justify-center overflow-hidden"
               >
                 {isImage(assetName) || !assetName.includes(".") ? (
                   <img
@@ -208,17 +211,20 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
               )}
             </div>
           ))}
-          {editMode && (
-            <div className="cursor-pointer" onClick={() => fileUploadRef.current?.click()}>
-              <ArrowUpTrayIcon className="mx-auto h-5 w-5 cursor-pointer" />
-              <input
-                className="hidden"
-                ref={fileUploadRef}
-                type="file"
-                onChange={handleUploadFile}
-              />
-            </div>
-          )}
+          {editMode &&
+            (isUploading ? (
+              <Loader className="m-auto h-5 w-5" />
+            ) : (
+              <div className="cursor-pointer" onClick={() => fileUploadRef.current?.click()}>
+                <ArrowUpTrayIcon className="mx-auto h-5 w-5 cursor-pointer" />
+                <input
+                  className="hidden"
+                  ref={fileUploadRef}
+                  type="file"
+                  onChange={handleUploadFile}
+                />
+              </div>
+            ))}
         </div>
         <div className="absolute right-3 bottom-3 flex gap-2">
           <div className="flex gap-4">
