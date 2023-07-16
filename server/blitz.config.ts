@@ -15,18 +15,19 @@ const config: BlitzConfig = {
     SUPABASE_ENDPOINT: process.env.SUPABASE_ENDPOINT,
     SUPABASE_API_KEY: process.env.SUPABASE_API_KEY,
     ORDER_ASSETS_CDN_URL: process.env.ORDER_ASSETS_CDN_URL,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT,
   },
   images: {
     domains: [new URL(process.env.ORDER_ASSETS_CDN_URL!).host],
   },
-  /* Uncomment this to customize the webpack config
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Note: we provide webpack above so you should not `require` it
-    // Perform customizations to webpack config
-    // Important: return the modified config
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.alias["@sentry/node"] = "@sentry/browser"
+    }
+
     return config
   },
-  */
 }
 
 module.exports = config

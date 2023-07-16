@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {
   ArrowDownTrayIcon,
   ArrowLeftIcon,
@@ -93,7 +94,6 @@ const FilteredOrdersGrid = () => {
         value={keyword}
         onChange={(event) => setKeyword(event.target.value)}
       />
-
       <div className="flex gap-2">
         <div className="mb-3 flex min-w-0 flex-1 items-center gap-2">
           <ArrowLeftIcon
@@ -133,13 +133,11 @@ const FilteredOrdersGrid = () => {
           />
         </div>
       </div>
-
       <div className="my-2 flex flex-col gap-2">
         {/* <OrderAssetsSlide /> */}
         <OrderStats dateRange={dateRange} />
         {/* <OrderCakes className="sm:hidden" dateRange={dateRange} /> */}
       </div>
-
       <div className="flex gap-2 pb-3">
         {/* <OrderCakes className="max-sm:hidden" dateRange={dateRange} /> */}
         <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -158,7 +156,6 @@ const FilteredOrdersGrid = () => {
           ))}
         </div>
       </div>
-
       {/* {hasNextPage && (
         <div className="py-2 w-full text-center">
           <Button

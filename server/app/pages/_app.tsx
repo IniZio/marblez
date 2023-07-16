@@ -6,6 +6,7 @@ import {
   ErrorFallbackProps,
   useQueryErrorResetBoundary,
 } from "blitz"
+import Sentry from "integrations/sentry"
 import { useEffect } from "react"
 import OneSignal from "react-onesignal"
 
@@ -26,6 +27,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <ErrorBoundary
       FallbackComponent={RootErrorFallback}
       onReset={useQueryErrorResetBoundary().reset}
+      onError={(error, componentStack) => {
+        console.log("error", error)
+        Sentry.captureException(error, { contexts: { react: { componentStack } } })
+      }}
     >
       {getLayout(<Component {...pageProps} />)}
     </ErrorBoundary>
