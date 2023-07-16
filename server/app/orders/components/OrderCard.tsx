@@ -142,6 +142,39 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
         return Promise.resolve()
       }
 
+      // resize
+      const resizedFile = isImage(uploadedfile.name)
+        ? await new Promise<File>((resolve) => {
+            const img = new Image()
+            const MAX_DIMENSION = 600
+            img.src = URL.createObjectURL(uploadedfile)
+            img.onload = () => {
+              const elem = document.createElement("canvas")
+              const scaleFactor = Math.min(MAX_DIMENSION / img.width, MAX_DIMENSION / img.height)
+              if (img.width > MAX_DIMENSION || img.height > MAX_DIMENSION) {
+                elem.width = img.width * scaleFactor
+                elem.height = img.height * scaleFactor
+              } else {
+                elem.width = img.width
+                elem.height = img.height
+              }
+              const ctx = elem.getContext("2d")
+              ctx?.drawImage(img, 0, 0, elem.width, elem.height)
+              ctx?.canvas.toBlob(
+                (blob) => {
+                  const file = new File([blob as Blob], uploadedfile.name, {
+                    type: "image/jpeg",
+                    lastModified: Date.now(),
+                  })
+                  resolve(file)
+                },
+                "image/jpeg",
+                1
+              )
+            }
+          })
+        : uploadedfile
+
       setIsUploading(true)
       return supabaseClient.storage
         .from("order-assets")
@@ -149,7 +182,7 @@ function OrderCard({ order, orderAssets, onUpdate }: OrderProps) {
           `${order.receivedAt?.toISOString()}-${new Date().toISOString()}.${uploadedfile.name
             .split(".")
             .pop()}`,
-          uploadedfile,
+          resizedFile,
           {
             cacheControl: "3600",
             upsert: true,
