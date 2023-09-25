@@ -28,6 +28,15 @@ const config: BlitzConfig = {
 
     return config
   },
+  redirects: async () => {
+    return [
+      {
+        source: "/",
+        destination: "https://missmarble.fly.dev/pos",
+        permanent: false,
+      },
+    ]
+  },
 }
 
 module.exports = config
