@@ -32,7 +32,7 @@ const config: BlitzConfig = {
     return [
       {
         source: "/",
-        destination: "https://missmarble.fly.dev/pos",
+        destination: "https://missmarble-inizio.vercel.app/pos",
         permanent: false,
       },
     ]
