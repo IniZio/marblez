@@ -24,7 +24,7 @@ const fields = {
   remarks: [33],
   printed_at: 89,
   printed: 90,
-  // index: 91,
+  index: 91,
 };
 
 function lineIf(o, fields, opt) {
@@ -237,7 +237,7 @@ function exportOrders(filter, {
   const filterView = range.createFilter();
   const filterCriteriaByDate = SpreadsheetApp.newFilterCriteria().whenTextContains([`'${month}/${day}`])
   filterView.setColumnFilterCriteria(fields.date, filterCriteriaByDate);
-
+  
   var data = (
     range.getValues()
     .map(function (o, index) {
@@ -450,4 +450,32 @@ function doGet({
     numOfColumns: 1,
     unrecorded: !parameter.update_status,
   })
+}
+
+function installableOnEdit(event) {
+  autoIncrement();
+}
+
+function autoIncrement() {
+  var AUTOINC_COLUMN = fields.index; // After printed column
+  var HEADER_ROW_COUNT = 1;
+
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var worksheet = spreadsheet.getActiveSheet();
+  var rows = worksheet.getDataRange().getNumRows();
+  var vals = worksheet.getSheetValues(1, 1, rows + 1, 2);
+
+  worksheet.getRange(HEADER_ROW_COUNT, AUTOINC_COLUMN + 1).setValue('Index')
+
+  for (var row = HEADER_ROW_COUNT; row < vals.length; row++) {
+    try {
+      var id = vals[row][AUTOINC_COLUMN];
+      if (id === undefined) {
+        // Here the columns & rows are 1-indexed
+        worksheet.getRange(row + 1, AUTOINC_COLUMN + 1).setValue(row + 1);
+      }
+    } catch (ex) {
+      // Keep calm and carry on
+    }
+  }
 }
